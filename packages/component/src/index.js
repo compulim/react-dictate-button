@@ -16,36 +16,17 @@ function prefix(name) {
   } catch (err) {}
 }
 
-const UNINITIALIZED = 0;
-const IDLE = 1;
-const START = 2;
-const AUDIO_START = 3;
-const SOUND_START = 4;
-const SPEECH_START = 5;
-const SPEECH_END = 6;
-const SOUND_END = 7;
-const AUDIO_END = 8;
-const END = 9;
-
 export default class DictateButton extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleAudioEnd = this.handleAudioEnd.bind(this);
     this.handleAudioStart = this.handleAudioStart.bind(this);
-    this.handleClick = this.handleClick.bind(this);
     this.handleEnd = this.handleEnd.bind(this);
-    this.handleNoMatch = this.handleNoMatch.bind(this);
+    this.handleEndClick = this.handleEndClick.bind(this);
+    this.handleError = this.handleError.bind(this);
     this.handleResult = this.handleResult.bind(this);
-    this.handleSoundEnd = this.handleSoundEnd.bind(this);
-    this.handleSoundStart = this.handleSoundStart.bind(this);
-    this.handleSpeechEnd = this.handleSpeechEnd.bind(this);
     this.handleSpeechStart = this.handleSpeechStart.bind(this);
-    this.handleStart = this.handleStart.bind(this);
-
-    this.checkPartialSupport = memoize(speechRecognition =>
-      speechRecognition ? 'probably' : false
-    );
+    this.handleStartClick = this.handleStartClick.bind(this);
 
     this.createGrammar = memoize((speechGrammarList, grammar) => {
       const grammarList = new speechGrammarList();
@@ -59,7 +40,8 @@ export default class DictateButton extends React.Component {
     this.createRecognition = memoize(speechRecognition => new speechRecognition());
 
     this.state = {
-      support: this.checkPartialSupport(props.speechRecognition)
+      phase: '',
+      supported: !!props.speechRecognition
     };
   }
 
@@ -71,40 +53,74 @@ export default class DictateButton extends React.Component {
     }
   }
 
-  handleAudioEnd() {
-    console.log('audio end');
+  componentWillUnmount() {
+    this.recognition && this.recognition.abort();
   }
 
   handleAudioStart() {
-    console.log('audio start');
+    this.setState(() => ({ phase: 'listening' }));
+    this.props.onProgress && this.props.onProgress([], { isFinal: false });
+  }
 
-    if (this.state.support !== true) {
-      this.setState(() => ({
-        support: true
-      }));
+  handleEnd() {
+    this.setState(() => ({ phase: null }));
+    this.props.onEnd && this.props.onEnd();
+  }
+
+  handleEndClick() {
+    this.recognition && this.recognition.abort();
+  }
+
+  handleError(event) {
+    if (event.error !== 'aborted') {
+      this.setState(() => ({ supported: false }));
+    }
+
+    this.props.onError && this.props.onError(event);
+  }
+
+  handleResult({ results }) {
+    const { props } = this;
+    const lastResult = results[results.length - 1];
+
+    if (results.length) {
+      if (lastResult.isFinal) {
+        const [{ confidence, transcript: text }] = lastResult;
+
+        props.onResult({ confidence, text });
+      } else {
+        results.length && props.onProgress(
+          [].map.call(results, ([{ confidence, transcript: text }]) => ({
+            confidence,
+            text
+          })),
+          {
+            isFinal: results.isFinal
+          }
+        );
+      }
     }
   }
 
-  handleClick() {
+  handleSpeechStart() {
+    this.state.supported !== true && this.setState(() => ({ supported: true }));
+  }
+
+  handleStartClick() {
     this.recognition && this.recognition.stop();
 
     const { props } = this;
     const recognition = this.recognition = this.createRecognition(props.speechRecognition);
 
+    recognition.continuous = props.continuous;
     recognition.grammars = this.createGrammar(props.speechGrammarList, props.grammar);
-    recognition.onaudioend = this.handleAudioEnd;
+    recognition.interimResults = !!props.onProgress;
+    recognition.lang = props.lang;
     recognition.onaudiostart = this.handleAudioStart;
     recognition.onend = this.handleEnd;
     recognition.onerror = this.handleError;
-    recognition.onnomatch = this.handleNoMatch;
     recognition.onresult = this.handleResult;
-    recognition.onsoundend = this.handleSoundEnd;
-    recognition.onsoundstart = this.handleSoundStart;
-    recognition.onspeechend = this.handleSpeechEnd;
     recognition.onspeechstart = this.handleSpeechStart;
-    recognition.onstart = this.handleStart;
-    recognition.lang = props.lang;
-    recognition.interimResults = !!props.onProgress;
 
     try {
       recognition.start();
@@ -112,62 +128,25 @@ export default class DictateButton extends React.Component {
       console.error(err);
 
       // TODO: Check if error is thrown by Safari due to non-user-event
-      this.setState(() => ({ support: false }));
+      this.setState(() => ({ supported: false }));
     }
-  }
 
-  handleEnd() {
-    console.log('end');
-  }
+    this.setState(() => ({ phase: 'starting' }));
 
-  handleError(event) {
-    console.log(event);
-  }
-
-  handleNoMatch() {
-    console.log('no match');
-    props.onChange();
-  }
-
-  handleResult({ results }) {
-    const { props } = this;
-    const lastResult = results[results.length - 1];
-
-    console.log('result');
-    console.log(results);
-
-    props.onChange(lastResult[0]);
-  }
-
-  handleSoundEnd() {
-    console.log('sound end');
-  }
-
-  handleSoundStart() {
-    console.log('sound start');
-  }
-
-  handleSpeechEnd() {
-    console.log('speech end');
-  }
-
-  handleSpeechStart() {
-    console.log('speech start');
-  }
-
-  handleStart() {
-    console.log('start');
+    props.onStart && props.onStart();
   }
 
   render() {
     const { props, state } = this;
-    const support = this.checkPartialSupport(props.speechRecognition, props.speechRecognitionEvent);
 
     return (
       <button
         className={ props.className }
-        disabled={ state.support === false }
-        onClick={ this.handleClick }
+        disabled={
+          state.supported === false
+          || state.phase === 'starting'
+        }
+        onClick={ state.phase ? this.handleEndClick : this.handleStartClick }
       >
         { props.children }
       </button>
@@ -176,6 +155,7 @@ export default class DictateButton extends React.Component {
 }
 
 DictateButton.defaultProps = {
+  continuous: false,
   grammar: '',
   lang: 'en-US',
   speechGrammarList: prefix('SpeechGrammarList'),
@@ -183,10 +163,14 @@ DictateButton.defaultProps = {
 };
 
 DictateButton.propTypes = {
+  continuous: PropTypes.bool,
   grammar: PropTypes.string,
   lang: PropTypes.string,
-  onChange: PropTypes.func,
+  onEnd: PropTypes.func,
+  onError: PropTypes.func,
   onProgress: PropTypes.func,
+  onResult: PropTypes.func,
+  onStart: PropTypes.func,
   speechGrammarList: PropTypes.any,
   speechRecognition: PropTypes.any
 };

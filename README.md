@@ -19,6 +19,15 @@ Reasons why we need to build our own component, instead of using [existing packa
    * Enable speech recognition on unsupported browsers by bridging it with WebRTC and cloud-based service
 * Support grammar list (speech priming)
 
+## Naming
+
+We name it "dictate button" instead of "web speech button" or "speech recognition button" because:
+
+* Hide the complexity of Web Speech events because we only want to focus on dictation experience
+   * Differences between `onstart`, `onaudiostart`, `onsoundstart`, `onspeechstart`
+* "Web Speech" could means speech synthesis, which is out of scope for this package
+* "Speech Recognition" could means we will expose what Web Speech API has
+
 # How to use
 
 ```jsx

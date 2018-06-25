@@ -1,24 +1,44 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
 
-import MyComponent from 'component';
+import DictateButton from 'component';
 
-class App extends Component {
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleProgress = this.handleProgress.bind(this);
+
+    this.state = {};
+  }
+
+  handleChange(text) {
+    this.setState(() => ({ text }));
+  }
+
+  handleProgress() {
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-        <MyComponent />
+      <div>
+        <DictateButton
+          className="my-dictate-button"
+          grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+          onChange={ this.handleChange }
+          onProgress={ this.handleProgress }
+        >
+          Click here to start dictation
+        </DictateButton>
+        {
+          this.state.text ?
+            <p>
+              { this.state.text }
+            </p>
+          :
+            <p>&lt;No dictation done yet&gt;</p>
+        }
       </div>
     );
   }
 }
-
-export default App;

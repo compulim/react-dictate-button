@@ -110,8 +110,6 @@ For example,
 
 Morphing can be done thru [React.Context](https://reactjs.org/docs/context.html). In short, you can build your own component, without worrying the [code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js) and [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js).
 
-Sample code of a simple dictation textbox can be found [here](packages/playground/DictationTextbox.js).
-
 ## Checkbox version
 
 In addition to `<button>`, we also ship `<input type="checkbox">` out of the box. The checkbox version is better suited for toggle button scenario and web accessibility. You can use the following code for the checkbox version.
@@ -129,6 +127,10 @@ export default () =>
     Start/stop
   </DictateCheckbox>
 ```
+
+## Textbox with dictate button
+
+We also provide a "textbox with dictate button" version. But instead of shipping a full-fledged control, we make it a minimally-styled control so you can start copying the code and customize it in your own project. The sample code can be found at [DictationTextbox.js](packages/playground/DictationTextbox.js).
 
 # Design considersations
 

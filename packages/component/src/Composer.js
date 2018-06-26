@@ -5,6 +5,12 @@ import React from 'react';
 import Context from './Context';
 import prefix from './prefix';
 
+function chainListener(...listeners) {
+  return function () {
+    listeners.forEach(listener => listener.apply(this, arguments))
+  };
+}
+
 export default class Composer extends React.Component {
   constructor(props) {
     super(props);
@@ -22,6 +28,7 @@ export default class Composer extends React.Component {
     this.handleAudioStart = this.handleAudioStart.bind(this);
     this.handleEnd = this.handleEnd.bind(this);
     this.handleError = this.handleError.bind(this);
+    this.handleRawEvent = this.handleRawEvent.bind(this);
     this.handleResult = this.handleResult.bind(this);
     this.handleStart = this.handleStart.bind(this);
 
@@ -29,9 +36,9 @@ export default class Composer extends React.Component {
       abort: () => {
         this.state.recognition && this.state.recognition.abort();
       },
-      isFinal: false,
+      // isFinal: false,
       readyState: 0,
-      results: null,
+      // results: null,
       start: () => {
         const { props } = this;
 
@@ -42,11 +49,17 @@ export default class Composer extends React.Component {
         recognition.grammars = this.createGrammarList(props.speechGrammarList, props.grammar);
         recognition.lang = props.lang;
         recognition.interimResults = true;
-        recognition.onaudiostart = this.handleAudioStart;
-        recognition.onend = this.handleEnd;
-        recognition.onerror = this.handleError;
-        recognition.onresult = this.handleResult;
-        recognition.onstart = this.handleStart;
+        recognition.onaudioend = this.handleRawEvent;
+        recognition.onaudiostart = chainListener(this.handleAudioStart, this.handleRawEvent);
+        recognition.onend = chainListener(this.handleEnd, this.handleRawEvent);
+        recognition.onerror = chainListener(this.handleError, this.handleRawEvent);
+        recognition.onnomatch= this.handleRawEvent;
+        recognition.onresult = chainListener(this.handleResult, this.handleRawEvent);
+        recognition.onsoundend = this.handleRawEvent;
+        recognition.onsoundstart = this.handleRawEvent;
+        recognition.onspeechend = this.handleRawEvent;
+        recognition.onspeechstart = this.handleRawEvent;
+        recognition.onstart = chainListener(this.handleStart, this.handleRawEvent);
         recognition.start();
 
         this.setState(() => ({ recognition }));
@@ -66,6 +79,8 @@ export default class Composer extends React.Component {
     if (nextProps.disabled !== this.props.disabled) {
       this.setState(state => {
         state.recognition && state.recognition.abort();
+
+        return { readyState: 0 };
       });
     }
   }
@@ -79,7 +94,7 @@ export default class Composer extends React.Component {
   handleAudioStart() {
     this.setState(() => ({
       readyState: 2,
-      results: []
+      // results: []
     }));
 
     this.props.onProgress && this.props.onProgress([]);
@@ -90,8 +105,17 @@ export default class Composer extends React.Component {
   }
 
   handleError(event) {
-    this.setState(() => ({ readyState: 0 }));
+    this.setState(() => ({
+      // isFinal: false,
+      readyState: 0,
+      // results: null
+    }));
+
     this.props.onError && this.props.onError(event);
+  }
+
+  handleRawEvent(event) {
+    this.props.onRawEvent && this.props.onRawEvent(event);
   }
 
   handleResult(event) {
@@ -104,7 +128,7 @@ export default class Composer extends React.Component {
         transcript: firstAlt.transcript
       }));
 
-      this.setState(() => ({ results }));
+      // this.setState(() => ({ results }));
 
       const [first] = rawResults;
 
@@ -114,24 +138,23 @@ export default class Composer extends React.Component {
         props.onProgress && props.onProgress(results);
       }
     }
-
-    props.onRawResult && props.onRawResult(event);
   }
 
   handleStart() {
     this.setState(() => ({
       readyState: 1,
-      results: null
+      // results: null
     }));
   }
 
   render() {
     const { props, state } = this;
+    const { children } = props;
 
     return (
       <Context.Provider value={ state }>
         <Context.Consumer>
-          { context => props.children(context) }
+          { context => typeof children === 'function' ? children(context) : children }
         </Context.Consumer>
       </Context.Provider>
     );
@@ -148,7 +171,7 @@ Composer.propTypes = {
   onDictate: PropTypes.func,
   onError: PropTypes.func,
   onProgress: PropTypes.func,
-  onRawResult: PropTypes.func,
+  onRawEvent: PropTypes.func,
   speechGrammarList: PropTypes.any.isRequired,
   speechRecognition: PropTypes.any.isRequired
 };

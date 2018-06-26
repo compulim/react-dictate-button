@@ -17,8 +17,9 @@ Reasons why we need to build our own component, instead of using [existing packa
 * Some browsers required speech recognition to be triggered by a user event (button click)
 * Bring your own Web Speech API
    * Enable speech recognition on unsupported browsers by bridging it with WebRTC and cloud-based service
-* Support grammar list thru JSGF (speech priming)
+* Support grammar list thru [JSGF](https://www.w3.org/TR/jsgf/) (a.k.a. speech priming)
 * Ability to interrupt dictation
+* Ability to morph into elements other than `<button>`
 
 ## Naming
 
@@ -37,19 +38,11 @@ import DictateButton from 'react-dictate-button';
 export default () =>
   <DictateButton
     className="my-dictate-button"
-    disabled={ false }
     grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
     onDictate={ this.handleDictate }
     onProgress={ this.handleProgress }
-    speechGrammarList={ window.SpeechGrammarList || window.webkitSpeechGrammarList }
-    speechRecognition={ window.SpeechRecognition || window.webkitSpeechRecognition }
   >
-    {
-      readyState =>
-        readyState === 0 ? 'Start dictation' :
-        readyState === 1 ? 'Starting...' :
-        'Stop dictation'
-    }
+    Start/stop
   </DictateButton>
 ```
 
@@ -59,14 +52,16 @@ export default () =>
 | - | - | - | - |
 | `className` | `string` | | Class name to apply to the button |
 | `disabled` | `boolean` | `false` | `true` to disable the dictation button and abort active recognition, otherwise, `false` |
-| `grammar` | `string` | | Grammar list in JSGF format |
+| `grammar` | `string` | | Grammar list in [JSGF format](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList/addFromString) |
 | `lang` | `string` | | Language to recognize, for example, `'en-us'` |
 | `onDictate` | `function` | | Event callback to fire when dictation is completed, as `({ confidence: number, transcript: number }) => {}` |
 | `onError` | `function` | | Event callback to fire when error has occurred or recognition is aborted, as `(event: SpeechRecognitionEvent) => {}` |
 | `onProgress` | `function` | | Event callback to fire for interim results, as `([{ confidence: number, transcript: number }]) => {}` |
 | `onRawResult` | `function` | | Event callback to fire for handling raw events from `SpeechRecognition.onresult`, as `(event: SpeechRecognitionEvent) => {}` |
-| `speechGrammarList` | `any` | `window.SpeechGrammarList ││ window.webkitSpeechGrammarList` | Bring your own `SpeechGrammarList` |
-| `speechRecognition` | `any` | `window.SpeechRecognition ││ window.webkitSpeechRecognition` | Bring your own `SpeechRecognition` |
+| `speechGrammarList` | `any` | Browser implementation | Bring your own `SpeechGrammarList` |
+| `speechRecognition` | `any` | Browser implementation | Bring your own `SpeechRecognition` |
+
+> Changing `grammar` and `lang` will not effect until the dictation is restarted. You can use `disabled` and `onError({ type === 'aborted' })` to restart a dictation.
 
 ## Function as a child
 
@@ -90,6 +85,10 @@ For example,
   }
 </DictateButton>
 ```
+
+# Road map
+
+Currently, other than maintenance, there is no planned road map. Please feel free to [file](https://github.com/compulim/react-dictate-button/issues) suggestions.
 
 # Contributions
 

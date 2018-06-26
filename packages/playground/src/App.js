@@ -10,7 +10,7 @@ export default class App extends React.Component {
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
-    this.handleRawResult = this.handleRawResult.bind(this);
+    this.handleRawEvent = this.handleRawEvent.bind(this);
 
     this.state = {
       aborted: false,
@@ -33,10 +33,10 @@ export default class App extends React.Component {
   }
 
   handleError(event) {
-    console.error(event);
-
     this.setState(() => ({
-      aborted: false
+      aborted: false,
+      interimResults: null,
+      result: null
     }));
   }
 
@@ -47,9 +47,8 @@ export default class App extends React.Component {
     }));
   }
 
-  handleRawResult({ results, type }) {
-    console.log(type);
-    console.log(results);
+  handleRawEvent(event) {
+    console.log(event.type);
   }
 
   render() {
@@ -65,7 +64,7 @@ export default class App extends React.Component {
           onDictate={ this.handleDictate }
           onError={ this.handleError }
           onProgress={ this.handleProgress }
-          onRawResult={ this.handleRawResult }
+          onRawEvent={ this.handleRawEvent }
         >
           { readyState =>
               readyState === 0 ? 'Start dictation' :

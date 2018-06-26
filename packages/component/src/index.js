@@ -3,7 +3,7 @@ import React from 'react';
 
 import Composer from './Composer';
 
-const DictateButtonWithComposer = props =>
+const DictateButton = props =>
   <Composer
     disabled={ props.disabled }
     grammar={ props.grammar }
@@ -11,7 +11,7 @@ const DictateButtonWithComposer = props =>
     onDictate={ props.onDictate }
     onError={ props.onError }
     onProgress={ props.onProgress }
-    onRawResult={ props.onRawResult }
+    onRawEvent={ props.onRawEvent }
     speechGrammarList={ props.speechGrammarList }
     speechRecognition={ props.speechRecognition }
   >
@@ -31,7 +31,7 @@ const DictateButtonWithComposer = props =>
     }
   </Composer>
 
-DictateButtonWithComposer.propTypes = {
+DictateButton.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   grammar: PropTypes.string,
@@ -39,9 +39,9 @@ DictateButtonWithComposer.propTypes = {
   onDictate: PropTypes.func,
   onError: PropTypes.func,
   onProgress: PropTypes.func,
-  onRawResult: PropTypes.func,
+  onRawEvent: PropTypes.func,
   speechGrammarList: PropTypes.any,
   speechRecognition: PropTypes.any
 };
 
-export default DictateButtonWithComposer
+export default DictateButton

@@ -3,11 +3,11 @@ import React from 'react';
 
 import Composer from './Composer';
 
-export default class DictateButton extends React.Component {
+export default class DictateCheckbox extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleClick = this.handleClick.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
 
@@ -16,8 +16,8 @@ export default class DictateButton extends React.Component {
     };
   }
 
-  handleClick() {
-    this.setState(({ started }) => ({ started: !started }));
+  handleChange({ target: { checked: started } }) {
+    this.setState(() => ({ started }));
   }
 
   handleDictate(event) {
@@ -46,30 +46,33 @@ export default class DictateButton extends React.Component {
         started={ state.started && !props.disabled }
       >
         { context =>
-          <button
-            className={ props.className }
-            disabled={
-              context.readyState === 1
-              || context.readyState === 3
-              || !context.supported
-              || props.disabled
-            }
-            onClick={ this.handleClick }
-          >
+          <label>
+            <input
+              checked={ state.started }
+              className={ props.className }
+              disabled={
+                context.readyState === 1
+                || context.readyState === 3
+                || !context.supported
+                || props.disabled
+              }
+              onChange={ this.handleChange }
+              type="checkbox"
+            />
             {
               typeof props.children === 'function' ?
                 props.children(context.readyState)
               :
                 props.children
             }
-          </button>
+          </label>
         }
       </Composer>
     );
   }
 }
 
-DictateButton.propTypes = {
+DictateCheckbox.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
   grammar: PropTypes.string,

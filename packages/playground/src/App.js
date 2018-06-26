@@ -1,31 +1,24 @@
 import React from 'react';
 
-import DictateButton from 'component';
+// import DictateButton from 'component';
+import DictateButton, { DictateCheckbox } from 'component';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleAbortClick = this.handleAbortClick.bind(this);
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
     this.handleRawEvent = this.handleRawEvent.bind(this);
 
     this.state = {
-      aborted: false,
       interim: null,
       result: null
     };
   }
 
-  handleAbortClick() {
-    this.setState(() => ({
-      aborted: true
-    }));
-  }
-
-  handleDictate({ confidence, transcript }) {
+  handleDictate({ confidence, transcript } = {}) {
     this.setState(() => ({
       interimResults: null,
       result: { confidence, transcript }
@@ -34,10 +27,9 @@ export default class App extends React.Component {
 
   handleError(event) {
     console.error(event);
-    alert(event.error);
+    // alert(event.error);
 
     this.setState(() => ({
-      aborted: false,
       interimResults: null,
       result: null
     }));
@@ -61,7 +53,6 @@ export default class App extends React.Component {
       <div>
         <DictateButton
           className="my-dictate-button"
-          disabled={ state.aborted }
           grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
           lang="en-US"
           onDictate={ this.handleDictate }
@@ -75,7 +66,21 @@ export default class App extends React.Component {
               'Stop dictation'
           }
         </DictateButton>
-        <button onClick={ this.handleAbortClick }>Abort</button>
+        <DictateCheckbox
+          className="my-dictate-button"
+          grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+          lang="en-US"
+          onDictate={ this.handleDictate }
+          onError={ this.handleError }
+          onProgress={ this.handleProgress }
+          onRawEvent={ this.handleRawEvent }
+        >
+          { readyState =>
+              readyState === 0 ? 'Start dictation' :
+              readyState === 1 ? 'Starting...' :
+              'Stop dictation'
+          }
+        </DictateCheckbox>
         {
           state.result ?
             <p>{ state.result.transcript }</p>

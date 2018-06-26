@@ -23,8 +23,9 @@ export default class Composer extends React.Component {
       return grammarList;
     });
 
-    this.createRecognition = memoize(speechRecognition => new speechRecognition());
+    this.createRecognition = memoize(speechRecognition => speechRecognition && new speechRecognition());
 
+    this.handleAudioEnd = this.handleAudioEnd.bind(this);
     this.handleAudioStart = this.handleAudioStart.bind(this);
     this.handleEnd = this.handleEnd.bind(this);
     this.handleError = this.handleError.bind(this);
@@ -33,92 +34,66 @@ export default class Composer extends React.Component {
     this.handleStart = this.handleStart.bind(this);
 
     this.state = {
-      abort: () => {
-        this.state.recognition && this.state.recognition.abort();
-      },
       readyState: 0,
-      start: () => {
-        const { props } = this;
-
-        this.state.recognition && this.state.recognition.abort();
-
-        if (!this.state.supported) {
-          throw new Error('Speech recognition is not supported');
-        }
-
-        const recognition = this.createRecognition(props.speechRecognition);
-
-        recognition.grammars = this.createGrammarList(props.speechGrammarList, props.grammar);
-        recognition.lang = props.lang;
-        recognition.interimResults = true;
-        recognition.onaudioend = this.handleRawEvent;
-        recognition.onaudiostart = chainListener(this.handleAudioStart, this.handleRawEvent);
-        recognition.onend = chainListener(this.handleEnd, this.handleRawEvent);
-        recognition.onerror = chainListener(this.handleError, this.handleRawEvent);
-        recognition.onnomatch= this.handleRawEvent;
-        recognition.onresult = chainListener(this.handleResult, this.handleRawEvent);
-        recognition.onsoundend = this.handleRawEvent;
-        recognition.onsoundstart = this.handleRawEvent;
-        recognition.onspeechend = this.handleRawEvent;
-        recognition.onspeechstart = this.handleRawEvent;
-        recognition.onstart = chainListener(this.handleStart, this.handleRawEvent);
-        recognition.start();
-
-        this.setState(() => ({ recognition }));
-      },
       supported: !!props.speechRecognition
     };
   }
 
   componentWillReceiveProps(nextProps) {
+    let { recognition } = this;
+    let nextState;
+
     if (nextProps.speechRecognition !== this.props.speechRecognition) {
-      this.setState(state => {
-        state.recognition && state.recognition.abort();
+      recognition && recognition.abort();
+      recognition = this.recognition = null;
 
-        return {
-          recognition: this.createRecognition(nextProps.speechRecognition),
-          supported: !!nextProps.speechRecognition
-        };
-      });
+      nextState = { ...nextState, supported: !!nextProps.speechRecognition };
     }
 
-    if (nextProps.disabled !== this.props.disabled) {
-      this.setState(state => {
-        state.recognition && state.recognition.abort();
-
-        return { readyState: 0 };
-      });
+    if (nextProps.started !== this.props.started) {
+      if (nextProps.started) {
+        this.start(nextProps);
+      } else {
+        recognition && recognition.abort();
+      }
     }
+
+    nextState && this.setState(() => nextState);
   }
 
   componentWillUnmount() {
-    const { recognition } = this.state;
+    this.recognition && this.recognition.abort();
+  }
 
-    recognition && recognition.abort();
+  handleAudioEnd() {
+    this.setState(() => ({ readyState: 3 }));
   }
 
   handleAudioStart() {
     this.setState(() => ({ readyState: 2 }));
 
+    // Web Speech API does not emit "result" when nothing is heard, and Chrome does not emit "nomatch" event.
+    // Because we emitted onProgress, we should emit "dictate" if not error, so they works in pair.
+    this.emitDictateOnEnd = true;
     this.props.onProgress && this.props.onProgress([]);
   }
 
   handleEnd() {
+    if (this.emitDictateOnEnd) {
+      this.props.onDictate && this.props.onDictate();
+    }
+
     this.setState(() => ({ readyState: 0 }));
   }
 
   handleError(event) {
-    this.setState(state => {
-      if (event.error === 'not-allowed') {
-        return {
-          readyState: 0,
-          supported: false
-        };
-      } else {
-        return { readyState: 0 };
-      }
-    });
+    this.setState(() => ({
+      readyState: 0,
+      ...(event.error === 'not-allowed' && { supported: false })
+    }));
 
+    // Error out, no need to emit "dictate"
+    this.emitDictateOnEnd = false;
     this.props.onError && this.props.onError(event);
   }
 
@@ -139,6 +114,7 @@ export default class Composer extends React.Component {
       const [first] = rawResults;
 
       if (first.isFinal) {
+        this.emitDictateOnEnd = false;
         props.onDictate && props.onDictate(results[0]);
       } else {
         props.onProgress && props.onProgress(results);
@@ -148,6 +124,32 @@ export default class Composer extends React.Component {
 
   handleStart() {
     this.setState(() => ({ readyState: 1 }));
+  }
+
+  start(props) {
+    this.recognition && this.recognition.abort();
+
+    if (!this.state.supported) {
+      throw new Error('Speech recognition is not supported');
+    }
+
+    const recognition = this.recognition = this.createRecognition(props.speechRecognition);
+
+    recognition.grammars = this.createGrammarList(props.speechGrammarList, props.grammar);
+    recognition.lang = props.lang;
+    recognition.interimResults = true;
+    recognition.onaudioend = chainListener(this.handleAudioEnd, this.handleRawEvent);
+    recognition.onaudiostart = chainListener(this.handleAudioStart, this.handleRawEvent);
+    recognition.onend = chainListener(this.handleEnd, this.handleRawEvent);
+    recognition.onerror = chainListener(this.handleError, this.handleRawEvent);
+    recognition.onnomatch= this.handleRawEvent;
+    recognition.onresult = chainListener(this.handleResult, this.handleRawEvent);
+    recognition.onsoundend = this.handleRawEvent;
+    recognition.onsoundstart = this.handleRawEvent;
+    recognition.onspeechend = this.handleRawEvent;
+    recognition.onspeechstart = this.handleRawEvent;
+    recognition.onstart = chainListener(this.handleStart, this.handleRawEvent);
+    recognition.start();
   }
 
   render() {

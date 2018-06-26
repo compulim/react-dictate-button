@@ -158,6 +158,7 @@ Please feel free to [file](https://github.com/compulim/react-dictate-button/issu
 * Instead of putting all logic inside [`Composer.js`](packages/component/src/Composer.js), how about
    1. Write an adapter to convert `SpeechRecognition` into another object with simpler event model and `readyState`
    2. Rewrite `Composer.js` to bridge the new `SimpleSpeechRecognition` model and React Context
+   3. Expose `SimpleSpeechRecognition` so people not on React can still benefit from the simpler event model
 
 # Contributions
 

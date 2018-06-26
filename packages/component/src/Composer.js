@@ -75,7 +75,7 @@ export default class Composer extends React.Component {
     // Web Speech API does not emit "result" when nothing is heard, and Chrome does not emit "nomatch" event.
     // Because we emitted onProgress, we should emit "dictate" if not error, so they works in pair.
     this.emitDictateOnEnd = true;
-    this.props.onProgress && this.props.onProgress([]);
+    this.props.onProgress && this.props.onProgress();
   }
 
   handleEnd() {

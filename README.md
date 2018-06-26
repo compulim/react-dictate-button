@@ -62,25 +62,25 @@ export default () =>
 
 ### Event lifecycle
 
-One of the most important design is to make sure events are easy to understand and deterministic. Thumb of rule is to make sure `onProgress` will lead to either `onDictate` or `onError`. Here are some samples of event firing sequence (tested on Chrome 67):
+One of the design aspect is to make sure events are easy to understand and deterministic. Thumb of rule is to make sure `onProgress` will lead to either `onDictate` or `onError`. Here are some samples of event firing sequence (tested on Chrome 67):
 
 * Happy path: speech is recognized
-   * `onProgress([])`
-   * `onProgress([...])`
-   * `onDictate(...)`
+   1. `onProgress()`
+   2. `onProgress([...])`
+   3. `onDictate(...)`
 * Heard some sound, but nothing can be recognized
-   * `onProgress([])`
-   * `onDictate()`
-* Nothing is heard (audio is muted)
-   * `onProgress([])`
-   * `onError({ error: 'no-speech' })`
+   1. `onProgress()`
+   2. `onDictate()`
+* Nothing is heard (audio device available but muted)
+   1. `onProgress()`
+   2. `onError({ error: 'no-speech' })`
 * Recognition aborted
-   * `onProgress([])`
-   * `onProgress([...])`
-   * While speech is getting recognized, `props.disabled` is set to `false`
-   * `onError({ error: 'aborted' })`
+   1. `onProgress()`
+   2. `onProgress([...])`
+   3. While speech is getting recognized, `props.disabled` is set to `false`
+   4. `onError({ error: 'aborted' })`
 * Not authorized to use speech or no audio device is available
-   * `onError({ error: 'not-allowed' })`
+   1. `onError({ error: 'not-allowed' })`
 
 ## Function as a child
 

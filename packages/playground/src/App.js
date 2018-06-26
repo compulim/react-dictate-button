@@ -24,7 +24,13 @@ export default class App extends React.Component {
     this.setState(() => ({ customValue }));
   }
 
-  handleDictate({ confidence, transcript } = {}) {
+  handleDictate(event) {
+    const { result } = event;
+    const { confidence, transcript } = result || {};
+
+    console.log(`dictate`);
+    console.log(event);
+
     this.setState(() => ({
       interimResults: null,
       result: { confidence, transcript }
@@ -32,6 +38,7 @@ export default class App extends React.Component {
   }
 
   handleError(event) {
+    console.log('error');
     console.error(event);
     // alert(event.error);
 
@@ -41,15 +48,20 @@ export default class App extends React.Component {
     }));
   }
 
-  handleProgress(interimResults) {
+  handleProgress(event) {
+    console.log(`progress`);
+    console.log(event);
+
+    const { results: interimResults } = event;
+
     this.setState(() => ({
       interimResults,
       result: null
     }));
   }
 
-  handleRawEvent(event) {
-    console.log(event.type);
+  handleRawEvent({ type }) {
+    console.log(`raw event: ${ type }`);
   }
 
   render() {

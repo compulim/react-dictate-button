@@ -27,7 +27,9 @@ export default class DictationTextbox extends React.Component {
     this.setState(({ started }) => ({ started: !started }));
   }
 
-  handleDictate({ transcript: value }) {
+  handleDictate({ result }) {
+    const { transcript: value } = result || {};
+
     this.setState(() => ({
       interim: null,
       listening: false,
@@ -47,9 +49,9 @@ export default class DictationTextbox extends React.Component {
     this.props.onError && this.props.onError(event);
   }
 
-  handleProgress(results = []) {
+  handleProgress({ results }) {
     this.setState(() => ({
-      interim: results.map(result => result.transcript.trim()).join(' '),
+      interim: (results || []).map(result => result.transcript.trim()).join(' '),
       listening: true
     }));
   }

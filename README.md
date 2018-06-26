@@ -20,9 +20,11 @@ Reasons why we need to build our own component, instead of using [existing packa
    * Enable speech recognition on unsupported browsers by bridging it with WebRTC and cloud-based service
 * Support grammar list thru [JSGF](https://www.w3.org/TR/jsgf/) (a.k.a. speech priming)
 * Ability to interrupt dictation
-* Ability to morph into elements other than `<button>`
+* Ability to [morph into other elements](#customization-thru-morphing)
 
 # How to use
+
+First, install our production version by `npm install react-dictate-button`. Or our development version by `npm install react-dictate-button@master`.
 
 ```jsx
 import DictateButton from 'react-dictate-button';
@@ -43,40 +45,40 @@ export default () =>
 | Name | Type | Default | Description |
 | - | - | - | - |
 | `className` | `string` | | Class name to apply to the button |
-| `disabled` | `boolean` | `false` | `true` to disable the dictation button and abort active recognition, otherwise, `false` |
+| `disabled` | `boolean` | `false` | `true` to interrupt and disable dictation, otherwise, `false` |
 | `grammar` | `string` | | Grammar list in [JSGF format](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList/addFromString) |
-| `lang` | `string` | | Language to recognize, for example, `'en-us'` |
+| `lang` | `string` | | Language to recognize, for example, `'en-US'` |
 | `speechGrammarList` | `any` | Browser implementation | Bring your own `SpeechGrammarList` |
 | `speechRecognition` | `any` | Browser implementation | Bring your own `SpeechRecognition` |
 
-> `grammar` and `lang` will not effect until next dictation.
+> Note: change of `grammar` and `lang` will not take effect until next dictation.
 
 ## Events
 
 | Name | Signature | Description |
 | - | - | - |
-| `onDictate` | `({ confidence: number, transcript: number }) => {}` | Event callback to fire when dictation has been completed |
+| `onDictate` | `({ result: { confidence: number, transcript: number } }) => {}` | Event callback to fire when dictation has been completed |
 | `onError` | `(event: SpeechRecognitionEvent) => {}` | Event callback to fire when error has occurred or recognition is aborted, [see below](#event-lifecycle) |
-| `onProgress` | `([{ confidence: number, transcript: number }]) => {}` | Event callback to fire for interim results, the array contains every segments of speech |
-| `onRawResult` | `(event: SpeechRecognitionEvent) => {}` | Event callback to fire for handling raw events from `SpeechRecognition.onresult` |
+| `onProgress` | `({ results: [{ confidence: number, transcript: number }] }) => {}` | Event callback to fire for interim results, the array contains every segments of recognized text |
+| `onRawEvent` | `(event: SpeechRecognitionEvent) => {}` | Event callback to fire for handling raw events from [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent) |
 
 ### Event lifecycle
 
 One of the design aspect is to make sure events are easy to understand and deterministic. Thumb of rule is to make sure `onProgress` will lead to either `onDictate` or `onError`. Here are some samples of event firing sequence (tested on Chrome 67):
 
 * Happy path: speech is recognized
-   1. `onProgress()`
-   2. `onProgress([...])`
-   3. `onDictate(...)`
+   1. `onProgress({})` (just started, therefore, no `results`)
+   2. `onProgress({ results: [] })`
+   3. `onDictate({ result: ... })`
 * Heard some sound, but nothing can be recognized
-   1. `onProgress()`
-   2. `onDictate()`
+   1. `onProgress({})`
+   2. `onDictate({})` (nothing is recognized, therefore, no `result`)
 * Nothing is heard (audio device available but muted)
-   1. `onProgress()`
+   1. `onProgress({})`
    2. `onError({ error: 'no-speech' })`
 * Recognition aborted
-   1. `onProgress()`
-   2. `onProgress([...])`
+   1. `onProgress({})`
+   2. `onProgress({ results: [] })`
    3. While speech is getting recognized, `props.disabled` is set to `false`
    4. `onError({ error: 'aborted' })`
 * Not authorized to use speech or no audio device is available
@@ -108,7 +110,7 @@ For example,
 
 # Customization thru morphing
 
-Morphing can be done thru [React.Context](https://reactjs.org/docs/context.html). In short, you can build your own component, without worrying the [code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js) and [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js).
+Morphing is done thru [React.Context](https://reactjs.org/docs/context.html). In short, you can build your own component by copying our code, without worrying the [code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js), [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js), and [`DictationTextbox.js`](packages/playground/src/DictationTextbox.js).
 
 ## Checkbox version
 
@@ -130,7 +132,7 @@ export default () =>
 
 ## Textbox with dictate button
 
-We also provide a "textbox with dictate button" version. But instead of shipping a full-fledged control, we make it a minimally-styled control so you can start copying the code and customize it in your own project. The sample code can be found at [DictationTextbox.js](packages/playground/DictationTextbox.js).
+We also provide a "textbox with dictate button" version. But instead of shipping a full-fledged control, we make it a minimally-styled control so you can start copying the code and customize it in your own project. The sample code can be found at [DictationTextbox.js](packages/playground/src/DictationTextbox.js).
 
 # Design considersations
 

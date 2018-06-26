@@ -3,9 +3,13 @@
   "version": "0.0.1-0",
   "description": "A button to start dictation using Web Speech API, with an easy to understand event lifecycle.",
   "keywords": [
+    "dictate",
+    "dictation",
     "rtc",
     "speech recognition",
     "speech to text",
+    "voice recognition",
+    "voice",
     "web rtc",
     "web speech",
     "webrtc",

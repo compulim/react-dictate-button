@@ -110,7 +110,11 @@ For example,
 
 Morphing can be done thru [React.Context](https://reactjs.org/docs/context.html). In short, you can build your own component, without worrying the [code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js) and [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js).
 
-In addition to `<button>`, we also ship `<input type="checkbox">` out of the box. You can use the following code for the checkbox version.
+Sample code of a simple dictation textbox can be found [here](packages/playground/DictationTextbox.js).
+
+## Checkbox version
+
+In addition to `<button>`, we also ship `<input type="checkbox">` out of the box. The checkbox version is better suited for toggle button scenario and web accessibility. You can use the following code for the checkbox version.
 
 ```jsx
 import { DictateCheckbox } from 'react-dictate-button';

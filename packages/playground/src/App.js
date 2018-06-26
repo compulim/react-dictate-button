@@ -1,20 +1,27 @@
 import React from 'react';
 
 import DictateButton, { DictateCheckbox } from 'component';
+import DictationTextbox from './DictationTextbox';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
+    this.handleCustomChange = this.handleCustomChange.bind(this);
     this.handleDictate = this.handleDictate.bind(this);
     this.handleError = this.handleError.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
     this.handleRawEvent = this.handleRawEvent.bind(this);
 
     this.state = {
+      customValue: null,
       interim: null,
       result: null
     };
+  }
+
+  handleCustomChange({ value: customValue }) {
+    this.setState(() => ({ customValue }));
   }
 
   handleDictate({ confidence, transcript } = {}) {
@@ -105,6 +112,11 @@ export default class App extends React.Component {
             </p>
           : false
         }
+        <h1>Custom textbox</h1>
+        <DictationTextbox
+          onChange={ this.handleCustomChange }
+          value={ state.customValue }
+        />
       </div>
     );
   }

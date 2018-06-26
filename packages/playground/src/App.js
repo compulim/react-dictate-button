@@ -1,6 +1,5 @@
 import React from 'react';
 
-// import DictateButton from 'component';
 import DictateButton, { DictateCheckbox } from 'component';
 
 export default class App extends React.Component {
@@ -51,36 +50,43 @@ export default class App extends React.Component {
 
     return (
       <div>
-        <DictateButton
-          className="my-dictate-button"
-          grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
-          lang="en-US"
-          onDictate={ this.handleDictate }
-          onError={ this.handleError }
-          onProgress={ this.handleProgress }
-          onRawEvent={ this.handleRawEvent }
-        >
-          { readyState =>
-              readyState === 0 ? 'Start dictation' :
-              readyState === 1 ? 'Starting...' :
-              'Stop dictation'
-          }
-        </DictateButton>
-        <DictateCheckbox
-          className="my-dictate-button"
-          grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
-          lang="en-US"
-          onDictate={ this.handleDictate }
-          onError={ this.handleError }
-          onProgress={ this.handleProgress }
-          onRawEvent={ this.handleRawEvent }
-        >
-          { readyState =>
-              readyState === 0 ? 'Start dictation' :
-              readyState === 1 ? 'Starting...' :
-              'Stop dictation'
-          }
-        </DictateCheckbox>
+        <h1>&lt;DictateButton&gt;</h1>
+        <div>
+          <DictateButton
+            className="my-dictate-button"
+            grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+            lang="en-US"
+            onDictate={ this.handleDictate }
+            onError={ this.handleError }
+            onProgress={ this.handleProgress }
+            onRawEvent={ this.handleRawEvent }
+          >
+            { readyState =>
+                readyState === 0 ? 'Start dictation' :
+                readyState === 1 ? 'Starting...' :
+                'Stop dictation'
+            }
+          </DictateButton>
+        </div>
+        <h1>&lt;DictateCheckbox&gt;</h1>
+        <div>
+          <DictateCheckbox
+            className="my-dictate-button"
+            grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+            lang="en-US"
+            onDictate={ this.handleDictate }
+            onError={ this.handleError }
+            onProgress={ this.handleProgress }
+            onRawEvent={ this.handleRawEvent }
+          >
+            { readyState =>
+                readyState === 0 ? 'Start dictation' :
+                readyState === 1 ? 'Starting...' :
+                'Stop dictation'
+            }
+          </DictateCheckbox>
+        </div>
+        <h1>Result</h1>
         {
           state.result ?
             <p>{ state.result.transcript }</p>

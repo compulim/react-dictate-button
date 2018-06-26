@@ -64,7 +64,7 @@ export default () =>
 
 ### Event lifecycle
 
-One of the design aspect is to make sure events are easy to understand and deterministic. Thumb of rule is to make sure `onProgress` will lead to either `onDictate` or `onError`. Here are some samples of event firing sequence (tested on Chrome 67):
+One of the design aspect is to make sure events are easy to understand and deterministic. First rule of thumb is to make sure `onProgress` will lead to either `onDictate` or `onError`. Here are some samples of event firing sequence (tested on Chrome 67):
 
 * Happy path: speech is recognized
    1. `onProgress({})` (just started, therefore, no `results`)

@@ -80,7 +80,7 @@ export default class App extends React.Component {
             onProgress={ this.handleProgress }
             onRawEvent={ this.handleRawEvent }
           >
-            { readyState =>
+            { ({ readyState }) =>
                 readyState === 0 ? 'Start dictation' :
                 readyState === 1 ? 'Starting...' :
                 'Stop dictation'
@@ -98,7 +98,7 @@ export default class App extends React.Component {
             onProgress={ this.handleProgress }
             onRawEvent={ this.handleRawEvent }
           >
-            { readyState =>
+            { ({ readyState }) =>
                 readyState === 0 ? 'Start dictation' :
                 readyState === 1 ? 'Starting...' :
                 'Stop dictation'

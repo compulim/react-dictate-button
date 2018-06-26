@@ -57,10 +57,10 @@ export default () =>
 
 | Name | Signature | Description |
 | - | - | - |
-| `onDictate` | `({ result: { confidence: number, transcript: number } }) => {}` | Event callback to fire when dictation has been completed |
-| `onError` | `(event: SpeechRecognitionEvent) => {}` | Event callback to fire when error has occurred or recognition is aborted, [see below](#event-lifecycle) |
-| `onProgress` | `({ results: [{ confidence: number, transcript: number }] }) => {}` | Event callback to fire for interim results, the array contains every segments of recognized text |
-| `onRawEvent` | `(event: SpeechRecognitionEvent) => {}` | Event callback to fire for handling raw events from [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent) |
+| `onDictate` | `({ result: { confidence: number, transcript: number } }) => {}` | Emit when dictation is completed |
+| `onError` | `(event: SpeechRecognitionEvent) => {}` | Emit when error has occurred or dictation is interrupted, [see below](#event-lifecycle) |
+| `onProgress` | `({ results: [{ confidence: number, transcript: number }] }) => {}` | Emit for interim results, the array contains every segments of recognized text |
+| `onRawEvent` | `(event: SpeechRecognitionEvent) => {}` | Emit for handling raw events from [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent) |
 
 ### Event lifecycle
 
@@ -100,7 +100,7 @@ For example,
 ```jsx
 <DictateButton>
   {
-    readyState =>
+    ({ readyState }) =>
       readyState === 0 ? 'Start dictation' :
       readyState === 1 ? 'Starting...' :
       'Stop dictation'

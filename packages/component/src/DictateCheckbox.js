@@ -61,7 +61,7 @@ export default class DictateCheckbox extends React.Component {
             />
             {
               typeof props.children === 'function' ?
-                props.children(context.readyState)
+                props.children({ readyState: context.readyState })
               :
                 props.children
             }

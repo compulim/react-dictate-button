@@ -52,18 +52,18 @@ We name it "dictate button" instead of "web speech button" or "speech recognitio
 
 ## Props
 
-| Name | Default | Description |
-| - | - | - |
-| `className` | | Class name to apply to the button |
-| `disabled` | `false` | `true` to disable the dictation button and abort active recognition, otherwise, `false` |
-| `grammar` | | Grammar list in JSGF format |
-| `lang` | | Language to recognize, for example, `'en-us'` |
-| `onDictate` | | Event callback to fire when dictation is completed, with `{ confidence: number, transcript: string }` |
-| `onError` | | Event callback to fire when error has occurred or recognition is aborted |
-| `onProgress` | | Event callback to fire for interim results, with `[{ confidence: number, transcript: string }]` |
-| `onRawResult` | | Event callback to fire for handling raw events from `SpeechRecognition.onresult` |
-| `speechGrammarList` | `window.SpeechGrammarList || window.webkitSpeechGrammarList` | Bring your own `SpeechGrammarList` |
-| `speechRecognition` | `window.SpeechRecognition || window.webkitSpeechRecognition` | Bring your own `SpeechRecognition` |
+| Name | Type | Default | Description |
+| - | - | - | - |
+| `className` | `string` | | Class name to apply to the button |
+| `disabled` | `boolean` | `false` | `true` to disable the dictation button and abort active recognition, otherwise, `false` |
+| `grammar` | `string` | | Grammar list in JSGF format |
+| `lang` | `string` | | Language to recognize, for example, `'en-us'` |
+| `onDictate` | `function` | | Event callback to fire when dictation is completed, as `({ confidence: number, transcript: number }) => {}` |
+| `onError` | `function` | | Event callback to fire when error has occurred or recognition is aborted, as `(event: SpeechRecognitionEvent) => {}` |
+| `onProgress` | `function` | | Event callback to fire for interim results, as `([{ confidence: number, transcript: number }]) => {}` |
+| `onRawResult` | `function` | | Event callback to fire for handling raw events from `SpeechRecognition.onresult`, as `(event: SpeechRecognitionEvent) => {}` |
+| `speechGrammarList` | `any` | `window.SpeechGrammarList ││ window.webkitSpeechGrammarList` | Bring your own `SpeechGrammarList` |
+| `speechRecognition` | `any` | `window.SpeechRecognition ││ window.webkitSpeechRecognition` | Bring your own `SpeechRecognition` |
 
 ## Children as a function
 
@@ -71,9 +71,9 @@ Instead of passing child elements, you can pass a `function (readyState)` to ren
 
 | Ready state | Description |
 | - | - |
-| 0 | Not started |
-| 1 | Starting recognition engine, dictation is not ready |
-| 2 | Recognizing |
+| `0` | Not started |
+| `1` | Starting recognition engine, dictation is not ready |
+| `2` | Recognizing |
 
 # Contributions
 

@@ -155,6 +155,9 @@ Please feel free to [file](https://github.com/compulim/react-dictate-button/issu
 
 * While `readyState` is 1 or 3 (transitioning), the underlying speech engine cannot be started/stopped until the state transition is complete
    * Need rework on the state management
+* Instead of putting all logic inside [`Composer.js`](packages/component/src/Composer.js), how about
+   1. Write an adapter to convert `SpeechRecognition` into another object with simpler event model and `readyState`
+   2. Rewrite `Composer.js` to bridge the new `SimpleSpeechRecognition` model and React Context
 
 # Contributions
 

@@ -149,7 +149,7 @@ We name it "dictate button" instead of "web speech button" or "speech recognitio
 * "Web Speech" could means speech synthesis, which is out of scope for this package
 * "Speech Recognition" could means we will expose Web Speech API as-is, which we want to hide details and make it straightforward for dictation scenario
 
-# Road map
+# Roadmap
 
 Please feel free to [file](https://github.com/compulim/react-dictate-button/issues) suggestions.
 

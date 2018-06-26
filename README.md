@@ -79,7 +79,7 @@ One of the design aspect is to make sure events are easy to understand and deter
 * Recognition aborted
    1. `onProgress({})`
    2. `onProgress({ results: [] })`
-   3. While speech is getting recognized, `props.disabled` is set to `false`
+   3. While speech is getting recognized, set `props.disabled` to `false`, interrupting dictation
    4. `onError({ error: 'aborted' })`
 * Not authorized to use speech or no audio device is available
    1. `onError({ error: 'not-allowed' })`
@@ -110,7 +110,7 @@ For example,
 
 # Customization thru morphing
 
-Morphing is done thru [React.Context](https://reactjs.org/docs/context.html). In short, you can build your own component by copying our code, without worrying the [code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js), [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js), and [`DictationTextbox.js`](packages/playground/src/DictationTextbox.js).
+Morphing is done thru [React.Context](https://reactjs.org/docs/context.html). In short, you can build your own component by copying our layout code, without messing around the [logic code behind the scene](packages/component/src/Composer.js). You can also easily bump version without breaking your layout. For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js), [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js), and [`DictationTextbox.js`](packages/playground/src/DictationTextbox.js).
 
 ## Checkbox version
 

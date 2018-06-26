@@ -1,47 +1,55 @@
-import { css } from 'glamor';
-import classNames from 'classnames';
 import React from 'react';
 
 import DictateButton from 'component';
-
-const INCONFIDENT_CSS = css({
-  opacity: .5
-});
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.handleEnd = this.handleEnd.bind(this);
+    this.handleAbortClick = this.handleAbortClick.bind(this);
+    this.handleDictate = this.handleDictate.bind(this);
+    this.handleError = this.handleError.bind(this);
     this.handleProgress = this.handleProgress.bind(this);
-    this.handleResult = this.handleResult.bind(this);
-    this.handleStart = this.handleStart.bind(this);
+    this.handleRawResult = this.handleRawResult.bind(this);
 
-    this.state = {};
+    this.state = {
+      aborted: false,
+      interim: null,
+      result: null
+    };
   }
 
-  handleEnd() {
-    this.setState(() => ({ phase: null }));
+  handleAbortClick() {
+    this.setState(() => ({
+      aborted: true
+    }));
+  }
+
+  handleDictate({ confidence, transcript }) {
+    this.setState(() => ({
+      interimResults: null,
+      result: { confidence, transcript }
+    }));
   }
 
   handleError(event) {
     console.error(event);
-  }
 
-  handleProgress(segments) {
     this.setState(() => ({
-      phase: 'listening',
-      segments,
-      text: null
+      aborted: false
     }));
   }
 
-  handleResult({ confidence, text }) {
-    this.setState(() => ({ segments: [], text }));
+  handleProgress(interimResults) {
+    this.setState(() => ({
+      interimResults,
+      result: null
+    }));
   }
 
-  handleStart() {
-    this.setState(() => ({ phase: 'starting' }));
+  handleRawResult({ results, type }) {
+    console.log(type);
+    console.log(results);
   }
 
   render() {
@@ -51,45 +59,38 @@ export default class App extends React.Component {
       <div>
         <DictateButton
           className="my-dictate-button"
+          disabled={ state.aborted }
           grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
           lang="en-US"
-          onEnd={ this.handleEnd }
+          onDictate={ this.handleDictate }
           onError={ this.handleError }
           onProgress={ this.handleProgress }
-          onResult={ this.handleResult }
-          onStart={ this.handleStart }
+          onRawResult={ this.handleRawResult }
         >
-          {
-            this.state.phase === 'starting' ?
-              'Starting...'
-            : this.state.phase === 'listening' ?
+          { readyState =>
+              readyState === 0 ? 'Start dictation' :
+              readyState === 1 ? 'Starting...' :
               'Stop dictation'
-            :
-              'Start dictation'
           }
         </DictateButton>
+        <button onClick={ this.handleAbortClick }>Abort</button>
         {
-          (state.text || state.segments) ?
+          state.result ?
+            <p>{ state.result.transcript }</p>
+          : state.interimResults ?
             <p>
               {
-                state.text
-                || (
-                  state.segments.length ?
-                    state.segments.map(({ confidence, text }, index) =>
-                      <span
-                        className={ classNames({ [INCONFIDENT_CSS]: confidence < .5 }) }
-                        key={ index }
-                      >
-                        { text }
-                      </span>
-                    )
-                  :
-                    'Listening...'
+                state.interimResults.map(({ confidence, transcript }, index) =>
+                  <span
+                    key={ index }
+                    style={{ opacity: Math.ceil(confidence * 2) / 2 }}
+                  >
+                    { transcript }
+                  </span>
                 )
               }
             </p>
-          :
-            <p>&lt;No dictation done yet&gt;</p>
+          : false
         }
       </div>
     );

@@ -18,6 +18,7 @@ Reasons why we need to build our own component, instead of using [existing packa
 * Bring your own Web Speech API
    * Enable speech recognition on unsupported browsers by bridging it with WebRTC and cloud-based service
 * Support grammar list (speech priming)
+* A way to abort recognition
 
 ## Naming
 
@@ -33,14 +34,46 @@ We name it "dictate button" instead of "web speech button" or "speech recognitio
 ```jsx
 <DictateButton
   className="my-dictate-button"
-  grammars="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
-  onChange={ this.handleChange }
+  disabled={ false }
+  grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+  onDictate={ this.handleDictate }
   onProgress={ this.handleProgress }
-  speechRecognition={ SpeechRecognition || webkitSpeechRecognition }
+  speechGrammarList={ window.SpeechGrammarList || window.webkitSpeechGrammarList }
+  speechRecognition={ window.SpeechRecognition || window.webkitSpeechRecognition }
 >
-  Click here to start dictation
+  {
+    readyState =>
+      readyState === 0 ? 'Start dictation' :
+      readyState === 1 ? 'Starting...' :
+      'Stop dictation'
+  }
 </DictateButton>
 ```
+
+## Props
+
+| Name | Default | Description |
+| - | - | - |
+| `className` | | Class name to apply to the button |
+| `disabled` | `false` | `true` to disable the dictation button and abort active recognition, otherwise, `false` |
+| `grammar` | | Grammar list in JSGF format |
+| `lang` | | Language to recognize, for example, `'en-us'` |
+| `onDictate` | | Event callback to fire when dictation is completed, with `{ confidence: number, transcript: string }` |
+| `onError` | | Event callback to fire when error has occurred or recognition is aborted |
+| `onProgress` | | Event callback to fire for interim results, with `[{ confidence: number, transcript: string }]` |
+| `onRawResult` | | Event callback to fire for handling raw events from `SpeechRecognition.onresult` |
+| `speechGrammarList` | `window.SpeechGrammarList || window.webkitSpeechGrammarList` | Bring your own `SpeechGrammarList` |
+| `speechRecognition` | `window.SpeechRecognition || window.webkitSpeechRecognition` | Bring your own `SpeechRecognition` |
+
+## Children as a function
+
+Instead of passing child elements, you can pass a `function (readyState)` to render different content based on ready state.
+
+| Ready state | Description |
+| - | - |
+| 0 | Not started |
+| 1 | Starting recognition engine, dictation is not ready |
+| 2 | Recognizing |
 
 # Contributions
 

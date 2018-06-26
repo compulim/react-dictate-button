@@ -14,40 +14,43 @@ Try out this component at [github.io/compulim/react-dictate-button](https://gith
 
 Reasons why we need to build our own component, instead of using [existing packages](https://www.npmjs.com/search?q=react%20speech) on NPM:
 
-* Some browsers required speech recognition to be kicked off by a user event (button click)
+* Some browsers required speech recognition to be triggered by a user event (button click)
 * Bring your own Web Speech API
    * Enable speech recognition on unsupported browsers by bridging it with WebRTC and cloud-based service
-* Support grammar list (speech priming)
-* A way to abort recognition
+* Support grammar list thru JSGF (speech priming)
+* Ability to interrupt dictation
 
 ## Naming
 
 We name it "dictate button" instead of "web speech button" or "speech recognition button" because:
 
 * Hide the complexity of Web Speech events because we only want to focus on dictation experience
-   * Differences between `onstart`, `onaudiostart`, `onsoundstart`, `onspeechstart`
+   * Complexity in lifecycle events: `onstart`, `onaudiostart`, `onsoundstart`, `onspeechstart`
 * "Web Speech" could means speech synthesis, which is out of scope for this package
-* "Speech Recognition" could means we will expose what Web Speech API has
+* "Speech Recognition" could means we will expose Web Speech API as-is, which we want to hide details and make it straightforward for dictation scenario
 
 # How to use
 
 ```jsx
-<DictateButton
-  className="my-dictate-button"
-  disabled={ false }
-  grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
-  onDictate={ this.handleDictate }
-  onProgress={ this.handleProgress }
-  speechGrammarList={ window.SpeechGrammarList || window.webkitSpeechGrammarList }
-  speechRecognition={ window.SpeechRecognition || window.webkitSpeechRecognition }
->
-  {
-    readyState =>
-      readyState === 0 ? 'Start dictation' :
-      readyState === 1 ? 'Starting...' :
-      'Stop dictation'
-  }
-</DictateButton>
+import DictateButton from 'react-dictate-button';
+
+export default () =>
+  <DictateButton
+    className="my-dictate-button"
+    disabled={ false }
+    grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+    onDictate={ this.handleDictate }
+    onProgress={ this.handleProgress }
+    speechGrammarList={ window.SpeechGrammarList || window.webkitSpeechGrammarList }
+    speechRecognition={ window.SpeechRecognition || window.webkitSpeechRecognition }
+  >
+    {
+      readyState =>
+        readyState === 0 ? 'Start dictation' :
+        readyState === 1 ? 'Starting...' :
+        'Stop dictation'
+    }
+  </DictateButton>
 ```
 
 ## Props
@@ -65,15 +68,28 @@ We name it "dictate button" instead of "web speech button" or "speech recognitio
 | `speechGrammarList` | `any` | `window.SpeechGrammarList ││ window.webkitSpeechGrammarList` | Bring your own `SpeechGrammarList` |
 | `speechRecognition` | `any` | `window.SpeechRecognition ││ window.webkitSpeechRecognition` | Bring your own `SpeechRecognition` |
 
-## Children as a function
+## Function as a child
 
-Instead of passing child elements, you can pass a `function (readyState)` to render different content based on ready state.
+Instead of passing child elements, you can pass a `function (readyState)` to render different content based on ready state. This is called [function as a child](https://reactjs.org/docs/render-props.html#using-props-other-than-render).
 
 | Ready state | Description |
 | - | - |
 | `0` | Not started |
 | `1` | Starting recognition engine, dictation is not ready |
 | `2` | Recognizing |
+
+For example,
+
+```jsx
+<DictateButton>
+  {
+    readyState =>
+      readyState === 0 ? 'Start dictation' :
+      readyState === 1 ? 'Starting...' :
+      'Stop dictation'
+  }
+</DictateButton>
+```
 
 # Contributions
 

@@ -33,6 +33,9 @@ export default class App extends React.Component {
   }
 
   handleError(event) {
+    console.error(event);
+    alert(event.error);
+
     this.setState(() => ({
       aborted: false,
       interimResults: null,

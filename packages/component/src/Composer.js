@@ -36,13 +36,15 @@ export default class Composer extends React.Component {
       abort: () => {
         this.state.recognition && this.state.recognition.abort();
       },
-      // isFinal: false,
       readyState: 0,
-      // results: null,
       start: () => {
         const { props } = this;
 
         this.state.recognition && this.state.recognition.abort();
+
+        if (!this.state.supported) {
+          throw new Error('Speech recognition is not supported');
+        }
 
         const recognition = this.createRecognition(props.speechRecognition);
 
@@ -63,7 +65,8 @@ export default class Composer extends React.Component {
         recognition.start();
 
         this.setState(() => ({ recognition }));
-      }
+      },
+      supported: !!props.speechRecognition
     };
   }
 
@@ -72,7 +75,10 @@ export default class Composer extends React.Component {
       this.setState(state => {
         state.recognition && state.recognition.abort();
 
-        return { recognition: this.createRecognition(nextProps.speechRecognition) };
+        return {
+          recognition: this.createRecognition(nextProps.speechRecognition),
+          supported: !!nextProps.speechRecognition
+        };
       });
     }
 
@@ -92,10 +98,7 @@ export default class Composer extends React.Component {
   }
 
   handleAudioStart() {
-    this.setState(() => ({
-      readyState: 2,
-      // results: []
-    }));
+    this.setState(() => ({ readyState: 2 }));
 
     this.props.onProgress && this.props.onProgress([]);
   }
@@ -105,11 +108,16 @@ export default class Composer extends React.Component {
   }
 
   handleError(event) {
-    this.setState(() => ({
-      // isFinal: false,
-      readyState: 0,
-      // results: null
-    }));
+    this.setState(state => {
+      if (event.error === 'not-allowed') {
+        return {
+          readyState: 0,
+          supported: false
+        };
+      } else {
+        return { readyState: 0 };
+      }
+    });
 
     this.props.onError && this.props.onError(event);
   }
@@ -128,8 +136,6 @@ export default class Composer extends React.Component {
         transcript: firstAlt.transcript
       }));
 
-      // this.setState(() => ({ results }));
-
       const [first] = rawResults;
 
       if (first.isFinal) {
@@ -141,10 +147,7 @@ export default class Composer extends React.Component {
   }
 
   handleStart() {
-    this.setState(() => ({
-      readyState: 1,
-      // results: null
-    }));
+    this.setState(() => ({ readyState: 1 }));
   }
 
   render() {

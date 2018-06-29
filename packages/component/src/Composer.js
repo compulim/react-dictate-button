@@ -183,6 +183,6 @@ Composer.propTypes = {
   onError: PropTypes.func,
   onProgress: PropTypes.func,
   onRawEvent: PropTypes.func,
-  speechGrammarList: PropTypes.any.isRequired,
-  speechRecognition: PropTypes.any.isRequired
+  speechGrammarList: PropTypes.any,
+  speechRecognition: PropTypes.any
 };

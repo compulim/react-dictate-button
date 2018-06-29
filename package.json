@@ -1,6 +1,6 @@
 {
   "name": "react-dictate-button",
-  "version": "1.1.1",
+  "version": "1.1.2-0",
   "description": "A button to start dictation using Web Speech API, with an easy to understand event lifecycle.",
   "keywords": [
     "dictate",

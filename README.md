@@ -46,6 +46,7 @@ export default () =>
 | - | - | - | - |
 | `className` | `string` | | Class name to apply to the button |
 | `disabled` | `boolean` | `false` | `true` to interrupt and disable dictation, otherwise, `false` |
+| `extra` | `any` | | Map to set to `SpeechRecognition` before `start`, useful when bringing your own `SpeechRecognition` |
 | `grammar` | `string` | | Grammar list in [JSGF format](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList/addFromString) |
 | `lang` | `string` | | Language to recognize, for example, `'en-US'` |
 | `speechGrammarList` | `any` | Browser implementation | Bring your own `SpeechGrammarList` |

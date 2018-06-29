@@ -42,6 +42,7 @@
     "babel-preset-stage-3": "^6.24.1",
     "jest": "^22.4.4",
     "lerna": "^2.11.0",
+    "memoize-one": "^4.0.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",

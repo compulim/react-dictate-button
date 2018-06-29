@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.0] - 2018-06-29
+### Added
+- Added `extra` prop to copy to `SpeechRecognition`
+
+### Changes
+- Bump `memoize-one` to `^4.0.0`
+
 ## [1.0.0] - 2018-06-26
 ### Added
 - Initial release

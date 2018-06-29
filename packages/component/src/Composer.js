@@ -142,13 +142,18 @@ export default class Composer extends React.Component {
     recognition.onaudiostart = chainListener(this.handleAudioStart, this.handleRawEvent);
     recognition.onend = chainListener(this.handleEnd, this.handleRawEvent);
     recognition.onerror = chainListener(this.handleError, this.handleRawEvent);
-    recognition.onnomatch= this.handleRawEvent;
+    recognition.onnomatch = this.handleRawEvent;
     recognition.onresult = chainListener(this.handleResult, this.handleRawEvent);
     recognition.onsoundend = this.handleRawEvent;
     recognition.onsoundstart = this.handleRawEvent;
     recognition.onspeechend = this.handleRawEvent;
     recognition.onspeechstart = this.handleRawEvent;
     recognition.onstart = chainListener(this.handleStart, this.handleRawEvent);
+
+    props.extra && Object.keys(props.extra).forEach(key => {
+      recognition[key] = props.extra[key];
+    });
+
     recognition.start();
   }
 
@@ -172,6 +177,7 @@ Composer.defaultProps = {
 };
 
 Composer.propTypes = {
+  extra: PropTypes.any,
   lang: PropTypes.string,
   onDictate: PropTypes.func,
   onError: PropTypes.func,

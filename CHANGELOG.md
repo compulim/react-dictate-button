@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.1] - 2018-06-29
+### Fixed:
+- fix: `extra` prop not passed to `<Composer>`
+
 ## [1.1.0] - 2018-06-29
 ### Added
 - Added `extra` prop to copy to `SpeechRecognition`

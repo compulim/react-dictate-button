@@ -35,6 +35,7 @@ export default class DictateCheckbox extends React.Component {
 
     return (
       <Composer
+        extra={ props.extra }
         grammar={ props.grammar }
         lang={ props.lang }
         onDictate={ this.handleDictate }
@@ -75,6 +76,7 @@ export default class DictateCheckbox extends React.Component {
 DictateCheckbox.propTypes = {
   className: PropTypes.string,
   disabled: PropTypes.bool,
+  extra: PropTypes.any,
   grammar: PropTypes.string,
   lang: PropTypes.string,
   onDictate: PropTypes.func,

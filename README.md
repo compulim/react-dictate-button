@@ -58,6 +58,7 @@ export default () =>
 
 | Name | Signature | Description |
 | - | - | - |
+| `onClick` | `(event: DOMButtonEvent)` | Emit when the user click on the button, `preventDefault` will stop recognition from starting |
 | `onDictate` | `({ result: { confidence: number, transcript: number } }) => {}` | Emit when dictation is completed |
 | `onError` | `(event: SpeechRecognitionEvent) => {}` | Emit when error has occurred or dictation is interrupted, [see below](#event-lifecycle) |
 | `onProgress` | `({ results: [{ confidence: number, transcript: number }] }) => {}` | Emit for interim results, the array contains every segments of recognized text |

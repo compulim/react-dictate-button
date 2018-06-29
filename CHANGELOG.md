@@ -6,8 +6,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.2] - 2018-06-29
+### Fixed
+- fix: `Composer.speechRecognition`/`speechGrammarList` should not be required
+
+### Added
+- add: `onClick` prop, can use `preventDefault` to stop speech recognition from starting
+
 ## [1.1.1] - 2018-06-29
-### Fixed:
+### Fixed
 - fix: `extra` prop not passed to `<Composer>`
 
 ## [1.1.0] - 2018-06-29

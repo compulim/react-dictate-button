@@ -16,8 +16,9 @@ export default class DictateButton extends React.Component {
     };
   }
 
-  handleClick() {
-    this.setState(({ started }) => ({ started: !started }));
+  handleClick(event) {
+    this.props.onClick && this.props.onClick(event);
+    !event.isDefaultPrevented() && this.setState(({ started }) => ({ started: !started }));
   }
 
   handleDictate(event) {
@@ -76,6 +77,7 @@ DictateButton.propTypes = {
   extra: PropTypes.any,
   grammar: PropTypes.string,
   lang: PropTypes.string,
+  onClick: PropTypes.func,
   onDictate: PropTypes.func,
   onError: PropTypes.func,
   onProgress: PropTypes.func,

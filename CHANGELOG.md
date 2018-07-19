@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.1.3] - 2018-07-19
+### Fixed
+- fix: move [`memoize-one`](https://npmjs.com/package/memoize-one) to production dependencies
+
 ## [1.1.2] - 2018-06-29
 ### Fixed
 - fix: `Composer.speechRecognition`/`speechGrammarList` should not be required

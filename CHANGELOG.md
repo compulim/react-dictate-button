@@ -5,17 +5,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Bump to [`event-as-promise@1.0.5`](https://npmjs.com/package/event-as-promise/v/1.0.5)
+- Move `lerna bootstrap` from hoisted to local
 
 ## [1.1.3] - 2018-07-19
 ### Fixed
-- fix: move [`memoize-one`](https://npmjs.com/package/memoize-one) to production dependencies
+- Fix: move [`memoize-one`](https://npmjs.com/package/memoize-one) to production dependencies
 
 ## [1.1.2] - 2018-06-29
 ### Fixed
-- fix: `Composer.speechRecognition`/`speechGrammarList` should not be required
+- Fix: `Composer.speechRecognition`/`speechGrammarList` should not be required
 
 ### Added
-- add: `onClick` prop, can use `preventDefault` to stop speech recognition from starting
+- Add: `onClick` prop, can use `preventDefault` to stop speech recognition from starting
 
 ## [1.1.1] - 2018-06-29
 ### Fixed
@@ -26,7 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added `extra` prop to copy to `SpeechRecognition`
 
 ### Changes
-- Bump `memoize-one` to `^4.0.0`
+- Bump to [`memoize-one@4.0.0`](https://npmjs.com/package/memoize-one/v/4.0.0)
 
 ## [1.0.0] - 2018-06-26
 ### Added

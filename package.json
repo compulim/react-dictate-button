@@ -20,9 +20,9 @@
     "lib/**/*"
   ],
   "scripts": {
-    "bootstrap": "lerna bootstrap --hoist",
-    "build": "lerna run build",
-    "test": "lerna run test"
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build --stream",
+    "test": "lerna run test --stream"
   },
   "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
   "license": "MIT",

@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "event-as-promise": "^1.0.2",
+    "event-as-promise": "^1.0.5",
     "glamor": "^2.20.40",
     "memoize-one": "^4.0.0"
   }

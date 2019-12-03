@@ -5,6 +5,10 @@ import React from 'react';
 import Context from './Context';
 import prefix from './prefix';
 
+function abortable(recognition) {
+  return !!recognition.abort;
+}
+
 function chainListener(...listeners) {
   return function () {
     listeners.forEach(listener => listener.apply(this, arguments))
@@ -44,7 +48,14 @@ export default class Composer extends React.Component {
     let nextState;
 
     if (nextProps.speechRecognition !== this.props.speechRecognition) {
-      recognition && recognition.abort();
+      if (recognition) {
+        if (abortable(recognition)) {
+          recognition.abort();
+        } else {
+          throw new Error('Cannot change "speechRecognition" prop while the current one is ongoing and is not abortable.');
+        }
+      }
+
       recognition = this.recognition = null;
 
       nextState = { ...nextState, supported: !!nextProps.speechRecognition };
@@ -53,8 +64,16 @@ export default class Composer extends React.Component {
     if (nextProps.started !== this.props.started) {
       if (nextProps.started) {
         this.start(nextProps);
+
+        nextState = { ...nextState, abortable: abortable(this.recognition) };
       } else {
-        recognition && recognition.abort();
+        if (recognition) {
+          if (abortable(recognition)) {
+            recognition.abort();
+          } else {
+            throw new Error('Cannot stop recognition while the current one is ongoing and is not abortable.');
+          }
+        }
       }
     }
 
@@ -62,7 +81,15 @@ export default class Composer extends React.Component {
   }
 
   componentWillUnmount() {
-    this.recognition && this.recognition.abort();
+    const { recognition } = this;
+
+    if (recognition) {
+      if (abortable(recognition)) {
+        recognition.abort();
+      } else {
+        console.warn('react-dictate-button: Component is unmounted but recognition is still ongoing because it is not abortable.');
+      }
+    }
   }
 
   handleAudioEnd() {
@@ -79,6 +106,8 @@ export default class Composer extends React.Component {
   }
 
   handleEnd() {
+    this.recognition = null;
+
     if (this.emitDictateOnEnd) {
       this.props.onDictate && this.props.onDictate({});
     }
@@ -94,6 +123,7 @@ export default class Composer extends React.Component {
 
     // Error out, no need to emit "dictate"
     this.emitDictateOnEnd = false;
+    this.recognition = null;
     this.props.onError && this.props.onError(event);
   }
 
@@ -115,9 +145,10 @@ export default class Composer extends React.Component {
 
       if (first.isFinal) {
         this.emitDictateOnEnd = false;
+        this.recognition = null;
         props.onDictate && props.onDictate({ result: results[0] });
       } else {
-        props.onProgress && props.onProgress({ results });
+        props.onProgress && props.onProgress({ abortable: abortable(this.recognition), results });
       }
     }
   }
@@ -127,7 +158,13 @@ export default class Composer extends React.Component {
   }
 
   start(props) {
-    this.recognition && this.recognition.abort();
+    if (this.recognition) {
+      if (abortable(this.recognition)) {
+        this.recognition.abort();
+      } else {
+        throw new Error('Cannot start a new recognition while the current one is ongoing and is not abortable.');
+      }
+    }
 
     if (!this.state.supported) {
       throw new Error('Speech recognition is not supported');

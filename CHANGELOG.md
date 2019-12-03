@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.2.0] - 2019-12-03
 ### Added
 - Support unabortable speech recognition, by [@compulim](https://github.com/compulim) in PR [#4](https://github.com/compulim/react-dictate-button/pull/4).
 

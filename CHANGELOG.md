@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.1] - 2019-12-04
 ### Fixed
 - Fix: `Composer.onProgress` should set `abortable` on the first event (based on `SpeechRecognition.audioStart` event), by [@compulim](https://github.com/compulim) in PR [#5](https://github.com/compulim/react-dictate-button/pull/5)
 

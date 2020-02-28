@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [1.2.2] - 2020-02-27
+
 ### Fixed
 - Fix [#12](https://github.com/compulim/react-dictate-button/issues/12): Workaround [Angular/zone.js bug](https://github.com/angular/angular/issues/31750) by not using Symbol.iterator for iterable objects, by [@compulim](https://github.com/compulim) in PR [#13](https://github.com/compulim/react-dictate-button/pull/13)
 

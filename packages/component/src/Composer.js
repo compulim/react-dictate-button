@@ -136,12 +136,16 @@ export default class Composer extends React.Component {
     const { results: rawResults } = event;
 
     if (rawResults.length) {
-      const results = [].map.call(rawResults, ([firstAlt]) => ({
-        confidence: firstAlt.confidence,
-        transcript: firstAlt.transcript
-      }));
+      const results = [].map.call(rawResults, alts => {
+        const firstAlt = alts[0];
 
-      const [first] = rawResults;
+        return {
+          confidence: firstAlt.confidence,
+          transcript: firstAlt.transcript
+        };
+      });
+
+      const first = rawResults[0];
 
       if (first.isFinal) {
         this.emitDictateOnEnd = false;

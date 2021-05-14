@@ -1,75 +1,118 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
 import Composer from './Composer';
+import Context from './Context';
+import useRefFrom from './useRefFrom';
 
-export default class DictateButton extends React.Component {
-  constructor(props) {
-    super(props);
+const DictateButtonCore = ({ children, className, disabled, onClick }) => {
+  const { readyState, supported } = useContext(Context);
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleDictate = this.handleDictate.bind(this);
-    this.handleError = this.handleError.bind(this);
+  return (
+    <button
+      className={className}
+      disabled={readyState === 1 || readyState === 3 || !supported || disabled}
+      onClick={onClick}
+    >
+      {typeof children === 'function' ? children({ readyState }) : children}
+    </button>
+  );
+};
 
-    this.state = {
-      started: false
-    };
-  }
+DictateButtonCore.defaultProps = {
+  children: undefined,
+  className: undefined,
+  disabled: undefined
+};
 
-  handleClick(event) {
-    this.props.onClick && this.props.onClick(event);
-    !event.isDefaultPrevented() && this.setState(({ started }) => ({ started: !started }));
-  }
+DictateButtonCore.propTypes = {
+  children: PropTypes.any,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func.isRequired
+};
 
-  handleDictate(event) {
-    this.setState(() => ({ started: false }));
-    this.props.onDictate && this.props.onDictate(event);
-  }
+const DictateButton = ({
+  children,
+  className,
+  disabled,
+  extra,
+  grammar,
+  lang,
+  onClick,
+  onDictate,
+  onError,
+  onProgress,
+  onRawEvent,
+  speechGrammarList,
+  speechRecognition
+}) => {
+  const [started, setStarted] = useState();
+  const onClickRef = useRefFrom(onClick);
+  const onDictateRef = useRefFrom(onDictate);
+  const onErrorRef = useRefFrom(onError);
 
-  handleError(event) {
-    this.setState(() => ({ started: false }));
-    this.props.onError && this.props.onError(event);
-  }
+  const handleClick = useCallback(
+    event => {
+      onClickRef.current && onClickRef.current(event);
 
-  render() {
-    const { props, state } = this;
+      !event.isDefaultPrevented() && setStarted(started => !started);
+    },
+    [onClickRef, setStarted]
+  );
 
-    return (
-      <Composer
-        extra={ props.extra }
-        grammar={ props.grammar }
-        lang={ props.lang }
-        onDictate={ this.handleDictate }
-        onError={ this.handleError }
-        onProgress={ props.onProgress }
-        onRawEvent={ props.onRawEvent }
-        speechGrammarList={ props.speechGrammarList }
-        speechRecognition={ props.speechRecognition }
-        started={ state.started && !props.disabled }
-      >
-        { context =>
-          <button
-            className={ props.className }
-            disabled={
-              context.readyState === 1
-              || context.readyState === 3
-              || !context.supported
-              || props.disabled
-            }
-            onClick={ this.handleClick }
-          >
-            {
-              typeof props.children === 'function' ?
-                props.children({ readyState: context.readyState })
-              :
-                props.children
-            }
-          </button>
-        }
-      </Composer>
-    );
-  }
-}
+  const handleDictate = useCallback(
+    event => {
+      setStarted(false);
+
+      onDictateRef.current && onDictateRef.current(event);
+    },
+    [onDictateRef, setStarted]
+  );
+
+  const handleError = useCallback(
+    event => {
+      setStarted(false);
+
+      onErrorRef.current && onErrorRef.current(event);
+    },
+    [onErrorRef, setStarted]
+  );
+
+  return (
+    <Composer
+      extra={extra}
+      grammar={grammar}
+      lang={lang}
+      onDictate={handleDictate}
+      onError={handleError}
+      onProgress={onProgress}
+      onRawEvent={onRawEvent}
+      speechGrammarList={speechGrammarList}
+      speechRecognition={speechRecognition}
+      started={started && !disabled}
+    >
+      <DictateButtonCore className={className} disabled={disabled} onClick={handleClick}>
+        {children}
+      </DictateButtonCore>
+    </Composer>
+  );
+};
+
+DictateButton.defaultProps = {
+  className: undefined,
+  disabled: undefined,
+  extra: undefined,
+  grammar: undefined,
+  lang: undefined,
+  onClick: undefined,
+  onDictate: undefined,
+  onError: undefined,
+  onProgress: undefined,
+  onRawEvent: undefined,
+  speechGrammarList: undefined,
+  speechRecognition: undefined
+};
 
 DictateButton.propTypes = {
   className: PropTypes.string,
@@ -85,3 +128,5 @@ DictateButton.propTypes = {
   speechGrammarList: PropTypes.any,
   speechRecognition: PropTypes.any
 };
+
+export default DictateButton;

@@ -1,58 +1,13 @@
 {
-  "name": "react-dictate-button",
+  "name": "root",
   "version": "1.2.3-0",
-  "description": "A button to start dictation using Web Speech API, with an easy to understand event lifecycle.",
-  "keywords": [
-    "dictate",
-    "dictation",
-    "rtc",
-    "speech recognition",
-    "speech to text",
-    "voice recognition",
-    "voice",
-    "web rtc",
-    "web speech",
-    "webrtc",
-    "webspeech"
-  ],
-  "main": "lib/index.js",
-  "files": [
-    "lib/**/*"
-  ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
+    "start": "lerna run start --parallel --stream",
     "test": "lerna run test --stream"
   },
-  "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/compulim/react-dictate-button.git"
-  },
-  "bugs": {
-    "url": "https://github.com/compulim/react-dictate-button/issues"
-  },
-  "homepage": "https://github.com/compulim/react-dictate-button#readme",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-env": "^2.4.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-stage-3": "^6.24.1",
-    "jest": "^22.4.4",
-    "lerna": "^2.11.0",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "react-scripts": "1.1.4",
-    "rimraf": "^2.6.2"
-  },
-  "dependencies": {
-    "classnames": "^2.2.6",
-    "glamor": "^2.20.40",
-    "memoize-one": "^4.0.0"
-  },
-  "peerDependencies": {
-    "react": "^16.4.1"
+    "lerna": "^4.0.0"
   }
 }

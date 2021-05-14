@@ -1,135 +1,101 @@
-import React from 'react';
+import DictateButton, { DictateCheckbox } from 'react-dictate-button';
+import React, { useCallback, useState } from 'react';
 
-import DictateButton, { DictateCheckbox } from 'component';
 import DictationTextbox from './DictationTextbox';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
+const App = () => {
+  const [customValue, setCustomValue] = useState();
+  const [interim, setInterim] = useState();
+  const [result, setResult] = useState();
 
-    this.handleCustomChange = this.handleCustomChange.bind(this);
-    this.handleDictate = this.handleDictate.bind(this);
-    this.handleError = this.handleError.bind(this);
-    this.handleProgress = this.handleProgress.bind(this);
-    this.handleRawEvent = this.handleRawEvent.bind(this);
+  const handleCustomChange = useCallback(({ value }) => setCustomValue(value), [setCustomValue]);
 
-    this.state = {
-      customValue: null,
-      interim: null,
-      result: null
-    };
-  }
+  const handleDictate = useCallback(
+    event => {
+      const { result } = event;
+      const { confidence, transcript } = result || {};
 
-  handleCustomChange({ value: customValue }) {
-    this.setState(() => ({ customValue }));
-  }
+      setInterim(undefined);
+      setResult({ confidence, transcript });
+    },
+    [setInterim, setResult]
+  );
 
-  handleDictate(event) {
-    const { result } = event;
-    const { confidence, transcript } = result || {};
+  const handleError = useCallback(
+    event => {
+      setInterim(undefined);
+      setResult(undefined);
+    },
+    [setInterim, setResult]
+  );
 
-    console.log(`dictate`);
-    console.log(event);
+  const handleProgress = useCallback(
+    event => {
+      setInterim(event.results);
+      setResult(undefined);
+    },
+    [setInterim, setResult]
+  );
 
-    this.setState(() => ({
-      interimResults: null,
-      result: { confidence, transcript }
-    }));
-  }
+  const handleRawEvent = useCallback(event => console.log(`Raw event: ${event.type}`, event), []);
 
-  handleError(event) {
-    console.log('error');
-    console.error(event);
-    // alert(event.error);
-
-    this.setState(() => ({
-      interimResults: null,
-      result: null
-    }));
-  }
-
-  handleProgress(event) {
-    console.log(`progress`);
-    console.log(event);
-
-    const { results: interimResults } = event;
-
-    this.setState(() => ({
-      interimResults,
-      result: null
-    }));
-  }
-
-  handleRawEvent({ type }) {
-    console.log(`raw event: ${ type }`);
-  }
-
-  render() {
-    const { state } = this;
-
-    return (
+  return (
+    <div>
+      <h1>&lt;DictateButton&gt;</h1>
       <div>
-        <h1>&lt;DictateButton&gt;</h1>
-        <div>
-          <DictateButton
-            className="my-dictate-button"
-            grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
-            lang="en-US"
-            onDictate={ this.handleDictate }
-            onError={ this.handleError }
-            onProgress={ this.handleProgress }
-            onRawEvent={ this.handleRawEvent }
-          >
-            { ({ readyState }) =>
-                readyState === 0 ? 'Start dictation' :
-                readyState === 1 ? 'Starting...' :
-                'Stop dictation'
-            }
-          </DictateButton>
-        </div>
-        <h1>&lt;DictateCheckbox&gt;</h1>
-        <div>
-          <DictateCheckbox
-            className="my-dictate-button"
-            grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
-            lang="en-US"
-            onDictate={ this.handleDictate }
-            onError={ this.handleError }
-            onProgress={ this.handleProgress }
-            onRawEvent={ this.handleRawEvent }
-          >
-            { ({ readyState }) =>
-                readyState === 0 ? 'Start dictation' :
-                readyState === 1 ? 'Starting...' :
-                'Stop dictation'
-            }
-          </DictateCheckbox>
-        </div>
-        <h1>Result</h1>
-        {
-          state.result ?
-            <p>{ state.result.transcript }</p>
-          : state.interimResults ?
-            <p>
-              {
-                state.interimResults.map(({ confidence, transcript }, index) =>
-                  <span
-                    key={ index }
-                    style={{ opacity: Math.ceil(confidence * 2) / 2 }}
-                  >
-                    { transcript }
-                  </span>
-                )
-              }
-            </p>
-          : false
-        }
-        <h1>Custom textbox</h1>
-        <DictationTextbox
-          onChange={ this.handleCustomChange }
-          value={ state.customValue }
-        />
+        <DictateButton
+          className="my-dictate-button"
+          grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+          lang="en-US"
+          onDictate={handleDictate}
+          onError={handleError}
+          onProgress={handleProgress}
+          onRawEvent={handleRawEvent}
+        >
+          {({ readyState }) =>
+            readyState === 0 ? 'Start dictation' : readyState === 1 ? 'Starting...' : 'Stop dictation'
+          }
+        </DictateButton>
       </div>
-    );
-  }
-}
+      <h1>&lt;DictateCheckbox&gt;</h1>
+      <div>
+        <DictateCheckbox
+          className="my-dictate-button"
+          grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+          lang="en-US"
+          onDictate={handleDictate}
+          onError={handleError}
+          onProgress={handleProgress}
+          onRawEvent={handleRawEvent}
+        >
+          {({ readyState }) =>
+            readyState === 0 ? 'Start dictation' : readyState === 1 ? 'Starting...' : 'Stop dictation'
+          }
+        </DictateCheckbox>
+      </div>
+      <h1>Result</h1>
+      {result ? (
+        <p>{result.transcript}</p>
+      ) : interim ? (
+        <p>
+          {interim.map(({ confidence, transcript }, index) => (
+            <span key={index} style={{ opacity: confidence ? Math.ceil(confidence * 2) / 2 : 0.5 }}>
+              {transcript}
+            </span>
+          ))}
+        </p>
+      ) : (
+        false
+      )}
+      <h1>Custom textbox</h1>
+      <DictationTextbox
+        grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+        lang="en-US"
+        onChange={handleCustomChange}
+        value={customValue}
+      />
+    </div>
+  );
+};
+
+export default App;

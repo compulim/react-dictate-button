@@ -1,7 +1,8 @@
 import Composer from './Composer';
+import Context from './Context';
 import DictateButton from './DictateButton';
 import DictateCheckbox from './DictateCheckbox';
 
-export default DictateButton
+export default DictateButton;
 
-export { Composer, DictateCheckbox }
+export { Composer, Context, DictateCheckbox };

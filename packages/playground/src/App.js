@@ -22,7 +22,7 @@ const App = () => {
   );
 
   const handleError = useCallback(
-    event => {
+    () => {
       setInterim(undefined);
       setResult(undefined);
     },
@@ -61,7 +61,6 @@ const App = () => {
       <div>
         <DictateCheckbox
           className="my-dictate-button"
-          grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
           lang="en-US"
           onDictate={handleDictate}
           onError={handleError}

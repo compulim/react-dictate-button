@@ -125,11 +125,26 @@ export default () => (
 
 ## Hooks
 
+> Although previous versions exported a React Context, it is recommended to use the hooks interface.
+
 | Name            | Signature   | Description                                                                             |
 | --------------- | ----------- | --------------------------------------------------------------------------------------- |
 | `useAbortable`  | `[boolean]` | If ongoing speech recognition can be aborted, `true`, otherwise, `false`                |
 | `useReadyState` | `[number]`  | Returns the current state of recognition, refer to [this section](#function-as-a-child) |
 | `useSupported`  | `[boolean]` | If speech recognition is supported, `true`, otherwise, `false`                          |
+
+### Checks if speech recognition is supported
+
+To determines whether speech recognition is supported in the browser:
+
+- If `speechRecognition` prop is `undefined`
+  - If both [`window.navigator.mediaDevices`](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices) and [`window.navigator.mediaDevices.getUserMedia`](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia) are falsy, it is not supported
+    - Probably the browser is not on a secure HTTP connection
+  - If both `window.SpeechRecognition` and vendor-prefixed are falsy, it is not supported
+  - If recognition failed once with `not-allowed` error code, it is not supported
+- Otherwise, it is supported
+
+> Even the browser is on an insecure HTTP connection, `window.SpeechRecognition` (or vendor-prefixed) will continue to be truthy. Instead, `mediaDevices.getUserMedia` is used for capability detection.
 
 ### Event lifecycle
 
@@ -174,7 +189,7 @@ For example,
 
 # Customization thru morphing
 
-Morphing is done thru [React.Context](https://reactjs.org/docs/context.html). In short, you can build your own component by copying our layout code, without messing around the [logic code behind the scene](packages/component/src/Composer.js). You can also easily bump version without breaking your layout. For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js), [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js), and [`DictationTextbox.js`](packages/playground/src/DictationTextbox.js).
+You can build your own component by copying our layout code, without messing around the [logic code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js), [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js), and [`DictationTextbox.js`](packages/playground/src/DictationTextbox.js).
 
 ## Checkbox version
 

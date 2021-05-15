@@ -166,12 +166,14 @@ const Composer = ({
       }
 
       const grammars = speechGrammarListRef.current && grammarRef.current && new speechGrammarListRef.current();
-
-      grammars && grammars.addFromString(grammarRef.current, 1);
-
       const recognition = (recognitionRef.current = new speechRecognitionRef.current());
 
-      recognition.grammars = grammars;
+      if (grammars) {
+        grammars.addFromString(grammarRef.current, 1);
+
+        recognition.grammars = grammars;
+      }
+
       recognition.lang = langRef.current;
       recognition.interimResults = true;
       recognition.onaudioend = applyAll(handleAudioEnd, handleRawEvent);
@@ -255,8 +257,8 @@ Composer.defaultProps = {
   onError: undefined,
   onProgress: undefined,
   onRawEvent: undefined,
-  speechGrammarList: vendorPrefix('SpeechGrammarList'),
-  speechRecognition: vendorPrefix('SpeechRecognition'),
+  speechGrammarList: navigator.mediaDevices && navigator.mediaDevices.getUserMedia && vendorPrefix('SpeechGrammarList'),
+  speechRecognition: navigator.mediaDevices && navigator.mediaDevices.getUserMedia && vendorPrefix('SpeechRecognition'),
   started: undefined
 };
 

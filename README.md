@@ -22,10 +22,9 @@ Try out this component at [github.io/compulim/react-dictate-button](https://gith
 Reasons why we need to build our own component, instead of using [existing packages](https://www.npmjs.com/search?q=react%20speech) on NPM:
 
 - Most browsers required speech recognition (or WebRTC) to be triggered by a user event (button click)
-  - We want to enforce this rule to reduce compatibility issues
 - Bring your own engine for [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API)
   - Enable speech recognition on unsupported browsers by bridging it with [cloud-based service](https://npmjs.com/package/web-speech-cognitive-services)
-- Support grammar list thru [JSGF](https://www.w3.org/TR/jsgf/) (a.k.a. speech priming)
+- Support grammar list thru [JSpeech Grammar Format](https://www.w3.org/TR/jsgf/)
 - Ability to interrupt dictation
 - Ability to [morph into other elements](#customization-thru-morphing)
 

@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/react-dictate-button.svg)](https://badge.fury.io/js/react-dictate-button) [![Build Status](https://travis-ci.org/compulim/react-dictate-button.svg?branch=master)](https://travis-ci.org/compulim/react-dictate-button)
 
-A button to start dictation using [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API), with an easy to understand event lifecycle.
+A button to start speech recognition using [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API), with an easy to understand event lifecycle.
 
 # Breaking changes
 
@@ -25,7 +25,7 @@ Reasons why we need to build our own component, instead of using [existing packa
 - Bring your own engine for [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API)
   - Enable speech recognition on unsupported browsers by bridging it with [cloud-based service](https://npmjs.com/package/web-speech-cognitive-services)
 - Support grammar list thru [JSpeech Grammar Format](https://www.w3.org/TR/jsgf/)
-- Ability to interrupt dictation
+- Ability to interrupt recognition
 - Ability to [morph into other elements](#customization-thru-morphing)
 
 # How to use
@@ -53,14 +53,14 @@ export default () => (
 | Name                | Type                     | Default                                         | Description                                                                                                                                                                                                                                                       |
 | ------------------- | ------------------------ | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `className`         | `string`                 | `undefined`                                     | Class name to apply to the button                                                                                                                                                                                                                                 |
-| `disabled`          | `boolean`                | `false`                                         | `true` to interrupt and disable dictation, otherwise, `false`                                                                                                                                                                                                     |
+| `disabled`          | `boolean`                | `false`                                         | `true` to abort ongoing recognition and disable the button, otherwise, `false`                                                                                                                                                                                    |
 | `extra`             | `{ [key: string]: any }` | `{}`                                            | Additional properties to set to [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) before `start`, useful when bringing your own [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) |
 | `grammar`           | `string`                 | `undefined`                                     | Grammar list in [JSGF format](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList/addFromString)                                                                                                                                                   |
 | `lang`              | `string`                 | `undefined`                                     | Language to recognize, for example, `'en-US'` or [`navigator.language`](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorLanguage/language)                                                                                                              |
 | `speechGrammarList` | `any`                    | `window.SpeechGrammarList` (or vendor-prefixed) | Bring your own [`SpeechGrammarList`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList)                                                                                                                                                          |
 | `speechRecognition` | `any`                    | `window.SpeechRecognition` (or vendor-prefixed) | Bring your own [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)                                                                                                                                                          |
 
-> Note: change of `grammar` and `lang` will not take effect until next dictation.
+> Note: change of `extra`, `grammar`, `lang`, `speechGrammarList`, and `speechRecognition` will not take effect until next speech recognition is started.
 
 ## Events
 
@@ -89,12 +89,12 @@ export default () => (
   type: 'dictate'
 }) => void</pre>
       </td>
-      <td>Emit when dictation is completed</td>
+      <td>Emit when recognition is completed</td>
     </tr>
     <tr>
       <th><code>onError</code></th>
       <td><pre>(event: <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionErrorEvent">SpeechRecognitionErrorEvent</a>) => void</pre></td>
-      <td>Emit when error has occurred or dictation is interrupted, <a href="#event-lifecycle">see below</a></td>
+      <td>Emit when error has occurred or recognition is interrupted, <a href="#event-lifecycle">see below</a></td>
     </tr>
     <tr>
       <th><code>onProgress</code></th>
@@ -163,7 +163,7 @@ One of the design aspect is to make sure events are easy to understand and deter
 - Recognition aborted
   1.  `onProgress({})`
   2.  `onProgress({ results: [] })`
-  3.  While speech is getting recognized, set `props.disabled` to `false`, interrupting dictation
+  3.  While speech is getting recognized, set `props.disabled` to `false`, abort recognition
   4.  `onError({ error: 'aborted' })`
 - Not authorized to use speech or no audio device is availablabortable: truee
   1.  `onError({ error: 'not-allowed' })`
@@ -172,18 +172,20 @@ One of the design aspect is to make sure events are easy to understand and deter
 
 Instead of passing child elements, you can pass a function to render different content based on ready state. This is called [function as a child](https://reactjs.org/docs/render-props.html#using-props-other-than-render).
 
-| Ready state | Description                                         |
-| ----------- | --------------------------------------------------- |
-| `0`         | Not started                                         |
-| `1`         | Starting recognition engine, dictation is not ready |
-| `2`         | Recognizing                                         |
-| `3`         | Stopping                                            |
+| Ready state | Description                                                                |
+| ----------- | -------------------------------------------------------------------------- |
+| `0`         | Not started                                                                |
+| `1`         | Starting recognition engine, recognition is not ready until it turn to `2` |
+| `2`         | Recognizing                                                                |
+| `3`         | Stopping                                                                   |
 
 For example,
 
 ```jsx
 <DictateButton>
-  {({ readyState }) => (readyState === 0 ? 'Start dictation' : readyState === 1 ? 'Starting...' : 'Stop dictation')}
+  {({ readyState }) =>
+    readyState === 0 ? 'Start' : readyState === 1 ? 'Starting...' : readyState === 2 ? 'Listening...' : 'Stopping...'
+  }
 </DictateButton>
 ```
 
@@ -217,18 +219,14 @@ We also provide a "textbox with dictate button" version. But instead of shipping
 
 # Design considerations
 
-## Naming
-
-We name it "dictate button" instead of "web speech button" or "speech recognition button" because:
-
-- Hide the complexity of Web Speech events because we only want to focus on dictation experience
+- Hide the complexity of Web Speech events because we only want to focus on recognition experience
   - Complexity in lifecycle events: `onstart`, `onaudiostart`, `onsoundstart`, `onspeechstart`
   - `onresult` may not fire in some cases, `onnomatch` is not fired in Chrome
   - To reduce complexity, we want to make sure event firing are either:
     - Happy path: `onProgress`, then either `onDictate` or `onError`
     - Otherwise: `onError`
 - "Web Speech" could means speech synthesis, which is out of scope for this package
-- "Speech Recognition" could means we will expose Web Speech API as-is, which we want to hide details and make it straightforward for dictation scenario
+- "Speech Recognition" could means we will expose Web Speech API as-is, which we want to hide details and make it straightforward for recognition scenario
 
 # Roadmap
 

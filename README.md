@@ -4,8 +4,6 @@
 
 A button to start dictation using [Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API), with an easy to understand event lifecycle.
 
-This project scaffolding is from [react-component-template](https://github.com/compulim/react-component-template).
-
 # Breaking changes
 
 ## [2.0.0] - 2021-05-15
@@ -40,6 +38,7 @@ export default () => (
   <DictateButton
     className="my-dictate-button"
     grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
+    lang="en-US"
     onDictate={this.handleDictate}
     onProgress={this.handleProgress}
   >
@@ -50,48 +49,105 @@ export default () => (
 
 ## Props
 
-| Name                | Type      | Default                | Description                                                                                                     |
-| ------------------- | --------- | ---------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `className`         | `string`  |                        | Class name to apply to the button                                                                               |
-| `disabled`          | `boolean` | `false`                | `true` to interrupt and disable dictation, otherwise, `false`                                                   |
-| `extra`             | `any`     |                        | Map to set to `SpeechRecognition` before `start`, useful when bringing your own `SpeechRecognition`             |
-| `grammar`           | `string`  |                        | Grammar list in [JSGF format](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList/addFromString) |
-| `lang`              | `string`  |                        | Language to recognize, for example, `'en-US'`                                                                   |
-| `speechGrammarList` | `any`     | Browser implementation | Bring your own `SpeechGrammarList`                                                                              |
-| `speechRecognition` | `any`     | Browser implementation | Bring your own `SpeechRecognition`                                                                              |
+| Name                | Type      | Default                                         | Description                                                                                                                                                                                                                                                       |
+| ------------------- | --------- | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `className`         | `string`  | `undefined`                                     | Class name to apply to the button                                                                                                                                                                                                                                 |
+| `disabled`          | `boolean` | `false`                                         | `true` to interrupt and disable dictation, otherwise, `false`                                                                                                                                                                                                     |
+| `extra`             | `any`     | `{}`                                            | Additional properties to set to [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) before `start`, useful when bringing your own [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) |
+| `grammar`           | `string`  | `undefined`                                     | Grammar list in [JSGF format](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList/addFromString)                                                                                                                                                   |
+| `lang`              | `string`  | `undefined`                                     | Language to recognize, for example, `'en-US'` or [`navigator.language`](https://developer.mozilla.org/en-US/docs/Web/API/NavigatorLanguage/language)                                                                                                              |
+| `speechGrammarList` | `any`     | `window.SpeechGrammarList` (or vendor-prefixed) | Bring your own [`SpeechGrammarList`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList)                                                                                                                                                          |
+| `speechRecognition` | `any`     | `window.SpeechRecognition` (or vendor-prefixed) | Bring your own [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)                                                                                                                                                          |
 
 > Note: change of `grammar` and `lang` will not take effect until next dictation.
 
 ## Events
 
-| Name         | Signature                                                           | Description                                                                                                                      |
-| ------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `onClick`    | `(event: DOMButtonEvent)`                                           | Emit when the user click on the button, `preventDefault` will stop recognition from starting                                     |
-| `onDictate`  | `({ result: { confidence: number, transcript: number } }) => {}`    | Emit when dictation is completed                                                                                                 |
-| `onError`    | `(event: SpeechRecognitionEvent) => {}`                             | Emit when error has occurred or dictation is interrupted, [see below](#event-lifecycle)                                          |
-| `onProgress` | `({ results: [{ confidence: number, transcript: number }] }) => {}` | Emit for interim results, the array contains every segments of recognized text                                                   |
-| `onRawEvent` | `(event: SpeechRecognitionEvent) => {}`                             | Emit for handling raw events from [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent) |
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Signature</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th><code>onClick</code></th>
+      <td><pre>(event: <a href="https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent">MouseEvent</a>) => void</pre></td>
+      <td>Emit when the user click on the button, <code>preventDefault</code> will stop recognition from starting</td>
+    </tr>
+    <tr>
+      <th><code>onDictate</code></th>
+      <td>
+        <pre>({
+  result: {
+    confidence: number,
+    transcript: number
+  }
+}) => void</pre>
+      </td>
+      <td>Emit when dictation is completed</td>
+    </tr>
+    <tr>
+      <th><code>onError</code></th>
+      <td><pre>(event: <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionErrorEvent">SpeechRecognitionErrorEvent</a>) => void</pre></td>
+      <td>Emit when error has occurred or dictation is interrupted, <a href="#event-lifecycle">see below</a></td>
+    </tr>
+    <tr>
+      <th><code>onProgress</code></th>
+      <td>
+        <pre>({
+  abortable: boolean,
+  results: [{
+    confidence: number,
+    transcript: number
+  }]
+}) => void</pre>
+      </td>
+      <td>Emit for interim results, the array contains every segments of recognized text</td>
+    </tr>
+    <tr>
+      <th><code>onRawEvent</code></th>
+      <td><pre>(event: <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent">SpeechRecognitionEvent</a>) => void</pre></td>
+      <td>
+        Emit for handling raw events from
+        <a href="https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognitionEvent"
+          ><code>SpeechRecognition</code></a
+        >
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## Hooks
+
+| Name            | Signature   | Description                                                                             |
+| --------------- | ----------- | --------------------------------------------------------------------------------------- |
+| `useAbortable`  | `[boolean]` | If ongoing speech recognition can be aborted, `true`, otherwise, `false`                |
+| `useReadyState` | `[number]`  | Returns the current state of recognition, refer to [this section](#function-as-a-child) |
+| `useSupported`  | `[boolean]` | If speech recognition is supported, `true`, otherwise, `false`                          |
 
 ### Event lifecycle
 
 One of the design aspect is to make sure events are easy to understand and deterministic. First rule of thumb is to make sure `onProgress` will lead to either `onDictate` or `onError`. Here are some samples of event firing sequence (tested on Chrome 67):
 
 - Happy path: speech is recognized
-  1.  `onProgress({})` (just started, therefore, no `results`)
-  2.  `onProgress({ results: [] })`
+  1.  `onProgress({ abortable: true })` (just started, therefore, no `results`)
+  2.  `onProgress({ abortable: true, results: [] })`
   3.  `onDictate({ result: ... })`
 - Heard some sound, but nothing can be recognized
-  1.  `onProgress({})`
+  1.  `onProgress({ abortable: true })`
   2.  `onDictate({})` (nothing is recognized, therefore, no `result`)
 - Nothing is heard (audio device available but muted)
-  1.  `onProgress({})`
+  1.  `onProgress({ abortable: true })`
   2.  `onError({ error: 'no-speech' })`
 - Recognition aborted
-  1.  `onProgress({})`
-  2.  `onProgress({ results: [] })`
+  1.  `onProgress({ abortable: true })`
+  2.  `onProgress({ abortable: true, results: [] })`
   3.  While speech is getting recognized, set `props.disabled` to `false`, interrupting dictation
   4.  `onError({ error: 'aborted' })`
-- Not authorized to use speech or no audio device is available
+- Not authorized to use speech or no audio device is availablabortable: truee
   1.  `onError({ error: 'not-allowed' })`
 
 ## Function as a child
@@ -128,6 +184,7 @@ export default () => (
   <DictateCheckbox
     className="my-dictate-checkbox"
     grammar="#JSGF V1.0; grammar districts; public <district> = Redmond | Bellevue;"
+    lang="en-US"
     onDictate={this.handleDictate}
     onProgress={this.handleProgress}
   >

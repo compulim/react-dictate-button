@@ -4,6 +4,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
+    "precommit": "lerna run precommit --parallel --stream",
     "start": "lerna run start --parallel --stream",
     "test": "lerna run test --stream"
   },

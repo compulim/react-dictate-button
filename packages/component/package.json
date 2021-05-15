@@ -34,6 +34,7 @@
     "build": "concurrently \"npm run build:babel:*\"",
     "build:babel:cjs": "babel --config-file ./babel.cjs.config.json --ignore **/*.spec.js,**/*.test.js --out-dir lib/ --source-maps inline src/",
     "build:babel:esm": "babel --config-file ./babel.esm.config.json --ignore **/*.spec.js,**/*.test.js --out-dir lib/esm --source-maps inline src/",
+    "precommit": "eslint src/",
     "prestart": "npm run build",
     "start": "concurrently \"npm run start:babel:*\"",
     "start:babel:cjs": "npm run build:babel:cjs -- --skip-initial-build --watch",
@@ -44,7 +45,12 @@
     "@babel/core": "^7.14.2",
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-react": "^7.13.13",
-    "concurrently": "^6.1.0"
+    "concurrently": "^6.1.0",
+    "eslint": "^7.26.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.3.0"
   },
   "dependencies": {
     "prop-types": "15.7.2"

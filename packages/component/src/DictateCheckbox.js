@@ -1,3 +1,5 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 2, 3] }] */
+
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useState } from 'react';
 
@@ -16,7 +18,7 @@ const DictateCheckboxCore = ({ children, className, disabled, onChange, started 
         onChange={onChange}
         type="checkbox"
       />
-      {typeof children === 'function' ? children({ readyState: readyState }) : children}
+      {typeof children === 'function' ? children({ readyState }) : children}
     </label>
   );
 };
@@ -31,7 +33,8 @@ DictateCheckboxCore.propTypes = {
   children: PropTypes.any,
   className: PropTypes.string,
   disabled: PropTypes.bool,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  started: PropTypes.bool.isRequired
 };
 
 const DictateCheckbox = ({
@@ -51,8 +54,8 @@ const DictateCheckbox = ({
   const [started, setStarted] = useState(false);
 
   const handleChange = useCallback(
-    ({ target: { checked: started } }) => {
-      setStarted(started);
+    ({ target: { checked } }) => {
+      setStarted(checked);
     },
     [setStarted]
   );
@@ -94,7 +97,23 @@ const DictateCheckbox = ({
   );
 };
 
+DictateCheckbox.defaultProps = {
+  children: undefined,
+  className: undefined,
+  disabled: undefined,
+  extra: undefined,
+  grammar: undefined,
+  lang: undefined,
+  onDictate: undefined,
+  onError: undefined,
+  onProgress: undefined,
+  onRawEvent: undefined,
+  speechGrammarList: undefined,
+  speechRecognition: undefined
+};
+
 DictateCheckbox.propTypes = {
+  children: PropTypes.any,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   extra: PropTypes.any,

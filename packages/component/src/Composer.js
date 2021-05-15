@@ -1,3 +1,5 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 2, 3] }] */
+
 import PropTypes from 'prop-types';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -8,6 +10,7 @@ import vendorPrefix from './vendorPrefix';
 
 function applyAll(...fns) {
   return function () {
+    // eslint-disable-next-line no-invalid-this, prefer-rest-params
     fns.forEach(fn => fn.apply(this, arguments));
   };
 }
@@ -125,6 +128,8 @@ const Composer = ({
 
       if (rawResults.length) {
         const results = [].map.call(rawResults, alts => {
+          // Destructuring breaks Angular due to a bug in Zone.js.
+          // eslint-disable-next-line prefer-destructuring
           const firstAlt = alts[0];
 
           return {
@@ -133,6 +138,8 @@ const Composer = ({
           };
         });
 
+        // Destructuring breaks Angular due to a bug in Zone.js.
+        // eslint-disable-next-line prefer-destructuring
         const first = rawResults[0];
 
         if (first.isFinal) {
@@ -153,11 +160,11 @@ const Composer = ({
 
   useEffect(() => {
     if (started) {
-      if (!speechRecognition || notAllowedRef.current) {
+      if (!speechRecognitionRef.current || notAllowedRef.current) {
         throw new Error('Speech recognition is not supported');
       }
 
-      let grammars = speechGrammarListRef.current && new speechGrammarListRef.current();
+      const grammars = speechGrammarListRef.current && new speechGrammarListRef.current();
 
       grammars && grammars.addFromString(grammarRef.current, 1);
 
@@ -177,6 +184,8 @@ const Composer = ({
       recognition.onspeechend = handleRawEvent;
       recognition.onspeechstart = handleRawEvent;
       recognition.onstart = applyAll(handleStart, handleRawEvent);
+
+      const { current: extra } = extraRef;
 
       extra &&
         Object.keys(extra).forEach(key => {
@@ -202,6 +211,13 @@ const Composer = ({
   }, [
     extraRef,
     grammarRef,
+    handleAudioEnd,
+    handleAudioStart,
+    handleEnd,
+    handleError,
+    handleRawEvent,
+    handleResult,
+    handleStart,
     langRef,
     notAllowedRef,
     recognitionRef,

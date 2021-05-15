@@ -1,3 +1,5 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 2, 3] }] */
+
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useState } from 'react';
 
@@ -13,6 +15,7 @@ const DictateButtonCore = ({ children, className, disabled, onClick }) => {
       className={className}
       disabled={readyState === 1 || readyState === 3 || !supported || disabled}
       onClick={onClick}
+      type="button"
     >
       {typeof children === 'function' ? children({ readyState }) : children}
     </button>
@@ -100,6 +103,7 @@ const DictateButton = ({
 };
 
 DictateButton.defaultProps = {
+  children: undefined,
   className: undefined,
   disabled: undefined,
   extra: undefined,
@@ -115,6 +119,7 @@ DictateButton.defaultProps = {
 };
 
 DictateButton.propTypes = {
+  children: PropTypes.any,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   extra: PropTypes.any,

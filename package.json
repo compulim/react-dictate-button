@@ -4,11 +4,15 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
-    "precommit": "lerna run precommit --parallel --stream",
+    "precommit": "lint-staged",
+    "precommit:component": "cd packages && cd component && npm run precommit --",
+    "prepare": "husky install",
     "start": "lerna run start --parallel --stream",
     "test": "lerna run test --stream"
   },
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "husky": "^6.0.0",
+    "lerna": "^4.0.0",
+    "lint-staged": "^11.0.0"
   }
 }

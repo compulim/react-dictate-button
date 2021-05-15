@@ -34,7 +34,7 @@
     "build": "concurrently \"npm run build:babel:*\"",
     "build:babel:cjs": "babel --config-file ./babel.cjs.config.json --ignore **/*.spec.js,**/*.test.js --out-dir lib/ --source-maps inline src/",
     "build:babel:esm": "babel --config-file ./babel.esm.config.json --ignore **/*.spec.js,**/*.test.js --out-dir lib/esm --source-maps inline src/",
-    "precommit": "eslint src/",
+    "precommit": "eslint",
     "prestart": "npm run build",
     "start": "concurrently \"npm run start:babel:*\"",
     "start:babel:cjs": "npm run build:babel:cjs -- --skip-initial-build --watch",

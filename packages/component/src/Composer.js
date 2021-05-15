@@ -68,7 +68,7 @@ const Composer = ({
       // Web Speech API does not emit "result" when nothing is heard, and Chrome does not emit "nomatch" event.
       // Because we emitted onProgress, we should emit "dictate" if not error, so they works in pair.
       emitDictateOnEndRef.current = true;
-      onProgressRef.current && onProgressRef.current({ abortable: recognitionAbortable(target) });
+      onProgressRef.current && onProgressRef.current({ abortable: recognitionAbortable(target), type: 'progress' });
     },
     [emitDictateOnEndRef, onProgressRef, recognitionRef, setReadyState]
   );
@@ -83,7 +83,7 @@ const Composer = ({
 
       setReadyState(0);
 
-      emitDictateOnEndRef.current && onDictateRef.current && onDictateRef.current({});
+      emitDictateOnEndRef.current && onDictateRef.current && onDictateRef.current({ type: 'dictate' });
     },
     [emitDictateOnEndRef, onDictateRef, recognitionRef, setReadyState]
   );
@@ -144,9 +144,10 @@ const Composer = ({
 
         if (first.isFinal) {
           emitDictateOnEndRef.current = false;
-          onDictateRef.current && onDictateRef.current({ result: results[0] });
+          onDictateRef.current && onDictateRef.current({ result: results[0], type: 'dictate' });
         } else {
-          onProgressRef.current && onProgressRef.current({ abortable: recognitionAbortable(target), results });
+          onProgressRef.current &&
+            onProgressRef.current({ abortable: recognitionAbortable(target), results, type: 'progress' });
         }
       }
     },
@@ -164,7 +165,7 @@ const Composer = ({
         throw new Error('Speech recognition is not supported');
       }
 
-      const grammars = speechGrammarListRef.current && new speechGrammarListRef.current();
+      const grammars = speechGrammarListRef.current && grammarRef.current && new speechGrammarListRef.current();
 
       grammars && grammars.addFromString(grammarRef.current, 1);
 

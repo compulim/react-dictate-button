@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Requires [`react@>=16.8.0`](https://npmjs.com/package/react)
 - Modifying props while recognition started will no longer abort recognition, props will be updated in next recognition
+- `SpeechGrammarList` is only constructed when `grammar` props present
 
 ### Fixed
 

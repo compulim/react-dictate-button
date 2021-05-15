@@ -11,6 +11,7 @@ A button to start dictation using [Web Speech API](https://developer.mozilla.org
 - Requires [`react@>=16.8.0`](https://npmjs.com/package/react)
 - Modifying props while recognition started will no longer abort recognition, props will be updated in next recognition
 - `SpeechGrammarList` is only constructed when `grammar` props present
+- Capability detection is now done through `window.mediaDevices.getUserMedia`, if `speechRecognition` prop is not present
 
 # Demo
 

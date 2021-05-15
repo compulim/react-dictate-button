@@ -197,7 +197,7 @@ export default () => (
 
 We also provide a "textbox with dictate button" version. But instead of shipping a full-fledged control, we make it a minimally-styled control so you can start copying the code and customize it in your own project. The sample code can be found at [DictationTextbox.js](packages/playground/src/DictationTextbox.js).
 
-# Design considersations
+# Design considerations
 
 ## Naming
 

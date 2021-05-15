@@ -1,14 +1,16 @@
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 2, 3] }] */
 
 import PropTypes from 'prop-types';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import Composer from './Composer';
-import Context from './Context';
+import useReadyState from './hooks/useReadyState';
 import useRefFrom from './useRefFrom';
+import useSupported from './hooks/useSupported';
 
 const DictateButtonCore = ({ children, className, disabled, onClick }) => {
-  const { readyState, supported } = useContext(Context);
+  const [readyState] = useReadyState();
+  const [supported] = useSupported();
 
   return (
     <button

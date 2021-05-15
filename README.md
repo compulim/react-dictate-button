@@ -6,6 +6,13 @@ A button to start dictation using [Web Speech API](https://developer.mozilla.org
 
 This project scaffolding is from [react-component-template](https://github.com/compulim/react-component-template).
 
+# Breaking changes
+
+## [2.0.0] - 2021-05-15
+
+- Requires [`react@>=16.8.0`](https://npmjs.com/package/react)
+- Modifying props while recognition started will no longer abort recognition, props will be updated in next recognition
+
 # Demo
 
 Try out this component at [github.io/compulim/react-dictate-button](https://github.io/compulim/react-dictate-button/).

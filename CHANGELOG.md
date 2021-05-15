@@ -18,9 +18,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Fixed [#39](https://github.com/compulim/react-dictate-button/issues/39), added `type="button"` attribute to `<DictateButton>`, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
 
+### Added
+
+- Added [`eslint`](https://npmjs.com/package/eslint), [`husky`](https://npmjs.com/package/husky), and [`lint-staged`](https://npmjs.com/package/lint-staged) for code hygiene, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
+
 ### Changed
 
-- Bumped all dependencies and reducing dependencies, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
+- Bumped all dependencies and removed unneeded dependencies, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
   - [`@babel/cli@7.13.16`](https://npmjs.com/package/@babel/cli)
   - [`@babel/core@7.14.2`](https://npmjs.com/package/@babel/core)
   - [`@babel/preset-env@7.14.2`](https://npmjs.com/package/@babel/preset-env)

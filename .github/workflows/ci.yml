@@ -115,12 +115,11 @@ jobs:
           echo "::set-output name=version::$(tar xOf *.tgz package/package.json | jq -r '.version')"
           echo "::set-output name=tarball::$(ls *.tgz)"
           echo "::set-output name=date::$(date +%Y-%m-%d)"
-          echo "::set-output name=branch::$(git branch --show-current)"
 
       - name: Publishing ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }}
         run: |
           npm config set //registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}
-          npm publish *.tgz --tag ${{ steps.read-package-json.outputs.branch }}
+          npm publish *.tgz --tag main
 
       - name: Tagging dist-tag ${{ steps.read-package-json.outputs.name }}@${{ steps.read-package-json.outputs.version }} latest
         if: ${{ startsWith(github.ref, 'refs/tags/') }}

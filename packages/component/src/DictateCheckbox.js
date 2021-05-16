@@ -1,79 +1,121 @@
+/* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 2, 3] }] */
+
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 
 import Composer from './Composer';
+import useReadyState from './hooks/useReadyState';
+import useSupported from './hooks/useSupported';
 
-export default class DictateCheckbox extends React.Component {
-  constructor(props) {
-    super(props);
+const DictateCheckboxCore = ({ children, className, disabled, onChange, started }) => {
+  const [readyState] = useReadyState();
+  const [supported] = useSupported();
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleDictate = this.handleDictate.bind(this);
-    this.handleError = this.handleError.bind(this);
+  return (
+    <label>
+      <input
+        checked={started}
+        className={className}
+        disabled={readyState === 1 || readyState === 3 || !supported || disabled}
+        onChange={onChange}
+        type="checkbox"
+      />
+      {typeof children === 'function' ? children({ readyState }) : children}
+    </label>
+  );
+};
 
-    this.state = {
-      started: false
-    };
-  }
+DictateCheckboxCore.defaultProps = {
+  children: undefined,
+  className: undefined,
+  disabled: undefined
+};
 
-  handleChange({ target: { checked: started } }) {
-    this.setState(() => ({ started }));
-  }
+DictateCheckboxCore.propTypes = {
+  children: PropTypes.any,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  onChange: PropTypes.func.isRequired,
+  started: PropTypes.bool.isRequired
+};
 
-  handleDictate(event) {
-    this.setState(() => ({ started: false }));
-    this.props.onDictate && this.props.onDictate(event);
-  }
+const DictateCheckbox = ({
+  children,
+  className,
+  disabled,
+  extra,
+  grammar,
+  lang,
+  onDictate,
+  onError,
+  onProgress,
+  onRawEvent,
+  speechGrammarList,
+  speechRecognition
+}) => {
+  const [started, setStarted] = useState(false);
 
-  handleError(event) {
-    this.setState(() => ({ started: false }));
-    this.props.onError && this.props.onError(event);
-  }
+  const handleChange = useCallback(
+    ({ target: { checked } }) => {
+      setStarted(checked);
+    },
+    [setStarted]
+  );
 
-  render() {
-    const { props, state } = this;
+  const handleDictate = useCallback(
+    event => {
+      setStarted(false);
 
-    return (
-      <Composer
-        extra={ props.extra }
-        grammar={ props.grammar }
-        lang={ props.lang }
-        onDictate={ this.handleDictate }
-        onError={ this.handleError }
-        onProgress={ props.onProgress }
-        onRawEvent={ props.onRawEvent }
-        speechGrammarList={ props.speechGrammarList }
-        speechRecognition={ props.speechRecognition }
-        started={ state.started && !props.disabled }
-      >
-        { context =>
-          <label>
-            <input
-              checked={ state.started }
-              className={ props.className }
-              disabled={
-                context.readyState === 1
-                || context.readyState === 3
-                || !context.supported
-                || props.disabled
-              }
-              onChange={ this.handleChange }
-              type="checkbox"
-            />
-            {
-              typeof props.children === 'function' ?
-                props.children({ readyState: context.readyState })
-              :
-                props.children
-            }
-          </label>
-        }
-      </Composer>
-    );
-  }
-}
+      onDictate && onDictate(event);
+    },
+    [onDictate, setStarted]
+  );
+
+  const handleError = useCallback(
+    event => {
+      setStarted(false);
+      onError && onError(event);
+    },
+    [onError, setStarted]
+  );
+
+  return (
+    <Composer
+      extra={extra}
+      grammar={grammar}
+      lang={lang}
+      onDictate={handleDictate}
+      onError={handleError}
+      onProgress={onProgress}
+      onRawEvent={onRawEvent}
+      speechGrammarList={speechGrammarList}
+      speechRecognition={speechRecognition}
+      started={started && !disabled}
+    >
+      <DictateCheckboxCore className={className} disabled={disabled} onChange={handleChange} started={started}>
+        {children}
+      </DictateCheckboxCore>
+    </Composer>
+  );
+};
+
+DictateCheckbox.defaultProps = {
+  children: undefined,
+  className: undefined,
+  disabled: undefined,
+  extra: undefined,
+  grammar: undefined,
+  lang: undefined,
+  onDictate: undefined,
+  onError: undefined,
+  onProgress: undefined,
+  onRawEvent: undefined,
+  speechGrammarList: undefined,
+  speechRecognition: undefined
+};
 
 DictateCheckbox.propTypes = {
+  children: PropTypes.any,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   extra: PropTypes.any,
@@ -86,3 +128,5 @@ DictateCheckbox.propTypes = {
   speechGrammarList: PropTypes.any,
   speechRecognition: PropTypes.any
 };
+
+export default DictateCheckbox;

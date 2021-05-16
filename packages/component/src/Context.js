@@ -1,21 +1,9 @@
-import React from 'react';
+import { createContext } from 'react';
 
-const Context = React.createContext({
-  abortable: undefined,
-  recognition: null
-})
+const Context = createContext({
+  abortable: false,
+  readyState: 0,
+  supported: true
+});
 
-const withRecognition = Component => props =>
-  <Context.Consumer>
-    { ({ recognition }) =>
-      <Component recognition={ recognition } { ...props }>
-        { props.children }
-      </Component>
-    }
-  </Context.Consumer>
-
-export default Context
-
-export {
-  withRecognition
-}
+export default Context;

@@ -1,108 +1,182 @@
+import { Composer, Context } from 'react-dictate-button';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 
-import { Composer } from 'component';
+import useRefFrom from './useRefFrom';
 
-export default class DictationTextbox extends React.Component {
-  constructor(props) {
-    super(props);
+const DictationTextBoxCore = ({
+  buttonClassName,
+  className,
+  disabled,
+  interim,
+  listening,
+  listeningText,
+  onChange,
+  onClick,
+  started,
+  startText,
+  stopText,
+  textboxClassName,
+  value
+}) => {
+  const { readyState, supported } = useContext(Context);
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleDictate = this.handleDictate.bind(this);
-    this.handleError = this.handleError.bind(this);
-    this.handleProgress = this.handleProgress.bind(this);
-
-    this.state = {
-      listening: false,
-      started: false
-    };
-  }
-
-  handleChange({ target: { value } }) {
-    this.props.onChange && this.props.onChange({ value });
-  }
-
-  handleClick() {
-    this.setState(({ started }) => ({ started: !started }));
-  }
-
-  handleDictate({ result }) {
-    const { transcript: value } = result || {};
-
-    this.setState(() => ({
-      interim: null,
-      listening: false,
-      started: false
-    }));
-
-    this.props.onChange && this.props.onChange({ value });
-  }
-
-  handleError(event) {
-    this.setState(() => ({
-      interim: null,
-      listening: false,
-      started: false
-    }));
-
-    this.props.onError && this.props.onError(event);
-  }
-
-  handleProgress({ results }) {
-    this.setState(() => ({
-      interim: (results || []).map(result => result.transcript.trim()).join(' '),
-      listening: true
-    }));
-  }
-
-  render() {
-    const { props, state } = this;
-
-    return (
-      <Composer
-        grammar={ props.grammar }
-        lang={ props.lang }
-        onDictate={ this.handleDictate }
-        onError={ this.handleError }
-        onProgress={ this.handleProgress }
-        speechGrammarList={ props.speechGrammarList }
-        speechRecognition={ props.speechRecognition }
-        started={ state.started && !props.disabled }
+  return (
+    <div className={className}>
+      <button
+        className={buttonClassName}
+        disabled={readyState === 1 || readyState === 3 || !supported || disabled}
+        onClick={onClick}
       >
-        { context =>
-          <div className={ props.className }>
-            <button
-              className={ props.buttonClassName }
-              disabled={
-                context.readyState === 1
-                || context.readyState === 3
-                || !context.supported
-                || props.disabled
-              }
-              onClick={ this.handleClick }
-            >
-              { context.readyState > 1 ? props.stopText : props.startText }
-            </button>
-            <input
-              className={ props.textboxClassName }
-              onChange={ this.handleChange }
-              placeholder={ (state.started && state.listening) ? state.interim || props.listeningText : '' }
-              readOnly={ context.readyState !== 0 }
-              type="text"
-              value={ (!state.started && props.value) || '' }
-            />
-          </div>
-        }
-      </Composer>
-    );
-  }
-}
+        {readyState > 1 ? stopText : startText}
+      </button>
+      <input
+        className={textboxClassName}
+        onChange={onChange}
+        placeholder={started && listening ? interim || listeningText : ''}
+        readOnly={readyState !== 0}
+        type="text"
+        value={(!started && value) || ''}
+      />
+    </div>
+  );
+};
+
+DictationTextBoxCore.defaultProps = {
+  buttonClassName: undefined,
+  className: undefined,
+  disabled: undefined,
+  interim: undefined,
+  listeningText: undefined,
+  startText: undefined,
+  stopText: undefined,
+  textboxClassName: undefined,
+  value: undefined
+};
+
+DictationTextBoxCore.propTypes = {
+  buttonClassName: PropTypes.string,
+  className: PropTypes.string,
+  disabled: PropTypes.bool,
+  interim: PropTypes.string,
+  listening: PropTypes.bool.isRequired,
+  listeningText: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  started: PropTypes.bool.isRequired,
+  startText: PropTypes.string,
+  stopText: PropTypes.string,
+  textboxClassName: PropTypes.string,
+  value: PropTypes.string
+};
+
+const DictationTextbox = ({
+  buttonClassName,
+  className,
+  disabled,
+  grammar,
+  lang,
+  listeningText,
+  onChange,
+  onError,
+  speechGrammarList,
+  speechRecognition,
+  startText,
+  stopText,
+  textboxClassName,
+  value
+}) => {
+  const [interim, setInterim] = useState('');
+  const [listening, setListening] = useState(false);
+  const [started, setStarted] = useState(false);
+  const onChangeRef = useRefFrom(onChange);
+  const onErrorRef = useRefFrom(onError);
+
+  const handleChange = useCallback(
+    ({ target: { value } }) => onChangeRef.current && onChangeRef.current({ value }),
+    [onChangeRef]
+  );
+
+  const handleClick = useCallback(() => setStarted(started => !started), [setStarted]);
+
+  const handleDictate = useCallback(
+    ({ result }) => {
+      const { transcript: value } = result || {};
+
+      setInterim(undefined);
+      setListening(false);
+      setStarted(false);
+
+      onChangeRef.current && onChangeRef.current({ value });
+    },
+    [onChangeRef, setInterim, setListening, setStarted]
+  );
+
+  const handleError = useCallback(
+    event => {
+      console.log('error', event);
+
+      setInterim(undefined);
+      setListening(false);
+      setStarted(false);
+
+      onErrorRef.current && onErrorRef.current(event);
+    },
+    [onErrorRef, setInterim, setListening, setStarted]
+  );
+
+  const handleProgress = useCallback(
+    ({ results }) => {
+      setInterim((results || []).map(result => result.transcript.trim()).join(' '));
+      setListening(true);
+    },
+    [setInterim, setListening]
+  );
+
+  return (
+    <Composer
+      grammar={grammar}
+      lang={lang}
+      onDictate={handleDictate}
+      onError={handleError}
+      onProgress={handleProgress}
+      speechGrammarList={speechGrammarList}
+      speechRecognition={speechRecognition}
+      started={started && !disabled}
+    >
+      <DictationTextBoxCore
+        buttonClassName={buttonClassName}
+        className={className}
+        disabled={disabled}
+        interim={interim}
+        listening={listening}
+        listeningText={listeningText}
+        onChange={handleChange}
+        onClick={handleClick}
+        started={started}
+        startText={startText}
+        stopText={stopText}
+        textboxClassName={textboxClassName}
+        value={value}
+      />
+    </Composer>
+  );
+};
 
 DictationTextbox.defaultProps = {
-  listeningText: 'Listening...',
+  buttonClassName: undefined,
+  className: undefined,
+  disabled: undefined,
+  grammar: undefined,
+  lang: undefined,
+  listeningText: 'Listening…',
+  onChange: undefined,
+  speechGrammarList: undefined,
+  speechRecognition: undefined,
   startText: 'Dictate',
-  stopText: 'Stop'
+  stopText: 'Stop',
+  textboxClassName: undefined,
+  value: undefined
 };
 
 DictationTextbox.propTypes = {
@@ -120,3 +194,5 @@ DictationTextbox.propTypes = {
   textboxClassName: PropTypes.string,
   value: PropTypes.string
 };
+
+export default DictationTextbox;

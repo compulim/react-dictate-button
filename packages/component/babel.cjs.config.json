@@ -1,0 +1,14 @@
+{
+  "extends": "./babel.config.json",
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "corejs": 3,
+        "forceAllTransforms": true,
+        "modules": "commonjs",
+        "useBuiltIns": "usage"
+      }
+    ]
+  ]
+}

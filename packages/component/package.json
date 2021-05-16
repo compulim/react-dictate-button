@@ -1,30 +1,64 @@
 {
-  "name": "component",
-  "version": "1.0.0",
-  "description": "",
+  "name": "react-dictate-button",
+  "version": "0.0.0-0",
+  "description": "A button to start dictation using Web Speech API, with an easy to understand event lifecycle.",
+  "keywords": [
+    "dictate",
+    "dictation",
+    "rtc",
+    "speech recognition",
+    "speech to text",
+    "voice recognition",
+    "voice",
+    "web rtc",
+    "web speech",
+    "webrtc",
+    "webspeech"
+  ],
   "main": "lib/index.js",
+  "module": "lib/esm/index.js",
+  "files": [
+    "lib/**/*"
+  ],
+  "author": "William Wong <compulim@hotmail.com> (http://compulim.info/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/compulim/react-dictate-button.git"
+  },
+  "bugs": {
+    "url": "https://github.com/compulim/react-dictate-button/issues"
+  },
+  "homepage": "https://github.com/compulim/react-dictate-button#readme",
   "scripts": {
-    "build": "babel --out-dir lib --ignore **/*.spec.js,**/*.test.js --source-maps inline src/",
-    "clean": "rimraf lib",
-    "test": "echo no tests specified"
+    "build": "concurrently \"npm run build:babel:*\"",
+    "build:babel:cjs": "babel --config-file ./babel.cjs.config.json --ignore **/*.spec.js,**/*.test.js --out-dir lib/ --source-maps inline src/",
+    "build:babel:esm": "babel --config-file ./babel.esm.config.json --ignore **/*.spec.js,**/*.test.js --out-dir lib/esm --source-maps inline src/",
+    "precommit": "eslint",
+    "prestart": "npm run build",
+    "start": "concurrently \"npm run start:babel:*\"",
+    "start:babel:cjs": "npm run build:babel:cjs -- --skip-initial-build --watch",
+    "start:babel:esm": "npm run build:babel:esm -- --skip-initial-build --watch"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "jest": "^22.4.4",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
-    "rimraf": "^2.6.2"
-  },
-  "peerDependencies": {
-    "react": "^16.4.1"
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.14.2",
+    "@babel/plugin-transform-runtime": "^7.14.2",
+    "@babel/preset-env": "^7.14.2",
+    "@babel/preset-react": "^7.13.13",
+    "concurrently": "^6.1.0",
+    "eslint": "^7.26.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "prettier": "^2.3.0"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
-    "event-as-promise": "^1.0.5",
-    "glamor": "^2.20.40",
-    "memoize-one": "^4.0.0"
+    "@babel/runtime-corejs3": "^7.14.0",
+    "core-js": "^3.12.1",
+    "prop-types": "15.7.2"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.0"
   }
 }

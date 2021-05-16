@@ -4,8 +4,10 @@
     [
       "@babel/preset-env",
       {
+        "corejs": 3,
         "forceAllTransforms": true,
-        "modules": false
+        "modules": false,
+        "useBuiltIns": "usage"
       }
     ]
   ]

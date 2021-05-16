@@ -43,6 +43,7 @@
   "devDependencies": {
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.14.2",
+    "@babel/plugin-transform-runtime": "^7.14.2",
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-react": "^7.13.13",
     "concurrently": "^6.1.0",
@@ -53,6 +54,8 @@
     "prettier": "^2.3.0"
   },
   "dependencies": {
+    "@babel/runtime-corejs3": "^7.14.0",
+    "core-js": "^3.12.1",
     "prop-types": "15.7.2"
   },
   "peerDependencies": {

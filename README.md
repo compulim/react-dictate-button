@@ -8,10 +8,10 @@ A button to start speech recognition using [Web Speech API](https://developer.mo
 
 ## [2.0.0] - 2021-05-15
 
-- Requires [`react@>=16.8.0`](https://npmjs.com/package/react)
-- Modifying props while recognition started will no longer abort recognition, props will be updated in next recognition
-- `SpeechGrammarList` is only constructed when `grammar` props present
-- Capability detection is now done through `window.mediaDevices.getUserMedia`, if `speechRecognition` prop is not present
+- Requires [`react@>=16.8.0`](https://npmjs.com/package/react) and [`core-js@3`](https://npmjs.com/package/core-js`)
+- Modifying props while recognition has started will no longer abort recognition immediately, props will be updated in next recognition
+- `SpeechGrammarList` is only constructed when `grammar` props is present
+- If `speechRecognition` prop is not present, capability detection is now done through `window.mediaDevices.getUserMedia`
 
 # Demo
 

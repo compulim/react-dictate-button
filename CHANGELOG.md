@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Breaking changes
 
-- Requires [`react@>=16.8.0`](https://npmjs.com/package/react)
-- Modifying props while recognition started will no longer abort recognition, props will be updated in next recognition
-- `SpeechGrammarList` is only constructed when `grammar` props present
-- Capability detection is now done through `window.mediaDevices.getUserMedia`, if `speechRecognition` prop is not present
+- Requires [`react@>=16.8.0`](https://npmjs.com/package/react) and [`core-js@3`](https://npmjs.com/package/core-js`)
+- Modifying props while recognition has started will no longer abort recognition immediately, props will be updated in next recognition
+- `SpeechGrammarList` is only constructed when `grammar` props is present
+- If `speechRecognition` prop is not present, capability detection is now done through `window.mediaDevices.getUserMedia`
 
 ### Fixed
 
@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
+- Added `module` field for exporting in ES Modules, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
 - Added [`eslint`](https://npmjs.com/package/eslint), [`husky`](https://npmjs.com/package/husky), and [`lint-staged`](https://npmjs.com/package/lint-staged) for code hygiene, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
 
 ### Changed

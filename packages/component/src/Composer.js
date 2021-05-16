@@ -191,9 +191,9 @@ const Composer = ({
       const { current: extra } = extraRef;
 
       extra &&
-        Object.keys(extra).forEach(key => {
+        Object.entries(extra).forEach(([key, value]) => {
           if (key !== 'constructor' && key !== 'prototype' && key !== '__proto__') {
-            recognition[key] = extra[key];
+            recognition[key] = value;
           }
         });
 

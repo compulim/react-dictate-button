@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `module` field for exporting in ES Modules, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
 - Added [`eslint`](https://npmjs.com/package/eslint), [`husky`](https://npmjs.com/package/husky), and [`lint-staged`](https://npmjs.com/package/lint-staged) for code hygiene, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
+- Added and exported hooks: `useAbortable`, `useReadyState`, and `useSupported`, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
 
 ### Changed
 

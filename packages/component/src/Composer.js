@@ -80,10 +80,12 @@ const Composer = ({
       }
 
       recognitionRef.current = undefined;
-
       setReadyState(0);
 
-      emitDictateOnEndRef.current && onDictateRef.current && onDictateRef.current({ type: 'dictate' });
+      if (emitDictateOnEndRef.current) {
+        onDictateRef.current && onDictateRef.current({ type: 'dictate' });
+        emitDictateOnEndRef.current = false;
+      }
     },
     [emitDictateOnEndRef, onDictateRef, recognitionRef, setReadyState]
   );
@@ -143,7 +145,11 @@ const Composer = ({
         const first = rawResults[0];
 
         if (first.isFinal) {
-          emitDictateOnEndRef.current = false;
+          // After "onDictate" callback, the caller should be able to set "started" to false on an unabortable recognition.
+          // TODO: Add test for fortification.
+          recognitionRef.current = undefined;
+          setReadyState(0);
+
           onDictateRef.current && onDictateRef.current({ result: results[0], type: 'dictate' });
         } else {
           onProgressRef.current &&
@@ -151,7 +157,7 @@ const Composer = ({
         }
       }
     },
-    [emitDictateOnEndRef, onDictateRef, onProgressRef, recognitionRef]
+    [onDictateRef, onProgressRef, recognitionRef, setReadyState]
   );
 
   const handleStart = useCallback(

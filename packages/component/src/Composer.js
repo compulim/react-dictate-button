@@ -79,8 +79,12 @@ const Composer = ({
         return;
       }
 
-      recognitionRef.current = undefined;
-      setReadyState(0);
+      if (!recognitionRef.current.continuous) {
+        recognitionRef.current = undefined;
+        setReadyState(0);
+      } else {
+        recognitionRef.current.start();
+      }
 
       if (emitDictateOnEndRef.current) {
         onDictateRef.current && onDictateRef.current({ type: 'dictate' });
@@ -93,6 +97,10 @@ const Composer = ({
   const handleError = useCallback(
     event => {
       if (event.target !== recognitionRef.current) {
+        return;
+      }
+
+      if (event.error === 'no-speech' && recognitionRef.current.continuous) {
         return;
       }
 
@@ -129,7 +137,8 @@ const Composer = ({
       }
 
       if (rawResults.length) {
-        const results = [].map.call(rawResults, alts => {
+        const filteredRawResults = [].filter.call(rawResults, alts => !alts.isFinal);
+        const results = [].map.call(filteredRawResults, alts => {
           // Destructuring breaks Angular due to a bug in Zone.js.
           // eslint-disable-next-line prefer-destructuring
           const firstAlt = alts[0];
@@ -142,15 +151,21 @@ const Composer = ({
 
         // Destructuring breaks Angular due to a bug in Zone.js.
         // eslint-disable-next-line prefer-destructuring
-        const first = rawResults[0];
+        const last = rawResults[rawResults.length - 1];
 
-        if (first.isFinal) {
+        if (last.isFinal) {
           // After "onDictate" callback, the caller should be able to set "started" to false on an unabortable recognition.
-          // TODO: Add test for fortification.
-          recognitionRef.current = undefined;
-          setReadyState(0);
+          if (!recognitionRef.current.continuous) {
+            // TODO: Add test for fortification.
+            recognitionRef.current = undefined;
+            setReadyState(0);
+          }
+          const finalResult = {
+            confidence: last[0].confidence,
+            transcript: last[0].transcript
+          };
 
-          onDictateRef.current && onDictateRef.current({ result: results[0], type: 'dictate' });
+          onDictateRef.current && onDictateRef.current({ result: finalResult, type: 'dictate' });
         } else {
           onProgressRef.current &&
             onProgressRef.current({ abortable: recognitionAbortable(target), results, type: 'progress' });

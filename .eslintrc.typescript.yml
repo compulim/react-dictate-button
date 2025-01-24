@@ -1,0 +1,15 @@
+extends:
+  - plugin:@typescript-eslint/recommended
+parser: '@typescript-eslint/parser'
+plugins:
+  - '@typescript-eslint'
+rules:
+  # Shortening if-statement into &&, ||, or ternary operators.
+  '@typescript-eslint/no-unused-expressions': off
+
+  '@typescript-eslint/no-unused-vars':
+    - error
+    - argsIgnorePattern: ^_
+      caughtErrorsIgnorePattern: ^_
+      destructuredArrayIgnorePattern: ^_
+      varsIgnorePattern: ^_

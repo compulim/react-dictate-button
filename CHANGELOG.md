@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+
+- Ported to TypeScript, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+
+### Removed
+
+- 💥 `Context` is being deprecated, please move to `useAbortable`, `useReadyState`, and `useSupported` hooks respectively, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+
+### Changed
+
 ## [2.0.1] - 2021-06-01
 
 ### Fixed
@@ -14,13 +24,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed [#65](https://github.com/compulim/react-dictate-button/issues/65). Setting `started` to `false` after `onDictate` callback should succeed even on an unabortable recognition, by [@compulim](https://github.com/compulim), in PR [#66](https://github.com/compulim/react-dictate-button/pull/66)
 
 ## [2.0.0] - 2021-05-16
-
-### Breaking changes
-
-- Requires [`react@>=16.8.0`](https://npmjs.com/package/react) and [`core-js@3`](https://npmjs.com/package/core-js`)
-- Modifying props while recognition has started will no longer abort recognition immediately, props will be updated in next recognition
-- `SpeechGrammarList` is only constructed when `grammar` props is present
-- If `speechRecognition` prop is not present, capability detection is now done through `window.mediaDevices.getUserMedia`
 
 ### Fixed
 
@@ -34,6 +37,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- 💥 Requires [`react@>=16.8.0`](https://npmjs.com/package/react) and [`core-js@3`](https://npmjs.com/package/core-js`)
+- 💥 Modifying props while recognition has started will no longer abort recognition immediately, props will be updated in next recognition
+- 💥 `SpeechGrammarList` is only constructed when `grammar` props is present
+- 💥 If `speechRecognition` prop is not present, capability detection is now done through `window.mediaDevices.getUserMedia`
 - Bumped all dependencies and removed unneeded dependencies, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
   - [`@babel/cli@7.13.16`](https://npmjs.com/package/@babel/cli)
   - [`@babel/core@7.14.2`](https://npmjs.com/package/@babel/core)

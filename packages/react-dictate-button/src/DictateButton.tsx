@@ -1,16 +1,17 @@
 /* eslint no-magic-numbers: ["error", { "ignore": [0, 1, 2, 3] }] */
 
-import PropTypes from 'prop-types';
 import React, { useCallback, useState, type MouseEventHandler, type ReactNode } from 'react';
 import { useRefFrom } from 'use-ref-from';
 
 import Composer from './Composer.tsx';
-import type { DictateEventHandler } from './DictateEventHandler.ts';
-import type { ErrorEventHandler } from './ErrorEventHandler.ts';
+import { type DictateEventHandler } from './DictateEventHandler.ts';
+import { type ErrorEventHandler } from './ErrorEventHandler.ts';
 import useReadyState from './hooks/useReadyState.ts';
 import useSupported from './hooks/useSupported.ts';
-import type { ProgressEventHandler } from './ProgressEventHandler.ts';
-import type { RawEventHandler } from './RawEventHandler.ts';
+import { type ProgressEventHandler } from './ProgressEventHandler.ts';
+import { type RawEventHandler } from './RawEventHandler.ts';
+import { type SpeechGrammarListPolyfill } from './SpeechGrammarListPolyfill.ts';
+import { type SpeechRecognitionPolyfill } from './SpeechRecognitionPolyfill.ts';
 
 type DictateButtonCoreProps = Readonly<{
   children?: ((context: Readonly<{ readyState: number | undefined }>) => ReactNode) | ReactNode | undefined;
@@ -35,24 +36,11 @@ const DictateButtonCore = ({ children, className, disabled, onClick }: DictateBu
   );
 };
 
-DictateButtonCore.defaultProps = {
-  children: undefined,
-  className: undefined,
-  disabled: undefined
-};
-
-DictateButtonCore.propTypes = {
-  children: PropTypes.any,
-  className: PropTypes.string,
-  disabled: PropTypes.bool,
-  onClick: PropTypes.func.isRequired
-};
-
 type DictateButtonProps = {
   children?: ((context: Readonly<{ readyState: number | undefined }>) => ReactNode) | ReactNode | undefined;
   className?: string | undefined;
   disabled?: boolean | undefined;
-  extra?: any;
+  extra?: Record<string, unknown> | undefined;
   grammar?: string | undefined;
   lang?: string | undefined;
   onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
@@ -60,8 +48,8 @@ type DictateButtonProps = {
   onError?: ErrorEventHandler | undefined;
   onProgress?: ProgressEventHandler | undefined;
   onRawEvent?: RawEventHandler | undefined;
-  speechGrammarList?: any;
-  speechRecognition?: any;
+  speechGrammarList?: SpeechGrammarListPolyfill | undefined;
+  speechRecognition?: SpeechRecognitionPolyfill | undefined;
 };
 
 const DictateButton = ({

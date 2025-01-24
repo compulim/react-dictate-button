@@ -42,7 +42,7 @@ type DictateCheckboxProps = {
   children?: ((context: Readonly<{ readyState: number }>) => ReactNode) | ReactNode | undefined;
   className?: string | undefined;
   disabled?: boolean | undefined;
-  extra?: any | undefined;
+  extra?: Record<string, unknown> | undefined;
   grammar?: string | undefined;
   lang?: string | undefined;
   onDictate?: DictateEventHandler | undefined;

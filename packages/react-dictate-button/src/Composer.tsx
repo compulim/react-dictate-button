@@ -31,7 +31,7 @@ type ComposerProps = {
       ) => ReactNode)
     | ReactNode
     | undefined;
-  extra?: Record<string, any> | undefined;
+  extra?: Record<string, unknown> | undefined;
   grammar?: string | undefined;
   lang?: string | undefined;
   onDictate?: DictateEventHandler | undefined;
@@ -43,6 +43,7 @@ type ComposerProps = {
   started?: boolean | undefined;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function applyAll<T extends (this: any, ...args: any[]) => any>(this: any, ...fns: T[]): T {
   return function (...args) {
     // eslint-disable-next-line no-invalid-this, prefer-rest-params
@@ -51,7 +52,8 @@ function applyAll<T extends (this: any, ...args: any[]) => any>(this: any, ...fn
 }
 
 function recognitionAbortable(recognition: unknown): recognition is {
-  abort: (...args: any[]) => any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  abort: () => void;
 } {
   return !!(
     recognition &&
@@ -247,13 +249,13 @@ const Composer = ({
       recognition.onspeechend = handleRawEvent;
       recognition.onspeechstart = handleRawEvent;
       recognition.onstart = applyAll(handleStart, handleRawEvent);
-      console.log(recognition);
 
       const { current: extra } = extraRef;
 
       extra &&
         Object.entries(extra).forEach(([key, value]) => {
           if (key !== 'constructor' && key !== 'prototype' && key !== '__proto__') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (recognition as any)[key] = value;
           }
         });

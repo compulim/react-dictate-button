@@ -1,4 +1,4 @@
-import type { TypedEventHandler } from './TypedEventHandler.ts';
+import { type TypedEventHandler } from './TypedEventHandler.ts';
 
 export type ProgressEventHandler = TypedEventHandler<{
   abortable: boolean;

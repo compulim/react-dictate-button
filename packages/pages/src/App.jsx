@@ -1,5 +1,5 @@
-import DictateButton, { DictateCheckbox } from 'react-dictate-button';
 import React, { useCallback, useState } from 'react';
+import DictateButton, { DictateCheckbox } from 'react-dictate-button';
 
 import DictationTextbox from './DictationTextbox';
 

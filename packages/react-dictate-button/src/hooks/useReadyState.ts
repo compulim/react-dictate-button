@@ -1,4 +1,4 @@
-import useDictateContext from './internal/useDictateContext';
+import useDictateContext from './internal/useDictateContext.ts';
 
 export default function useReadyState(): readonly [number] {
   const { readyState } = useDictateContext();

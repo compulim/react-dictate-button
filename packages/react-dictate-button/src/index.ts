@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unassigned-import
 import './env.d.ts';
 
 import Composer, { type ComposerProps } from './Composer.tsx';

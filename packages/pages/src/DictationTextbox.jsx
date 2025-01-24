@@ -1,8 +1,8 @@
-import { Composer, Context } from 'react-dictate-button';
 import PropTypes from 'prop-types';
 import React, { useCallback, useContext, useState } from 'react';
+import { Composer, Context } from 'react-dictate-button';
 
-import useRefFrom from './useRefFrom';
+import useRefFrom from './useRefFrom.js';
 
 const DictationTextBoxCore = ({
   buttonClassName,
@@ -63,6 +63,7 @@ DictationTextBoxCore.propTypes = {
   listeningText: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
+  onError: PropTypes.func.isRequired,
   started: PropTypes.bool.isRequired,
   startText: PropTypes.string,
   stopText: PropTypes.string,
@@ -171,6 +172,7 @@ DictationTextbox.defaultProps = {
   lang: undefined,
   listeningText: 'Listening…',
   onChange: undefined,
+  onError: undefined,
   speechGrammarList: undefined,
   speechRecognition: undefined,
   startText: 'Dictate',
@@ -187,6 +189,7 @@ DictationTextbox.propTypes = {
   lang: PropTypes.string,
   listeningText: PropTypes.string,
   onChange: PropTypes.func,
+  onError: PropTypes.func.isRequired,
   speechGrammarList: PropTypes.any,
   speechRecognition: PropTypes.any,
   startText: PropTypes.string,

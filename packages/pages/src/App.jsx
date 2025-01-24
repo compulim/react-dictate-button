@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import DictateButton, { DictateCheckbox } from 'react-dictate-button';
 
-import DictationTextbox from './DictationTextbox';
+import DictationTextbox from './DictationTextbox.jsx';
 
 const App = () => {
   const [customValue, setCustomValue] = useState();
@@ -21,13 +21,10 @@ const App = () => {
     [setInterim, setResult]
   );
 
-  const handleError = useCallback(
-    () => {
-      setInterim(undefined);
-      setResult(undefined);
-    },
-    [setInterim, setResult]
-  );
+  const handleError = useCallback(() => {
+    setInterim(undefined);
+    setResult(undefined);
+  }, [setInterim, setResult]);
 
   const handleProgress = useCallback(
     event => {

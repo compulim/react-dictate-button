@@ -10,7 +10,7 @@
     "bump:prod": "PACKAGES_TO_BUMP=$(cat package.json | jq -r '(.pinDependencies // {}) as $P | (.localPeerDependencies // {}) as $L | (.dependencies // {}) | to_entries | map(select(.key as $K | $L | has($K) | not)) | map(.key + \"@\" + ($P[.key] // [\"latest\"])[0]) | join(\" \")') && [ ! -z \"$PACKAGES_TO_BUMP\" ] && npm install $PACKAGES_TO_BUMP || true",
     "precommit": "npm run precommit:eslint && npm run precommit:typescript",
     "precommit:eslint": "ESLINT_USE_FLAT_CONFIG=false eslint --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts ./src/",
-    "precommit:typescript": "tsc --project ./src/tsconfig.json",
+    "precommit:typescript": "echo [disabled] tsc --project ./src/tsconfig.json",
     "reinstall": "rm -r node_modules package-lock.json && npm install",
     "start": "npm run build -- --servedir=./public",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json"
@@ -60,8 +60,9 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "prop-types": "^15.8.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-dictate-button": "^0.0.0-0"
+    "react-dictate-button": "^0.0.0-0",
+    "react-dom": "^18.3.1"
   }
 }

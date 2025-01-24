@@ -1,0 +1,4 @@
+env:
+  browser: true
+extends:
+  - ./.eslintrc.custom.yml

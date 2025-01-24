@@ -100,7 +100,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `extra` prop to copy to `SpeechRecognition`
 
-### Changes
+### Changed
 
 - Bumped to [`memoize-one@4.0.0`](https://npmjs.com/package/memoize-one/v/4.0.0)
 

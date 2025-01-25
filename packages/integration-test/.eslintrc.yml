@@ -1,15 +1,7 @@
-env:
-  browser: true
 extends:
-  - ../../.eslintrc.react.yml
   - ./.eslintrc.custom.yml
 overrides:
   - env:
       commonjs: true
     files:
       - '**/*.js'
-rules:
-  # Disable for convenience
-  react/display-name: off
-  # Disable for convenience
-  react/prop-types: off

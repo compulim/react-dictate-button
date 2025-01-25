@@ -8,17 +8,11 @@ import { type DictateEventHandler } from './DictateEventHandler.ts';
 import { type ErrorEventHandler } from './ErrorEventHandler.ts';
 import { type ProgressEventHandler } from './ProgressEventHandler.ts';
 import { type RawEventHandler } from './RawEventHandler.ts';
+import { type SpeechGrammarListPolyfill } from './SpeechGrammarListPolyfill.ts';
+import { type SpeechRecognitionPolyfill } from './SpeechRecognitionPolyfill.ts';
 import { type TypedEventHandler } from './TypedEventHandler.ts';
 import usePrevious from './usePrevious.ts';
 import vendorPrefix from './vendorPrefix.ts';
-
-interface SpeechGrammarListPolyfill {
-  new (): SpeechGrammarList;
-}
-
-interface SpeechRecognitionPolyfill {
-  new (): SpeechRecognition;
-}
 
 type ComposerProps = {
   children?:

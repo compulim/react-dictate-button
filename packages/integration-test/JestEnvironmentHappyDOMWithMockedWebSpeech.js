@@ -23,11 +23,8 @@ class SpeechRecognitionEvent extends Event {
   ) {
     super(type, eventInitDict);
 
-    if ('results' in eventInitDict && eventInitDict.results) {
-      this._results = eventInitDict.results;
-    } else {
-      this._results = new SpeechRecognitionResultList();
-    }
+    this._results =
+      'results' in eventInitDict && eventInitDict.results ? eventInitDict.results : new SpeechRecognitionResultList();
   }
 
   get results() {

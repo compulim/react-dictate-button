@@ -1,7 +1,8 @@
-import React, { useCallback, useContext, useState, type FormEventHandler } from 'react';
+import React, { useCallback, useState, type FormEventHandler } from 'react';
 import {
   Composer,
-  Context,
+  useReadyState,
+  useSupported,
   type DictateEventHandler,
   type ErrorEventHandler,
   type ProgressEventHandler,
@@ -41,7 +42,8 @@ const DictationTextBoxCore = ({
   textBoxClassName,
   value
 }: DictationTextBoxCoreProps) => {
-  const { readyState, supported } = useContext(Context);
+  const [readyState] = useReadyState();
+  const [supported] = useSupported();
 
   return (
     <div className={className}>

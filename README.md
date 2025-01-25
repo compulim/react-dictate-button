@@ -33,7 +33,7 @@ Reasons why we need to build our own component, instead of using [existing packa
 First, install our production version by `npm install react-dictate-button`. Or our development version by `npm install react-dictate-button@master`.
 
 ```jsx
-import DictateButton from 'react-dictate-button';
+import { DictateButton } from 'react-dictate-button';
 
 export default () => (
   <DictateButton

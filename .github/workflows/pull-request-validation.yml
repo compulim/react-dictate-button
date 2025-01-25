@@ -7,6 +7,8 @@ on:
 
 jobs:
   call-workflow:
+    permissions:
+      contents: read
     strategy:
       matrix:
         switch: [current, react-16, react-17, react-18]

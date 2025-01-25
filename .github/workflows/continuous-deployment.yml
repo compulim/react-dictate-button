@@ -1,0 +1,24 @@
+name: Continuous deployment
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '.devcontainer/**'
+      - '.github/**'
+  workflow_dispatch: {}
+
+jobs:
+  call-workflow:
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
+      pages: write
+    secrets:
+      APP_ID: ${{ secrets.WORKFLOW_BOT_APP_ID }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      PRIVATE_KEY: ${{ secrets.WORKFLOW_BOT_PRIVATE_KEY }}
+    uses: compulim/workflows/.github/workflows/continuous-deployment.yml@main
+    with:
+      package-name: react-dictate-button

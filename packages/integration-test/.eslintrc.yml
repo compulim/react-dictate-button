@@ -1,0 +1,7 @@
+extends:
+  - ./.eslintrc.custom.yml
+overrides:
+  - env:
+      commonjs: true
+    files:
+      - '**/*.js'

@@ -1,0 +1,6 @@
+{
+  "forwardPorts": [8000],
+  "image": "mcr.microsoft.com/devcontainers/typescript-node",
+  "remoteUser": "node",
+  "updateContentCommand": "npm clean-install && npm run build"
+}

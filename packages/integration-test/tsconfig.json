@@ -1,8 +1,8 @@
 // This configuration file is for VSCode only.
 {
   "compilerOptions": {
-    "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noEmit": true
   },
   "extends": "./tsconfig.custom.json"
 }

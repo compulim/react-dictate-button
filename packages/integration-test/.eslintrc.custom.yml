@@ -2,6 +2,11 @@ env:
   browser: true
 extends:
   ../../.eslintrc.react.yml
+overrides:
+  - env:
+      commonjs: true
+    files:
+      - '**/*.js'
 rules:
   # Disable for convenience
   react/display-name: off

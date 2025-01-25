@@ -1,3 +1,5 @@
+/* eslint import/no-commonjs:0 */
+
 const JestEnvironmentHappyDOM = require('@happy-dom/jest-environment').default;
 const { EventTargetProperties } = require('event-target-properties');
 
@@ -21,11 +23,12 @@ class SpeechRecognitionEvent extends Event {
   ) {
     super(type, eventInitDict);
 
-    this._results =
-      'results' in eventInitDict && eventInitDict.results ? eventInitDict.results : new SpeechRecognitionResultList();
+    if ('results' in eventInitDict && eventInitDict.results) {
+      this._results = eventInitDict.results;
+    } else {
+      this._results = new SpeechRecognitionResultList();
+    }
   }
-
-  /** @type {SpeechRecognitionResultList} */ _results;
 
   get results() {
     return this._results;
@@ -43,13 +46,11 @@ class SpeechRecognitionResultList extends Array {
 }
 
 class SpeechRecognitionResult extends Array {
-  constructor(/** @type {SpeechRecognitionAlternative[]} */ items, /** @type {boolean} */ isFinal) {
+  constructor(/** @type {SpeechRecognitionAlternative[]} */ items, /** @type {boolean | undefined} */ isFinal) {
     super(...items);
 
-    this._isFinal = isFinal;
+    this._isFinal = !!isFinal;
   }
-
-  _isFinal = false;
 
   item(/** @type {number} */ index) {
     return this[index];
@@ -61,13 +62,10 @@ class SpeechRecognitionResult extends Array {
 }
 
 class SpeechRecognitionAlternative {
-  constructor(/** @type {number} */ confidence, /** @type {string} */ transcript) {
-    this._confidence = confidence;
-    this._transcript = transcript;
+  constructor(/** @type {number | undefined} */ confidence, /** @type {string | undefined} */ transcript) {
+    this._confidence = typeof confidence === 'undefined' ? 0 : confidence;
+    this._transcript = typeof transcript === 'undefined' ? '' : transcript;
   }
-
-  /** @type {number} */ _confidence = 0;
-  /** @type {string} */ _transcript = '';
 
   get confidence() {
     return this._confidence;
@@ -82,7 +80,12 @@ class SpeechRecognition extends EventTarget {
   constructor() {
     super();
 
+    this._continuous = false;
     this._eventTargetProperties = new EventTargetProperties(this);
+    this._grammars = new SpeechGrammarList();
+    this._interimResults = false;
+    this._lang = '';
+    this._maxAlternatives = 1;
   }
 
   get onaudioend() {
@@ -172,12 +175,6 @@ class SpeechRecognition extends EventTarget {
   set onstart(value) {
     this._eventTargetProperties.setProperty('start', value || undefined);
   }
-
-  _continuous = false;
-  _grammars = new SpeechGrammarList();
-  _interimResults = false;
-  _lang = '';
-  _maxAlternatives = 1;
 
   get continuous() {
     return this._continuous;

@@ -1,3 +1,5 @@
+/// <reference types="dom-speech-recognition" />
+
 const { fireEvent, render, screen } = require('@testing-library/react');
 const React = require('react');
 const { DictateButton } = require('react-dictate-button');
@@ -10,8 +12,8 @@ test('simple scenario', async () => {
   render(
     <DictateButton
       onDictate={handleDictate}
-      speechGrammarList={SpeechGrammarList}
-      speechRecognition={SpeechRecognition}
+      speechGrammarList={window.SpeechGrammarList}
+      speechRecognition={window.SpeechRecognition}
     >
       Click me
     </DictateButton>

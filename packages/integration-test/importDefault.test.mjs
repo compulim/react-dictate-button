@@ -1,6 +1,8 @@
+/// <reference types="dom-speech-recognition" />
+
 import { fireEvent, render, screen } from '@testing-library/react';
 import React, { act } from 'react';
-import DictateButton from 'react-dictate-button';
+import { DictateButton } from 'react-dictate-button';
 
 test('simple scenario', async () => {
   const handleDictate = jest.fn();
@@ -8,8 +10,8 @@ test('simple scenario', async () => {
   render(
     <DictateButton
       onDictate={handleDictate}
-      speechGrammarList={SpeechGrammarList}
-      speechRecognition={SpeechRecognition}
+      speechGrammarList={window.SpeechGrammarList}
+      speechRecognition={window.SpeechRecognition}
     >
       Click me
     </DictateButton>

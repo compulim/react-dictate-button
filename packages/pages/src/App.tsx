@@ -3,7 +3,10 @@ import { DictateButton, DictateCheckbox, ProgressEventHandler, type DictateEvent
 
 import DictationTextBox from './DictationTextbox.tsx';
 
-type Result = Readonly<{ confidence?: number | undefined; transcript?: string | undefined }>;
+type Result = Readonly<{
+  confidence?: number | undefined;
+  transcript?: string | undefined;
+}>;
 
 const App = () => {
   const [customValue, setCustomValue] = useState<string | undefined>();
@@ -91,7 +94,7 @@ const App = () => {
       ) : (
         false
       )}
-      <h1>Custom textbox</h1>
+      <h1>Custom text box</h1>
       <DictationTextBox
         grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
         lang="en-US"

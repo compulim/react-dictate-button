@@ -17,12 +17,12 @@ type DictationTextBoxCoreProps = {
   interim?: string | undefined;
   listening: boolean;
   listeningText?: string | undefined;
-  onChange: FormEventHandler<HTMLInputElement> | undefined;
-  onClick: () => void;
+  onChange?: FormEventHandler<HTMLInputElement> | undefined;
+  onClick?: (() => void) | undefined;
   started: boolean;
   startText?: string | undefined;
   stopText?: string | undefined;
-  textboxClassName?: string | undefined;
+  textBoxClassName?: string | undefined;
   value?: string | undefined;
 };
 
@@ -38,7 +38,7 @@ const DictationTextBoxCore = ({
   started,
   startText,
   stopText,
-  textboxClassName,
+  textBoxClassName,
   value
 }: DictationTextBoxCoreProps) => {
   const { readyState, supported } = useContext(Context);
@@ -53,7 +53,7 @@ const DictationTextBoxCore = ({
         {readyState > 1 ? stopText : startText}
       </button>
       <input
-        className={textboxClassName}
+        className={textBoxClassName}
         onChange={onChange}
         placeholder={started && listening ? interim || listeningText : ''}
         readOnly={readyState !== 0}
@@ -77,7 +77,7 @@ type DictationTextBoxProps = {
   speechRecognition?: SpeechRecognitionPolyfill | undefined;
   startText?: string | undefined;
   stopText?: string | undefined;
-  textboxClassName?: string | undefined;
+  textBoxClassName?: string | undefined;
   value?: string | undefined;
 };
 
@@ -94,7 +94,7 @@ const DictationTextBox = ({
   speechRecognition,
   startText = 'Dictate',
   stopText = 'Stop',
-  textboxClassName,
+  textBoxClassName,
   value
 }: DictationTextBoxProps) => {
   const [interim, setInterim] = useState<string | undefined>('');
@@ -167,7 +167,7 @@ const DictationTextBox = ({
         started={started}
         startText={startText}
         stopText={stopText}
-        textboxClassName={textboxClassName}
+        textBoxClassName={textBoxClassName}
         value={value}
       />
     </Composer>

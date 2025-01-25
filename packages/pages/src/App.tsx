@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { DictateButton, DictateCheckbox, ProgressEventHandler, type DictateEventHandler } from 'react-dictate-button';
 
-import DictationTextBox from './DictationTextbox.tsx';
+import DictationTextBox from './DictationTextBox.tsx';
 
 type Result = Readonly<{
   confidence?: number | undefined;

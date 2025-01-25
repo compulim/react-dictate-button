@@ -16,14 +16,18 @@ import { type SpeechGrammarListPolyfill } from './SpeechGrammarListPolyfill.ts';
 import { type SpeechRecognitionPolyfill } from './SpeechRecognitionPolyfill.ts';
 import { type TypedEventHandler } from './TypedEventHandler.ts';
 
-/** @deprecated Use `useXXX` hooks instead. */
+/** @deprecated Use `useAbortable`, `useReadyState`, and `useSupported` hooks instead. */
 const Context = Context_;
 
-export default DictateButton;
+/** @deprecated Use `import { DictateButton } from 'react-dictate-button'` instead. */
+const DictateButton_ = DictateButton;
+
+export default DictateButton_;
 
 export {
   Composer,
   Context,
+  DictateButton,
   DictateCheckbox,
   useAbortable,
   useReadyState,

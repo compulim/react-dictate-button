@@ -15,7 +15,7 @@ body:
       description: |
         Please verify the issue on latest versions. Support on non-latest version is minimal and on a per case basis.
 
-        If you are using latest production, please verify against our latest development version as the issue could have been resolved recently. To install latest development version, run `npm install use-schema-org-action@main`.
+        If you are using latest production, please verify against our latest development version as the issue could have been resolved recently. To install latest development version, run `npm install react-dictate-button@main`.
 
       multiple: true
       options:
@@ -30,8 +30,8 @@ body:
       description: Please describe how you import our package.
       multiple: true
       options:
-        - 'ESM: import { useSchemaOrgAction } from "use-schema-org-action"'
-        - 'CommonJS: require("use-schema-org-action")'
+        - 'ESM: import { DictateButton } from "react-dictate-button"'
+        - 'CommonJS: require("react-dictate-button")'
         - Others or unrelated
     validations:
       required: true
@@ -78,34 +78,26 @@ body:
         *Support will be slow or denied if a test case is not provided.*
       render: js
       value: |
-        /** @jest-environment jsdom */
-        /// <reference types="@types/jest" />
+        import { fireEvent, render, screen } from '@testing-library/react';
+        import React, { act } from 'react';
+        import { DictateButton } from 'react-dictate-button';
 
-        import { create } from 'react-test-renderer';
-        import { useSchemaOrgAction } from 'use-schema-org-action';
+        test('simple scenario', async () => {
+          const handleDictate = jest.fn();
 
-        test('simple scenario', () => {
-          // SETUP: With a VoteAction.
-          const App = () => {
-            const [action] = useSchemaOrgAction(
-              {
-                '@type': 'VoteAction',
-                actionOption: 'upvote',
-                'actionOption-input': { valueName: 'action' }
-              },
-              () => Promise({})
-            );
-
-            return JSON.stringify(action);
-          };
-
-          // WHEN: Rendered.
-          const renderer = create(<App />);
-
-          // THEN: It should render JSON of { "@type": "VoteAction", actionOption: 'upvote', actionStatus: 'PotentialActionStatus' }.
-          expect(renderer.toJSON()).toMatchInlineSnapshot(
-            `"{"actionStatus":"PotentialActionStatus","@type":"VoteAction","actionOption":"upvote"}"`
+          render(
+            <DictateButton
+              onDictate={handleDictate}
+              speechGrammarList={SpeechGrammarList}
+              speechRecognition={SpeechRecognition}
+            >
+              Click me
+            </DictateButton>
           );
+
+          await act(() => fireEvent.click(screen.getByText('Click me')));
+
+          expect(handleDictate).toHaveBeenCalledTimes(1);
         });
   - type: input
     attributes:

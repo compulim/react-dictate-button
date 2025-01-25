@@ -233,7 +233,6 @@ const Composer = ({
       }
 
       if (typeof langRef.current !== 'undefined') {
-        console.log(langRef.current);
         recognition.lang = langRef.current;
       }
 

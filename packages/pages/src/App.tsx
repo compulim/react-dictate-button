@@ -1,16 +1,21 @@
 import React, { useCallback, useState } from 'react';
-import DictateButton, { DictateCheckbox } from 'react-dictate-button';
+import { DictateButton, DictateCheckbox, ProgressEventHandler, type DictateEventHandler } from 'react-dictate-button';
 
-import DictationTextbox from './DictationTextbox.jsx';
+import DictationTextBox from './DictationTextbox.tsx';
+
+type Result = Readonly<{ confidence?: number | undefined; transcript?: string | undefined }>;
 
 const App = () => {
-  const [customValue, setCustomValue] = useState();
-  const [interim, setInterim] = useState();
-  const [result, setResult] = useState();
+  const [customValue, setCustomValue] = useState<string | undefined>();
+  const [interim, setInterim] = useState<readonly Result[] | undefined>();
+  const [result, setResult] = useState<Result | undefined>();
 
-  const handleCustomChange = useCallback(({ value }) => setCustomValue(value), [setCustomValue]);
+  const handleCustomChange = useCallback<(event: { value: string | undefined }) => void>(
+    ({ value }) => setCustomValue(value),
+    [setCustomValue]
+  );
 
-  const handleDictate = useCallback(
+  const handleDictate = useCallback<DictateEventHandler>(
     event => {
       const { result } = event;
       const { confidence, transcript } = result || {};
@@ -26,7 +31,7 @@ const App = () => {
     setResult(undefined);
   }, [setInterim, setResult]);
 
-  const handleProgress = useCallback(
+  const handleProgress = useCallback<ProgressEventHandler>(
     event => {
       setInterim(event.results);
       setResult(undefined);
@@ -34,7 +39,10 @@ const App = () => {
     [setInterim, setResult]
   );
 
-  const handleRawEvent = useCallback(event => console.log(`Raw event: ${event.type}`, event), []);
+  const handleRawEvent = useCallback<(event: Event) => void>(
+    event => console.log(`Raw event: ${event.type}`, event),
+    []
+  );
 
   return (
     <div>
@@ -84,7 +92,7 @@ const App = () => {
         false
       )}
       <h1>Custom textbox</h1>
-      <DictationTextbox
+      <DictationTextBox
         grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
         lang="en-US"
         onChange={handleCustomChange}

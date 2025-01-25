@@ -11,11 +11,18 @@ Breaking changes are indicated by 💥.
 
 ### Changed
 
-- Ported to TypeScript, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+- Modernized project scaffold, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+   - Ported all code to TypeScript
+   - Monorepo management changed to [npm workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces) from [lerna](https://lerna.js.org/)
+   - Bundler changed to [esbuild](https://esbuild.github.io/)/[tsup](https://github.com/egoist/tsup) from [Babel](https://babeljs.io/)
+   - Test environment changed to [Happy DOM](https://github.com/capricorn86/happy-dom) from [JSDOM](https://github.com/jsdom/jsdom)
+   - Added ES Modules in additional to CommonJS
 
 ### Removed
 
-- 💥 `Context` is being deprecated, please move to `useAbortable`, `useReadyState`, and `useSupported` hooks respectively, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+- 💥 Deprecated `Context`, use `useAbortable`, `useReadyState`, and `useSupported` hooks respectively, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+- 💥 Deprecated default exports, use `import { DictateButton } from 'react-dictate-button'` instead, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+- 💥 Removed `defaultProps` and `propTypes`, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
 
 ### Changed
 

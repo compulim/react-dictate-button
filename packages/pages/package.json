@@ -47,6 +47,12 @@
       "react-dom": "18.0.0"
     }
   },
+  "pinDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "react": "^18",
+    "react-dom": "^18"
+  },
   "localPeerDependencies": {
     "react-dictate-button": "^0.0.0-0"
   },

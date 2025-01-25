@@ -17,6 +17,7 @@ Breaking changes are indicated by 💥.
    - Bundler changed to [esbuild](https://esbuild.github.io/)/[tsup](https://github.com/egoist/tsup) from [Babel](https://babeljs.io/)
    - Test environment changed to [Happy DOM](https://github.com/capricorn86/happy-dom) from [JSDOM](https://github.com/jsdom/jsdom)
    - Added ES Modules in additional to CommonJS
+   - Removed [`husky`](https://www.npmjs.com/package/husky) and [`lint-staged`](https://www.npmjs.com/package/lint-staged)
 
 ### Removed
 

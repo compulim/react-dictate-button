@@ -11,11 +11,11 @@ Breaking changes are indicated by 💥.
 
 ### Changed
 
-- Ported to TypeScript, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+- Ported to TypeScript, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
 
 ### Removed
 
-- 💥 `Context` is being deprecated, please move to `useAbortable`, `useReadyState`, and `useSupported` hooks respectively, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+- 💥 `Context` is being deprecated, please move to `useAbortable`, `useReadyState`, and `useSupported` hooks respectively, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
 
 ### Changed
 

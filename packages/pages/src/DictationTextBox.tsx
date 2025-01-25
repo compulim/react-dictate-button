@@ -2,9 +2,9 @@ import React, { useCallback, useContext, useState, type FormEventHandler } from 
 import {
   Composer,
   Context,
-  DictateEventHandler,
-  ErrorEventHandler,
-  ProgressEventHandler,
+  type DictateEventHandler,
+  type ErrorEventHandler,
+  type ProgressEventHandler,
   type SpeechGrammarListPolyfill,
   type SpeechRecognitionPolyfill
 } from 'react-dictate-button';

@@ -1,0 +1,14 @@
+name: Bump dependencies
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  call-workflow:
+    permissions:
+      contents: write
+      id-token: write
+    secrets:
+      APP_ID: ${{ secrets.WORKFLOW_BOT_APP_ID }}
+      PRIVATE_KEY: ${{ secrets.WORKFLOW_BOT_PRIVATE_KEY }}
+    uses: compulim/workflows/.github/workflows/bump-dependencies.yml@main

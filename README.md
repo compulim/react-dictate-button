@@ -33,7 +33,7 @@ Reasons why we need to build our own component, instead of using [existing packa
 First, install our production version by `npm install react-dictate-button`. Or our development version by `npm install react-dictate-button@master`.
 
 ```jsx
-import DictateButton from 'react-dictate-button';
+import { DictateButton } from 'react-dictate-button';
 
 export default () => (
   <DictateButton
@@ -191,7 +191,7 @@ For example,
 
 # Customization thru morphing
 
-You can build your own component by copying our layout code, without messing around the [logic code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js), [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js), and [`DictationTextbox.js`](packages/playground/src/DictationTextbox.js).
+You can build your own component by copying our layout code, without messing around the [logic code behind the scene](packages/component/src/Composer.js). For details, please refer to [`DictateButton.js`](packages/component/src/DictateButton.js), [`DictateCheckbox.js`](packages/component/src/DictateCheckbox.js), and [`DictationTextBox.js`](packages/pages/src/DictationTextBox.js).
 
 ## Checkbox version
 
@@ -213,9 +213,9 @@ export default () => (
 );
 ```
 
-## Textbox with dictate button
+## Text box with dictate button
 
-We also provide a "textbox with dictate button" version. But instead of shipping a full-fledged control, we make it a minimally-styled control so you can start copying the code and customize it in your own project. The sample code can be found at [DictationTextbox.js](packages/playground/src/DictationTextbox.js).
+We also provide a "text box with dictate button" version. But instead of shipping a full-fledged control, we make it a minimally-styled control so you can start copying the code and customize it in your own project. The sample code can be found at [DictationTextBox.js](packages/pages/src/DictationTextBox.js).
 
 # Design considerations
 

@@ -1,0 +1,20 @@
+name: Publish release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  call-workflow:
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    secrets:
+      APP_ID: ${{ secrets.WORKFLOW_BOT_APP_ID }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      PRIVATE_KEY: ${{ secrets.WORKFLOW_BOT_PRIVATE_KEY }}
+    uses: compulim/workflows/.github/workflows/publish-release.yml@main
+    with:
+      package-name: react-dictate-button
+      tag: ${{ github.ref_name }}

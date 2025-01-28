@@ -5,7 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+Breaking changes are indicated by 💥.
+
 ## [Unreleased]
+
+### Changed
+
+- Modernized project scaffold, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+   - Ported all code to TypeScript
+   - Monorepo management changed to [npm workspaces](https://docs.npmjs.com/cli/v11/using-npm/workspaces) from [lerna](https://lerna.js.org/)
+   - Bundler changed to [esbuild](https://esbuild.github.io/)/[tsup](https://github.com/egoist/tsup) from [Babel](https://babeljs.io/)
+   - Test environment changed to [Happy DOM](https://github.com/capricorn86/happy-dom) from [JSDOM](https://github.com/jsdom/jsdom)
+   - Added ES Modules in additional to CommonJS
+   - Removed [`husky`](https://www.npmjs.com/package/husky) and [`lint-staged`](https://www.npmjs.com/package/lint-staged)
+
+### Removed
+
+- 💥 Deprecated `Context`, use `useAbortable`, `useReadyState`, and `useSupported` hooks respectively, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+- 💥 Deprecated default exports, use `import { DictateButton } from 'react-dictate-button'` instead, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+- 💥 Removed `defaultProps` and `propTypes`, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
+
+### Changed
 
 ## [2.0.1] - 2021-06-01
 
@@ -14,13 +34,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Fixed [#65](https://github.com/compulim/react-dictate-button/issues/65). Setting `started` to `false` after `onDictate` callback should succeed even on an unabortable recognition, by [@compulim](https://github.com/compulim), in PR [#66](https://github.com/compulim/react-dictate-button/pull/66)
 
 ## [2.0.0] - 2021-05-16
-
-### Breaking changes
-
-- Requires [`react@>=16.8.0`](https://npmjs.com/package/react) and [`core-js@3`](https://npmjs.com/package/core-js`)
-- Modifying props while recognition has started will no longer abort recognition immediately, props will be updated in next recognition
-- `SpeechGrammarList` is only constructed when `grammar` props is present
-- If `speechRecognition` prop is not present, capability detection is now done through `window.mediaDevices.getUserMedia`
 
 ### Fixed
 
@@ -35,6 +48,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Changed
 
+- 💥 Requires [`react@>=16.8.0`](https://npmjs.com/package/react) and [`core-js@3`](https://npmjs.com/package/core-js`)
+- 💥 Modifying props while recognition has started will no longer abort recognition immediately, props will be updated in next recognition
+- 💥 `SpeechGrammarList` is only constructed when `grammar` props is present
+- 💥 If `speechRecognition` prop is not present, capability detection is now done through `window.mediaDevices.getUserMedia`
 - Bumped all dependencies and removed unneeded dependencies, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
   - [`@babel/cli@7.13.16`](https://npmjs.com/package/@babel/cli)
   - [`@babel/core@7.14.2`](https://npmjs.com/package/@babel/core)
@@ -94,7 +111,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Added `extra` prop to copy to `SpeechRecognition`
 
-### Changes
+### Changed
 
 - Bumped to [`memoize-one@4.0.0`](https://npmjs.com/package/memoize-one/v/4.0.0)
 

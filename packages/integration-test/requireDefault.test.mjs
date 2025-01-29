@@ -1,4 +1,4 @@
-const { fireEvent, render, screen } = require('@testing-library/react');
+const { act, fireEvent, render, screen } = require('@testing-library/react');
 const React = require('react');
 const { DictateButton } = require('react-dictate-button');
 const {
@@ -8,8 +8,6 @@ const {
   SpeechRecognitionResult,
   SpeechRecognitionResultList
 } = require('react-dictate-button-mocked-speech-recognition');
-
-const { act } = React;
 
 test('simple scenario', async () => {
   let start;

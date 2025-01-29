@@ -1,7 +1,7 @@
 /** @jest-environment @happy-dom/jest-environment */
 
-import { fireEvent, render, screen } from '@testing-library/react';
-import React, { act } from 'react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
 import { DictateButton } from 'react-dictate-button';
 import { SpeechGrammarList, SpeechRecognition } from 'react-dictate-button-mocked-speech-recognition';
 

@@ -1,3 +1,1 @@
-import { SpeechRecognition } from './index';
-
-test('import should work', () => expect(SpeechRecognition).toBeTruthy());
+test('import should work', () => expect(require('./index').SpeechRecognition).toBeTruthy());

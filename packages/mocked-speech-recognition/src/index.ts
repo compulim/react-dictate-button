@@ -1,9 +1,9 @@
-import SpeechGrammarList from './SpeechGrammarList';
-import SpeechRecognition from './SpeechRecognition';
-import SpeechRecognitionAlternative from './SpeechRecognitionAlternative';
-import SpeechRecognitionEvent from './SpeechRecognitionEvent';
-import SpeechRecognitionResult from './SpeechRecognitionResult';
-import SpeechRecognitionResultList from './SpeechRecognitionResultList';
+import SpeechGrammarList from './SpeechGrammarList.ts';
+import SpeechRecognition from './SpeechRecognition.ts';
+import SpeechRecognitionAlternative from './SpeechRecognitionAlternative.ts';
+import SpeechRecognitionEvent from './SpeechRecognitionEvent.ts';
+import SpeechRecognitionResult from './SpeechRecognitionResult.ts';
+import SpeechRecognitionResultList from './SpeechRecognitionResultList.ts';
 
 export {
   SpeechGrammarList,

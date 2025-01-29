@@ -4,8 +4,7 @@ export default defineConfig([
   {
     dts: true,
     entry: {
-      'react-dictate-button': './src/index.ts',
-      'react-dictate-button.internal': './src/internal.ts'
+      'react-dictate-button-mocked-speech-recognition': './src/index.ts'
     },
     format: ['cjs', 'esm'],
     sourcemap: true

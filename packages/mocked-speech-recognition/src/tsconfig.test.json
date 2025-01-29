@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true // "@fluentui/*" has internal conflicts on their types
+  },
+  "extends": "./tsconfig.json",
+  "include": ["**/*.spec.*", "**/*.test.*"]
+}

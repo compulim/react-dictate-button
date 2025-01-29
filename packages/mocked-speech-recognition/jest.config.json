@@ -1,7 +1,5 @@
 {
-  "testPathIgnorePatterns": ["/__setup__/", "/lib/", "/node_modules/", "/__types__/", "\\.pnp\\.[^\\/]+$"],
   "transform": {
-    "/__tests__/types/": ["<rootDir>/__tests__/__setup__/typingTestTransformer.js"],
     "\\.[jt]sx?$": [
       "babel-jest",
       {

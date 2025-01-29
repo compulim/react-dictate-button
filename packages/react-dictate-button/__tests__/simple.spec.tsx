@@ -1,13 +1,15 @@
-const { act, fireEvent, render, screen } = require('@testing-library/react');
-const React = require('react');
-const { DictateButton } = require('react-dictate-button');
-const {
+/** @jest-environment @happy-dom/jest-environment */
+
+import { act, fireEvent, render, screen } from '@testing-library/react';
+import React from 'react';
+import { DictateButton } from 'react-dictate-button';
+import {
   SpeechRecognition,
   SpeechRecognitionAlternative,
   SpeechRecognitionEvent,
   SpeechRecognitionResult,
   SpeechRecognitionResultList
-} = require('react-dictate-button/internal');
+} from 'react-dictate-button-mocked-speech-recognition';
 
 test('simple scenario', async () => {
   let start;

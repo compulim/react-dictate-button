@@ -8,7 +8,7 @@ const {
   SpeechRecognitionAlternative,
   SpeechRecognitionResult,
   SpeechRecognitionResultList
-} = require('react-dictate-button-mocked-speech-recognition');
+} = require('react-dictate-button/internal');
 
 module.exports = class JestEnvironmentWithWebSpeech extends JestEnvironmentHappyDOM {
   /** @override */

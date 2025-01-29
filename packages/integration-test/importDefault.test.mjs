@@ -7,7 +7,7 @@ import {
   SpeechRecognitionEvent,
   SpeechRecognitionResult,
   SpeechRecognitionResultList
-} from 'react-dictate-button-mocked-speech-recognition';
+} from 'react-dictate-button/internal';
 
 test('simple scenario', async () => {
   let start;

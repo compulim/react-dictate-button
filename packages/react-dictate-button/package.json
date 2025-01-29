@@ -6,6 +6,16 @@
     "./dist/"
   ],
   "exports": {
+    "./internal": {
+      "import": {
+        "types": "./dist/react-dictate-button.internal.d.mts",
+        "default": "./dist/react-dictate-button.internal.mjs"
+      },
+      "require": {
+        "types": "./dist/react-dictate-button.internal.d.ts",
+        "default": "./dist/react-dictate-button.internal.js"
+      }
+    },
     ".": {
       "import": {
         "types": "./dist/react-dictate-button.d.mts",

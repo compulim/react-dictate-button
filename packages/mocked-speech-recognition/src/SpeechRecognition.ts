@@ -1,9 +1,5 @@
 import { EventTargetProperties } from 'event-target-properties';
 import SpeechGrammarList from './SpeechGrammarList';
-import SpeechRecognitionAlternative from './SpeechRecognitionAlternative';
-import SpeechRecognitionEvent from './SpeechRecognitionEvent';
-import SpeechRecognitionResult from './SpeechRecognitionResult';
-import SpeechRecognitionResultList from './SpeechRecognitionResultList';
 
 export default class SpeechRecognition extends EventTarget {
   constructor() {
@@ -149,16 +145,6 @@ export default class SpeechRecognition extends EventTarget {
   }
 
   abort() {}
-
-  start() {
-    const event = new SpeechRecognitionEvent('result', {
-      results: new SpeechRecognitionResultList([
-        new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9, 'Hello, World!')], true)
-      ])
-    });
-
-    this.dispatchEvent(event);
-  }
-
+  start() {}
   stop() {}
 }

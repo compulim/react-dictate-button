@@ -2,64 +2,89 @@
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { DictateButton } from 'react-dictate-button';
+import { DictateButton, type DictateEventHandler } from '../src/index';
 import {
   SpeechRecognition,
   SpeechRecognitionAlternative,
   SpeechRecognitionEvent,
   SpeechRecognitionResult,
   SpeechRecognitionResultList
-} from 'react-dictate-button-mocked-speech-recognition';
+} from 'react-dictate-button/internal';
 
-test('simple scenario', async () => {
-  let start;
-  const constructSpeechRecognition = jest.fn().mockImplementationOnce(() => {
-    const speechRecognition = new SpeechRecognition();
+describe('simple scenario', () => {
+  let start: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
+  let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
+  let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
 
-    start = jest.spyOn(speechRecognition, 'start');
+  beforeEach(() => {
+    constructSpeechRecognition = jest.fn().mockImplementationOnce(() => {
+      const speechRecognition = new SpeechRecognition();
 
-    return speechRecognition;
-  });
-  const handleDictate = jest.fn();
+      start = jest.spyOn(speechRecognition, 'start');
 
-  render(
-    <DictateButton
-      onDictate={handleDictate}
-      speechGrammarList={window.SpeechGrammarList}
-      speechRecognition={constructSpeechRecognition}
-    >
-      Click me
-    </DictateButton>
-  );
+      return speechRecognition;
+    });
 
-  expect(constructSpeechRecognition).toHaveBeenCalledTimes(0);
+    onDictate = jest.fn();
 
-  act(() => fireEvent.click(screen.getByText('Click me')));
-
-  expect(constructSpeechRecognition).toHaveBeenCalledTimes(1);
-  expect(start).toHaveBeenCalledTimes(1);
-
-  act(() => {
-    const /** @type {SpeechRecognition} */ speechRecognition = constructSpeechRecognition.mock.results[0]?.value;
-
-    speechRecognition.dispatchEvent(new Event('start', {}));
-    speechRecognition.dispatchEvent(new Event('audiostart', {}));
-    speechRecognition.dispatchEvent(new Event('soundstart', {}));
-    speechRecognition.dispatchEvent(new Event('speechstart', {}));
-
-    speechRecognition.dispatchEvent(
-      new SpeechRecognitionEvent('result', {
-        results: new SpeechRecognitionResultList([
-          new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9, 'Hello, World!')], true)
-        ])
-      })
+    render(
+      <DictateButton
+        onDictate={onDictate}
+        speechGrammarList={window.SpeechGrammarList}
+        speechRecognition={constructSpeechRecognition}
+      >
+        Click me
+      </DictateButton>
     );
-
-    speechRecognition.dispatchEvent(new Event('speechend', {}));
-    speechRecognition.dispatchEvent(new Event('soundend', {}));
-    speechRecognition.dispatchEvent(new Event('audioend', {}));
-    speechRecognition.dispatchEvent(new Event('end', {}));
   });
 
-  expect(handleDictate).toHaveBeenCalledTimes(1);
+  describe('when the dictate button is clicked', () => {
+    beforeEach(() => {
+      expect(constructSpeechRecognition).toHaveBeenCalledTimes(0);
+
+      act(() => fireEvent.click(screen.getByText('Click me')));
+    });
+
+    test('SpeechRecognition object should be constructed', () =>
+      expect(constructSpeechRecognition).toHaveBeenCalledTimes(1));
+
+    test('start() should have been called once', () => expect(start).toHaveBeenCalledTimes(1));
+
+    describe('when speech events are dispatched', () => {
+      beforeEach(() =>
+        act(() => {
+          const speechRecognition: SpeechRecognition = constructSpeechRecognition.mock.results[0]?.value;
+
+          speechRecognition.dispatchEvent(new Event('start', {}));
+          speechRecognition.dispatchEvent(new Event('audiostart', {}));
+          speechRecognition.dispatchEvent(new Event('soundstart', {}));
+          speechRecognition.dispatchEvent(new Event('speechstart', {}));
+
+          speechRecognition.dispatchEvent(
+            new SpeechRecognitionEvent('result', {
+              results: new SpeechRecognitionResultList([
+                new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9, 'Hello, World!')], true)
+              ])
+            })
+          );
+
+          speechRecognition.dispatchEvent(new Event('speechend', {}));
+          speechRecognition.dispatchEvent(new Event('soundend', {}));
+          speechRecognition.dispatchEvent(new Event('audioend', {}));
+          speechRecognition.dispatchEvent(new Event('end', {}));
+        })
+      );
+
+      describe('onDictate() should have been called', () => {
+        test('once', () => expect(onDictate).toHaveBeenCalledTimes(1));
+        test('with result', () =>
+          expect(onDictate).toHaveBeenLastCalledWith(
+            expect.objectContaining({
+              result: { confidence: 0.9, transcript: 'Hello, World!' },
+              type: 'dictate'
+            })
+          ));
+      });
+    });
+  });
 });

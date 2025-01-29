@@ -192,7 +192,6 @@ const Composer = ({
 
         if (first?.isFinal) {
           // After "onDictate" callback, the caller should be able to set "started" to false on an unabortable recognition.
-          // TODO: Add test for fortification.
           recognitionRef.current = undefined;
           setReadyState(0);
 

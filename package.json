@@ -6,6 +6,7 @@
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
   "workspaces": [
+    "packages/mocked-speech-recognition",
     "packages/react-dictate-button",
     "packages/pages",
     "packages/integration-test"

@@ -1,24 +1,24 @@
 {
-  "name": "react-dictate-button",
+  "name": "react-dictate-button-mocked-speech-recognition",
+  "private": true,
   "version": "0.0.0-0",
-  "description": "A button to start dictation using Web Speech API, with an easy to understand event lifecycle.",
   "files": [
     "./dist/"
   ],
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/react-dictate-button.d.mts",
-        "default": "./dist/react-dictate-button.mjs"
+        "types": "./dist/react-dictate-button-mocked-speech-recognition.d.mts",
+        "default": "./dist/react-dictate-button-mocked-speech-recognition.mjs"
       },
       "require": {
-        "types": "./dist/react-dictate-button.d.ts",
-        "default": "./dist/react-dictate-button.js"
+        "types": "./dist/react-dictate-button-mocked-speech-recognition.d.ts",
+        "default": "./dist/react-dictate-button-mocked-speech-recognition.js"
       }
     }
   },
-  "main": "./dist/react-dictate-button.js",
-  "typings": "./dist/react-dictate-button.d.ts",
+  "main": "./dist/react-dictate-button-mocked-speech-recognition.js",
+  "typings": "./dist/react-dictate-button-mocked-speech-recognition.d.ts",
   "scripts": {
     "build": "tsup",
     "bump": "npm run bump:prod && npm run bump:dev",
@@ -29,7 +29,6 @@
     "precommit:publint": "publint",
     "precommit:typescript:production": "tsc --noEmit --project ./src/tsconfig.precommit.production.json",
     "precommit:typescript:test": "tsc --noEmit --project ./src/tsconfig.precommit.test.json",
-    "prepack": "cp ../../CHANGELOG.md . && cp ../../LICENSE . && cp ../../README.md .",
     "start": "npm run build -- --onSuccess=\"touch ../pages/src/index.jsx ../integration-test/jest.config.json\" --watch",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
     "test": "jest"
@@ -38,19 +37,7 @@
     "type": "git",
     "url": "git+https://github.com/compulim/react-dictate-button.git"
   },
-  "keywords": [
-    "dictate",
-    "dictation",
-    "rtc",
-    "speech recognition",
-    "speech to text",
-    "voice recognition",
-    "voice",
-    "web rtc",
-    "web speech",
-    "webrtc",
-    "webspeech"
-  ],
+  "keywords": [],
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
   "bugs": {
@@ -102,7 +89,6 @@
     "@babel/preset-react": "^7.25.7",
     "@babel/preset-typescript": "^7.25.7",
     "@fluentui/react": "^8.121.4",
-    "@happy-dom/jest-environment": "^16.7.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.1",
     "@tsconfig/recommended": "^1.0.7",
@@ -119,7 +105,6 @@
     "prettier": "^3.3.3",
     "publint": "^0.2.11",
     "react": "^18.3.1",
-    "react-dictate-button-mocked-speech-recognition": "^0.0.0-0",
     "react-dom": "^18.3.1",
     "react-test-renderer": "^18.3.1",
     "react-wrap-with": "^0.1.0",
@@ -133,6 +118,7 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.14.0",
     "core-js": "^3.12.1",
+    "event-target-properties": "^0.1.0",
     "use-ref-from": "^0.1.0"
   }
 }

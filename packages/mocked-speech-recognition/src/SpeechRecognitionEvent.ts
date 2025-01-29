@@ -1,4 +1,4 @@
-import SpeechRecognitionResultList from './SpeechRecognitionResultList';
+import SpeechRecognitionResultList from './SpeechRecognitionResultList.ts';
 
 export default class SpeechRecognitionEvent extends Event {
   constructor(

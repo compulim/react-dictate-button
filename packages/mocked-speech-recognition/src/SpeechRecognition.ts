@@ -1,5 +1,5 @@
 import { EventTargetProperties } from 'event-target-properties';
-import SpeechGrammarList from './SpeechGrammarList';
+import SpeechGrammarList from './SpeechGrammarList.ts';
 
 export default class SpeechRecognition extends EventTarget {
   constructor() {

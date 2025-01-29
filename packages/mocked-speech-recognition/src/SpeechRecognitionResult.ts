@@ -1,4 +1,4 @@
-import SpeechRecognitionAlternative from './SpeechRecognitionAlternative';
+import SpeechRecognitionAlternative from './SpeechRecognitionAlternative.ts';
 
 export default class SpeechRecognitionResult extends Array<SpeechRecognitionAlternative> {
   constructor(items: SpeechRecognitionAlternative[], isFinal: boolean | undefined) {

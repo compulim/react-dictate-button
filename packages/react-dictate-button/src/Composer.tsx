@@ -85,6 +85,7 @@ const Composer = ({
   started
 }: ComposerProps) => {
   const [readyState, setReadyState] = useState(0);
+  const continuousRef = useRefFrom(continuous);
   const extraRef = useRefFrom(extra);
   const grammarRef = useRefFrom(grammar);
   const langRef = useRefFrom(lang);
@@ -210,7 +211,7 @@ const Composer = ({
         const rawResult = rawResults[resultIndex];
 
         if (rawResult?.isFinal) {
-          if (!continuous) {
+          if (!continuousRef.current) {
             // After "onDictate" callback, the caller should be able to set "started" to false on an unabortable recognition.
             emitEnd();
             recognitionRef.current = undefined;
@@ -255,7 +256,7 @@ const Composer = ({
         }
       }
     },
-    [emitEnd, onDictateRef, onProgressRef, recognitionRef, setReadyState, shouldEmitDictateOnEndRef]
+    [continuousRef, emitEnd, onDictateRef, onProgressRef, recognitionRef, setReadyState, shouldEmitDictateOnEndRef]
   );
 
   const handleStart = useCallback<TypedEventHandler<Event>>(

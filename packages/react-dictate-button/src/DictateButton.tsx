@@ -5,7 +5,7 @@ import { useRefFrom } from 'use-ref-from';
 
 import Composer from './Composer.tsx';
 import { type DictateEventHandler } from './DictateEventHandler.ts';
-import type { EndEventHandler } from './EndEventHandler.ts';
+import { type EndEventHandler } from './EndEventHandler.ts';
 import { type ErrorEventHandler } from './ErrorEventHandler.ts';
 import useReadyState from './hooks/useReadyState.ts';
 import useSupported from './hooks/useSupported.ts';
@@ -13,7 +13,7 @@ import { type ProgressEventHandler } from './ProgressEventHandler.ts';
 import { type RawEventHandler } from './RawEventHandler.ts';
 import { type SpeechGrammarListPolyfill } from './SpeechGrammarListPolyfill.ts';
 import { type SpeechRecognitionPolyfill } from './SpeechRecognitionPolyfill.ts';
-import type { StartEventHandler } from './StartEventHandler.ts';
+import { type StartEventHandler } from './StartEventHandler.ts';
 
 type DictateButtonCoreProps = Readonly<{
   children?: ((context: Readonly<{ readyState: number | undefined }>) => ReactNode) | ReactNode | undefined;
@@ -108,7 +108,6 @@ const DictateButton = ({
   const handleStart = useCallback<StartEventHandler>(
     event => {
       setStarted(true);
-
       onStartRef.current?.(event);
     },
     [onStartRef, setStarted]

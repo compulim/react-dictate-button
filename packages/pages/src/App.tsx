@@ -1,5 +1,5 @@
 import React, { useCallback, useState, type FormEventHandler } from 'react';
-import { DictateButton, DictateCheckbox, ProgressEventHandler, type DictateEventHandler } from 'react-dictate-button';
+import { DictateButton, DictateCheckbox, type DictateEventHandler, type ProgressEventHandler } from 'react-dictate-button';
 
 import DictationTextBox from './DictationTextBox.tsx';
 
@@ -36,6 +36,7 @@ const App = () => {
   );
 
   const handleError = useCallback(() => {
+    // TODO: Should not throw abort.
     setInterim(undefined);
     setResult(undefined);
   }, [setInterim, setResult]);

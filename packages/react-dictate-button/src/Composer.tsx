@@ -232,7 +232,6 @@ const Composer = ({
 
           shouldEmitDictateOnEndRef.current = false;
         } else {
-          // TODO: Add tests for multiple results.
           onProgressRef.current?.({
             abortable: recognitionAbortable(target),
             results: Object.freeze(

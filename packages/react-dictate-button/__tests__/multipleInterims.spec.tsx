@@ -17,7 +17,7 @@ import {
   SpeechRecognitionResultList
 } from '../src/internal';
 
-describe('with continuous mode', () => {
+describe('with multiple non-finalized interims', () => {
   let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
   let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
   let onEnd: jest.Mock<ReturnType<EndEventHandler>, Parameters<EndEventHandler>, undefined>;

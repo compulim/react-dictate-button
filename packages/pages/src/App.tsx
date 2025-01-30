@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, type FormEventHandler } from 'react';
 import { DictateButton, DictateCheckbox, ProgressEventHandler, type DictateEventHandler } from 'react-dictate-button';
 
 import DictationTextBox from './DictationTextBox.tsx';
@@ -9,9 +9,15 @@ type Result = Readonly<{
 }>;
 
 const App = () => {
+  const [continuous, setContinuous] = useState<boolean>(false);
   const [customValue, setCustomValue] = useState<string | undefined>();
   const [interim, setInterim] = useState<readonly Result[] | undefined>();
   const [result, setResult] = useState<Result | undefined>();
+
+  const handleContinuousChange = useCallback<FormEventHandler<HTMLInputElement>>(
+    event => setContinuous(event.currentTarget.checked),
+    [setContinuous]
+  );
 
   const handleCustomChange = useCallback<(event: { value: string | undefined }) => void>(
     ({ value }) => setCustomValue(value),
@@ -49,10 +55,18 @@ const App = () => {
 
   return (
     <div>
-      <h1>&lt;DictateButton&gt;</h1>
+      <h1>
+        <code>react-dictate-button</code>
+      </h1>
+      <label>
+        <input checked={continuous} onChange={handleContinuousChange} type="checkbox" />
+        &nbsp;Continuous mode
+      </label>
+      <h2>&lt;DictateButton&gt;</h2>
       <div>
         <DictateButton
           className="my-dictate-button"
+          continuous={continuous}
           grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
           lang="en-US"
           onDictate={handleDictate}
@@ -65,10 +79,11 @@ const App = () => {
           }
         </DictateButton>
       </div>
-      <h1>&lt;DictateCheckbox&gt;</h1>
+      <h2>&lt;DictateCheckbox&gt;</h2>
       <div>
         <DictateCheckbox
           className="my-dictate-button"
+          continuous={continuous}
           lang="en-US"
           onDictate={handleDictate}
           onError={handleError}
@@ -80,7 +95,7 @@ const App = () => {
           }
         </DictateCheckbox>
       </div>
-      <h1>Result</h1>
+      <h2>Result</h2>
       {result ? (
         <p>{result.transcript}</p>
       ) : interim ? (
@@ -94,7 +109,7 @@ const App = () => {
       ) : (
         false
       )}
-      <h1>Custom text box</h1>
+      <h2>Custom text box</h2>
       <DictationTextBox
         grammar="#JSGF V1.0; grammar districts; public <district> = Tuen Mun | Yuen Long;"
         lang="en-US"

@@ -2,14 +2,22 @@
 
 import { act, fireEvent, render, screen, type RenderResult } from '@testing-library/react';
 import React, { Fragment } from 'react';
-import { DictateButton, type DictateEventHandler, type ProgressEventHandler } from '../src/index';
+import {
+  DictateButton,
+  type DictateEventHandler,
+  type EndEventHandler,
+  type ProgressEventHandler,
+  type StartEventHandler
+} from '../src/index';
 import { SpeechRecognition } from '../src/internal';
 
 describe('abort on unmount scenario', () => {
   let abort: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
   let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
   let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
+  let onEnd: jest.Mock<ReturnType<EndEventHandler>, Parameters<EndEventHandler>, undefined>;
   let onProgress: jest.Mock<ReturnType<ProgressEventHandler>, Parameters<ProgressEventHandler>, undefined>;
+  let onStart: jest.Mock<ReturnType<StartEventHandler>, Parameters<StartEventHandler>, undefined>;
   let renderResult: RenderResult;
   let start: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
 
@@ -24,12 +32,16 @@ describe('abort on unmount scenario', () => {
     });
 
     onDictate = jest.fn();
+    onEnd = jest.fn();
     onProgress = jest.fn();
+    onStart = jest.fn();
 
     renderResult = render(
       <DictateButton
         onDictate={onDictate}
+        onEnd={onEnd}
         onProgress={onProgress}
+        onStart={onStart}
         speechGrammarList={window.SpeechGrammarList}
         speechRecognition={constructSpeechRecognition}
       >

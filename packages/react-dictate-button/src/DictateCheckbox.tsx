@@ -2,8 +2,10 @@
 
 import React, { useCallback, useState, type FormEventHandler, type ReactNode } from 'react';
 
+import { useRefFrom } from 'use-ref-from';
 import Composer from './Composer.tsx';
 import { type DictateEventHandler } from './DictateEventHandler.ts';
+import { type EndEventHandler } from './EndEventHandler.ts';
 import { type ErrorEventHandler } from './ErrorEventHandler.ts';
 import useReadyState from './hooks/useReadyState.ts';
 import useSupported from './hooks/useSupported.ts';
@@ -11,6 +13,7 @@ import { type ProgressEventHandler } from './ProgressEventHandler.ts';
 import { type RawEventHandler } from './RawEventHandler.ts';
 import { type SpeechGrammarListPolyfill } from './SpeechGrammarListPolyfill.ts';
 import { type SpeechRecognitionPolyfill } from './SpeechRecognitionPolyfill.ts';
+import { type StartEventHandler } from './StartEventHandler.ts';
 
 type DictateCheckboxCoreProps = {
   children?: ((context: Readonly<{ readyState: number }>) => ReactNode) | ReactNode | undefined;
@@ -47,9 +50,11 @@ type DictateCheckboxProps = {
   grammar?: string | undefined;
   lang?: string | undefined;
   onDictate?: DictateEventHandler | undefined;
+  onEnd?: EndEventHandler | undefined;
   onError?: ErrorEventHandler | undefined;
   onProgress?: ProgressEventHandler | undefined;
   onRawEvent?: RawEventHandler | undefined;
+  onStart?: StartEventHandler | undefined;
   speechGrammarList?: SpeechGrammarListPolyfill | undefined;
   speechRecognition?: SpeechRecognitionPolyfill | undefined;
 };
@@ -63,36 +68,46 @@ const DictateCheckbox = ({
   grammar,
   lang,
   onDictate,
+  onEnd,
   onError,
   onProgress,
   onRawEvent,
+  onStart,
   speechGrammarList,
   speechRecognition
 }: DictateCheckboxProps) => {
   const [started, setStarted] = useState(false);
+  const onEndRef = useRefFrom(onEnd);
+  const onErrorRef = useRefFrom(onError);
+  const onStartRef = useRefFrom(onStart);
 
   const handleChange = useCallback<FormEventHandler<HTMLInputElement>>(
-    ({ currentTarget: { checked } }) => {
-      setStarted(checked);
-    },
+    ({ currentTarget: { checked } }) => setStarted(checked),
     [setStarted]
   );
 
-  const handleDictate = useCallback<DictateEventHandler>(
+  const handleEnd = useCallback<EndEventHandler>(
     event => {
       setStarted(false);
-
-      onDictate && onDictate(event);
+      onEndRef.current?.(event);
     },
-    [onDictate, setStarted]
+    [onEndRef, setStarted]
   );
 
   const handleError = useCallback<ErrorEventHandler>(
     event => {
       setStarted(false);
-      onError && onError(event);
+      onErrorRef.current?.(event);
     },
-    [onError, setStarted]
+    [onErrorRef, setStarted]
+  );
+
+  const handleStart = useCallback<StartEventHandler>(
+    event => {
+      setStarted(true);
+      onStartRef.current?.(event);
+    },
+    [onStartRef, setStarted]
   );
 
   return (
@@ -101,10 +116,12 @@ const DictateCheckbox = ({
       extra={extra}
       grammar={grammar}
       lang={lang}
-      onDictate={handleDictate}
+      onDictate={onDictate}
+      onEnd={handleEnd}
       onError={handleError}
       onProgress={onProgress}
       onRawEvent={onRawEvent}
+      onStart={handleStart}
       speechGrammarList={speechGrammarList}
       speechRecognition={speechRecognition}
       started={started && !disabled}

@@ -2,7 +2,13 @@
 
 import { act, fireEvent, render, screen, type RenderResult } from '@testing-library/react';
 import React from 'react';
-import { DictateButton, type DictateEventHandler, type ProgressEventHandler } from '../src/index';
+import {
+  DictateButton,
+  type DictateEventHandler,
+  type EndEventHandler,
+  type ProgressEventHandler,
+  type StartEventHandler
+} from '../src/index';
 import {
   SpeechRecognition,
   SpeechRecognitionAlternative,
@@ -14,7 +20,9 @@ import {
 describe('end without "result" event with "isFinal" set to true', () => {
   let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
   let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
+  let onEnd: jest.Mock<ReturnType<EndEventHandler>, Parameters<EndEventHandler>, undefined>;
   let onProgress: jest.Mock<ReturnType<ProgressEventHandler>, Parameters<ProgressEventHandler>, undefined>;
+  let onStart: jest.Mock<ReturnType<StartEventHandler>, Parameters<StartEventHandler>, undefined>;
   let renderResult: RenderResult;
   let start: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
 
@@ -28,12 +36,16 @@ describe('end without "result" event with "isFinal" set to true', () => {
     });
 
     onDictate = jest.fn();
+    onEnd = jest.fn();
     onProgress = jest.fn();
+    onStart = jest.fn();
 
     renderResult = render(
       <DictateButton
         onDictate={onDictate}
+        onEnd={onEnd}
         onProgress={onProgress}
+        onStart={onStart}
         speechGrammarList={window.SpeechGrammarList}
         speechRecognition={constructSpeechRecognition}
       >
@@ -72,6 +84,9 @@ describe('end without "result" event with "isFinal" set to true', () => {
         speechRecognition.dispatchEvent(new Event('end', {}));
       });
     });
+
+    test('should emit "onEnd"', () => expect(onEnd).toHaveBeenCalledTimes(1));
+    test('should emit "onStart"', () => expect(onStart).toHaveBeenCalledTimes(1));
 
     test('should emit "onProgress" twice', () => {
       expect(onProgress).toHaveBeenCalledTimes(2);

@@ -2,7 +2,13 @@
 
 import { act, fireEvent, render, screen, type RenderResult } from '@testing-library/react';
 import React from 'react';
-import { DictateButton, type DictateEventHandler, type ProgressEventHandler } from '../src/index';
+import {
+  DictateButton,
+  type DictateEventHandler,
+  type EndEventHandler,
+  type ProgressEventHandler,
+  type StartEventHandler
+} from '../src/index';
 import {
   SpeechRecognition,
   SpeechRecognitionAlternative,
@@ -14,7 +20,9 @@ import {
 describe('with continuous mode', () => {
   let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
   let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
+  let onEnd: jest.Mock<ReturnType<EndEventHandler>, Parameters<EndEventHandler>, undefined>;
   let onProgress: jest.Mock<ReturnType<ProgressEventHandler>, Parameters<ProgressEventHandler>, undefined>;
+  let onStart: jest.Mock<ReturnType<StartEventHandler>, Parameters<StartEventHandler>, undefined>;
   let renderResult: RenderResult;
   let start: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
 
@@ -28,13 +36,17 @@ describe('with continuous mode', () => {
     });
 
     onDictate = jest.fn();
+    onEnd = jest.fn();
     onProgress = jest.fn();
+    onStart = jest.fn();
 
     renderResult = render(
       <DictateButton
         continuous={true}
         onDictate={onDictate}
+        onEnd={onEnd}
         onProgress={onProgress}
+        onStart={onStart}
         speechGrammarList={window.SpeechGrammarList}
         speechRecognition={constructSpeechRecognition}
       >
@@ -55,6 +67,12 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(new Event('soundstart', {}));
       speechRecognition.dispatchEvent(new Event('speechstart', {}));
     });
+
+    expect(onEnd).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(1);
+
+    onEnd.mockReset();
+    onStart.mockReset();
 
     expect(onProgress).toHaveBeenCalledTimes(1);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
@@ -384,6 +402,8 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(1);
     expect(onProgress).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(0);
   });
 });

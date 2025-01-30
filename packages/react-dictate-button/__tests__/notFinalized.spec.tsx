@@ -1,8 +1,8 @@
 /** @jest-environment @happy-dom/jest-environment */
 
 import { act, fireEvent, render, screen, type RenderResult } from '@testing-library/react';
-import React, { Fragment } from 'react';
-import { DictateButton, type DictateEventHandler } from '../src/index';
+import React from 'react';
+import { DictateButton, type DictateEventHandler, type ProgressEventHandler } from '../src/index';
 import {
   SpeechRecognition,
   SpeechRecognitionAlternative,
@@ -11,9 +11,10 @@ import {
   SpeechRecognitionResultList
 } from '../src/internal';
 
-describe('with SpeechRecognition object without abort() stop after onDictate', () => {
+describe('end without "result" event with "isFinal" set to true', () => {
   let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
   let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
+  let onProgress: jest.Mock<ReturnType<ProgressEventHandler>, Parameters<ProgressEventHandler>, undefined>;
   let renderResult: RenderResult;
   let start: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
 
@@ -21,18 +22,18 @@ describe('with SpeechRecognition object without abort() stop after onDictate', (
     constructSpeechRecognition = jest.fn().mockImplementationOnce(() => {
       const speechRecognition = new SpeechRecognition();
 
-      // @ts-expect-error forcifully remove abort().
-      speechRecognition.abort = undefined;
       start = jest.spyOn(speechRecognition, 'start');
 
       return speechRecognition;
     });
 
     onDictate = jest.fn();
+    onProgress = jest.fn();
 
     renderResult = render(
       <DictateButton
         onDictate={onDictate}
+        onProgress={onProgress}
         speechGrammarList={window.SpeechGrammarList}
         speechRecognition={constructSpeechRecognition}
       >
@@ -59,7 +60,7 @@ describe('with SpeechRecognition object without abort() stop after onDictate', (
         speechRecognition.dispatchEvent(
           new SpeechRecognitionEvent('result', {
             results: new SpeechRecognitionResultList([
-              new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9, 'Hello, World!')], true)
+              new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9, 'Hello, World!')], false)
             ])
           })
         );
@@ -69,17 +70,29 @@ describe('with SpeechRecognition object without abort() stop after onDictate', (
         speechRecognition.dispatchEvent(new Event('audioend', {}));
         speechRecognition.dispatchEvent(new Event('end', {}));
       });
-
-      expect(onDictate).toHaveBeenCalledTimes(1);
     });
 
-    test('unmounting the button after onDictate should not throw', () => {
-      renderResult.rerender(<Fragment />);
+    test('should emit "onProgress" twice', () => {
+      expect(onProgress).toHaveBeenCalledTimes(2);
+
+      // From "audiostart" event, no "results".
+      expect(onProgress).toHaveBeenNthCalledWith(1, {
+        abortable: true,
+        type: 'progress'
+      });
+
+      // From "result" event with falsy "isFinal", no "results".
+      expect(onProgress).toHaveBeenNthCalledWith(2, {
+        abortable: true,
+        results: [{ confidence: 0.9, transcript: 'Hello, World!' }],
+        type: 'progress'
+      });
+    });
+
+    // If "onProgress" is dispatched, a corresponding "onDictate" event must be dispatched in pair.
+    test('should emit "onDictate" without "result"', () => {
+      expect(onDictate).toHaveBeenCalledTimes(1);
+      expect(onDictate).toHaveBeenLastCalledWith({ type: 'dictate' });
     });
   });
-
-  // We cannot test "throw during unmount" because:
-  // 1. After throw, React seems stuck in unrecoverable state that it think it is still rendering
-  // 2. @testing-library/react will call unmount()
-  // 3. When calling unmount() while React think it is still rendering, it will throw another error and this is not catchable in Jest
 });

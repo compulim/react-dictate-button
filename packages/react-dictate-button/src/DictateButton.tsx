@@ -39,6 +39,7 @@ const DictateButtonCore = ({ children, className, disabled, onClick }: DictateBu
 type DictateButtonProps = {
   children?: ((context: Readonly<{ readyState: number | undefined }>) => ReactNode) | ReactNode | undefined;
   className?: string | undefined;
+  continuous?: boolean | undefined;
   disabled?: boolean | undefined;
   extra?: Record<string, unknown> | undefined;
   grammar?: string | undefined;
@@ -55,6 +56,7 @@ type DictateButtonProps = {
 const DictateButton = ({
   children,
   className,
+  continuous,
   disabled,
   extra,
   grammar,
@@ -101,6 +103,7 @@ const DictateButton = ({
 
   return (
     <Composer
+      continuous={continuous}
       extra={extra}
       grammar={grammar}
       lang={lang}

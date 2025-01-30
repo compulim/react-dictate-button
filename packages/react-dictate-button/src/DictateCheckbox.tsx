@@ -41,6 +41,7 @@ const DictateCheckboxCore = ({ children, className, disabled, onChange, started 
 type DictateCheckboxProps = {
   children?: ((context: Readonly<{ readyState: number }>) => ReactNode) | ReactNode | undefined;
   className?: string | undefined;
+  continuous?: boolean | undefined;
   disabled?: boolean | undefined;
   extra?: Record<string, unknown> | undefined;
   grammar?: string | undefined;
@@ -56,6 +57,7 @@ type DictateCheckboxProps = {
 const DictateCheckbox = ({
   children,
   className,
+  continuous,
   disabled,
   extra,
   grammar,
@@ -95,6 +97,7 @@ const DictateCheckbox = ({
 
   return (
     <Composer
+      continuous={continuous}
       extra={extra}
       grammar={grammar}
       lang={lang}

@@ -33,6 +33,7 @@ export default class SpeechRecognition extends EventTarget {
   }
 
   set onaudiostart(value) {
+    console.log('2', value);
     this.#eventTargetProperties.setProperty('audiostart', value || undefined);
   }
 

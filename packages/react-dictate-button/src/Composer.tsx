@@ -25,6 +25,7 @@ type ComposerProps = {
       ) => ReactNode)
     | ReactNode
     | undefined;
+  continuous?: boolean | undefined;
   extra?: Record<string, unknown> | undefined;
   grammar?: string | undefined;
   lang?: string | undefined;
@@ -59,6 +60,7 @@ function recognitionAbortable(recognition: unknown): recognition is {
 
 const Composer = ({
   children,
+  continuous,
   extra,
   grammar,
   lang,
@@ -167,38 +169,59 @@ const Composer = ({
   );
 
   const handleResult = useCallback<TypedEventHandler<SpeechRecognitionEvent>>(
-    ({ results: rawResults, target }) => {
+    ({ resultIndex, results: rawResults, target }) => {
       if (target !== recognitionRef.current) {
         return;
       }
 
       if (rawResults.length) {
-        const results = Object.freeze(
-          Array.from(rawResults).map(alts => {
-            // Destructuring breaks Angular due to a bug in Zone.js.
-            // eslint-disable-next-line prefer-destructuring
-            const firstAlt = alts[0];
-
-            return {
-              confidence: firstAlt?.confidence || 0,
-              transcript: firstAlt?.transcript || ''
-            };
-          })
-        );
-
         // Destructuring breaks Angular due to a bug in Zone.js.
         // eslint-disable-next-line prefer-destructuring
-        const first = rawResults[0];
+        const rawResult = rawResults[resultIndex];
 
-        if (first?.isFinal) {
-          // After "onDictate" callback, the caller should be able to set "started" to false on an unabortable recognition.
-          recognitionRef.current = undefined;
-          setReadyState(0);
+        if (rawResult?.isFinal) {
+          if (!continuous) {
+            // After "onDictate" callback, the caller should be able to set "started" to false on an unabortable recognition.
+            recognitionRef.current = undefined;
+            setReadyState(0);
+          }
 
-          onDictateRef.current && onDictateRef.current({ result: results[0], type: 'dictate' });
+          const alt = rawResult[0];
+
+          alt &&
+            onDictateRef.current &&
+            onDictateRef.current({
+              result: {
+                confidence: alt.confidence,
+                transcript: alt.transcript
+              },
+              type: 'dictate'
+            });
+
+          emitDictateOnEndRef.current = false;
         } else {
+          // TODO: Add tests for multiple results.
           onProgressRef.current &&
-            onProgressRef.current({ abortable: recognitionAbortable(target), results, type: 'progress' });
+            onProgressRef.current({
+              abortable: recognitionAbortable(target),
+              results: Object.freeze(
+                Array.from(rawResults)
+                  .filter(result => !result.isFinal)
+                  .map(alts => {
+                    // Destructuring breaks Angular due to a bug in Zone.js.
+                    // eslint-disable-next-line prefer-destructuring
+                    const firstAlt = alts[0];
+
+                    return {
+                      confidence: firstAlt?.confidence || 0,
+                      transcript: firstAlt?.transcript || ''
+                    };
+                  })
+              ),
+              type: 'progress'
+            });
+
+          emitDictateOnEndRef.current = true;
         }
       }
     },
@@ -229,18 +252,19 @@ const Composer = ({
         recognition.lang = langRef.current;
       }
 
+      recognition.continuous = !!continuous;
       recognition.interimResults = true;
-      recognition.onaudioend = applyAll(handleAudioEnd, handleRawEvent);
-      recognition.onaudiostart = applyAll(handleAudioStart, handleRawEvent);
-      recognition.onend = applyAll(handleEnd, handleRawEvent);
-      recognition.onerror = applyAll(handleError, handleRawEvent);
-      recognition.onnomatch = handleRawEvent;
-      recognition.onresult = applyAll(handleResult, handleRawEvent);
-      recognition.onsoundend = handleRawEvent;
-      recognition.onsoundstart = handleRawEvent;
-      recognition.onspeechend = handleRawEvent;
-      recognition.onspeechstart = handleRawEvent;
-      recognition.onstart = applyAll(handleStart, handleRawEvent);
+      recognition.addEventListener('audiostart', applyAll(handleAudioStart, handleRawEvent));
+      recognition.addEventListener('audioend', applyAll(handleAudioEnd, handleRawEvent));
+      recognition.addEventListener('end', applyAll(handleEnd, handleRawEvent));
+      recognition.addEventListener('error', applyAll(handleError, handleRawEvent));
+      recognition.addEventListener('nomatch', handleRawEvent);
+      recognition.addEventListener('result', applyAll(handleResult, handleRawEvent));
+      recognition.addEventListener('soundend', handleRawEvent);
+      recognition.addEventListener('soundstart', handleRawEvent);
+      recognition.addEventListener('speechend', handleRawEvent);
+      recognition.addEventListener('speechstart', handleRawEvent);
+      recognition.addEventListener('start', applyAll(handleStart, handleRawEvent));
 
       const { current: extra } = extraRef;
 

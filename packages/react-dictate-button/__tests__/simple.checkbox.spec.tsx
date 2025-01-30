@@ -2,7 +2,7 @@
 
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
-import { DictateButton, type DictateEventHandler } from '../src/index';
+import { DictateCheckbox, type DictateEventHandler } from '../src/index';
 import {
   SpeechRecognition,
   SpeechRecognitionAlternative,
@@ -11,7 +11,7 @@ import {
   SpeechRecognitionResultList
 } from '../src/internal';
 
-describe('simple scenario', () => {
+describe('simple scenario for <DictateCheckbox>', () => {
   let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
   let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
   let start: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
@@ -28,22 +28,25 @@ describe('simple scenario', () => {
     onDictate = jest.fn();
 
     render(
-      <DictateButton
+      <DictateCheckbox
         onDictate={onDictate}
         speechGrammarList={window.SpeechGrammarList}
         speechRecognition={constructSpeechRecognition}
       >
         Click me
-      </DictateButton>
+      </DictateCheckbox>
     );
   });
 
-  describe('when the dictate button is clicked', () => {
+  describe('when the dictate checkbox is checked', () => {
     beforeEach(() => {
       expect(constructSpeechRecognition).toHaveBeenCalledTimes(0);
 
       act(() => fireEvent.click(screen.getByText('Click me')));
     });
+
+    test('should be checked', () =>
+      expect(screen.getByText('Click me').querySelector('input')).toHaveProperty('checked', true));
 
     test('SpeechRecognition object should be constructed', () =>
       expect(constructSpeechRecognition).toHaveBeenCalledTimes(1));
@@ -85,6 +88,9 @@ describe('simple scenario', () => {
             })
           ));
       });
+
+      test('should be unchecked', () =>
+        expect(screen.getByText('Click me').querySelector('input')).toHaveProperty('checked', false));
     });
   });
 });

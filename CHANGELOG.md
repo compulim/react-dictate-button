@@ -9,6 +9,10 @@ Breaking changes are indicated by 💥.
 
 ## [Unreleased]
 
+### Added
+
+- Added the changes to handle the continuos listening by [@RushikeshGavali](https://github.com/RushikeshGavali) and [@compulim](https://github.com/compulim) in PR [#73](https://github.com/compulim/react-dictate-button/pull/73)
+
 ### Changed
 
 - Modernized project scaffold, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)

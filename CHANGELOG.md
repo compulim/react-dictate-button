@@ -11,7 +11,12 @@ Breaking changes are indicated by 💥.
 
 ### Added
 
-- Added the changes to handle the continuos listening by [@RushikeshGavali](https://github.com/RushikeshGavali) and [@compulim](https://github.com/compulim) in PR [#73](https://github.com/compulim/react-dictate-button/pull/73)
+- Added continuous mode support, by [@RushikeshGavali](https://github.com/RushikeshGavali) and [@compulim](https://github.com/compulim), in PR [#73](https://github.com/compulim/react-dictate-button/pull/73)
+   - In continuous mode, `dictate` and `progress` events will only report the latest round of recognition
+   - After `end`, the push button and checkbox will not be turned off automatically
+   - When stopping the recognition, it will emit an `error` event of error `aborted`, this is the behavior same as in non-continuous mode
+   - If the underlying Web Speech API implementation does not support continuous mode, it should work as if in interactive mode
+- Added `start` and `end` events, by [@compulim](https://github.com/compulim), in PR [#xxx](https://github.com/compulim/react-dictate-button/pull/xxx)
 
 ### Changed
 

@@ -1,6 +1,6 @@
 /** @jest-environment @happy-dom/jest-environment */
 
-import { act, fireEvent, render, screen, type RenderResult } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import React from 'react';
 import {
   DictateButton,

@@ -270,8 +270,6 @@ const Composer = ({
 
   useEffect(() => {
     if (started) {
-      shouldEmitEndRef.current = true;
-
       if (!speechRecognitionRef.current || notAllowedRef.current) {
         throw new Error('Speech recognition is not supported');
       }

@@ -1,5 +1,10 @@
 import React, { useCallback, useState, type FormEventHandler } from 'react';
-import { DictateButton, DictateCheckbox, type DictateEventHandler, type ProgressEventHandler } from 'react-dictate-button';
+import {
+  DictateButton,
+  DictateCheckbox,
+  type DictateEventHandler,
+  type ProgressEventHandler
+} from 'react-dictate-button';
 
 import DictationTextBox from './DictationTextBox.tsx';
 

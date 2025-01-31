@@ -1,3 +1,5 @@
+/** @jest-environment @happy-dom/jest-environment */
+
 const { act, fireEvent, render, screen } = require('@testing-library/react');
 const React = require('react');
 const { DictateButton } = require('react-dictate-button');

@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 Breaking changes are indicated by 💥.
 
-## [Unreleased]
+## [3.0.0] - 2025-01-31
 
 ### Added
 
@@ -34,8 +34,6 @@ Breaking changes are indicated by 💥.
 - 💥 Deprecated default exports, use `import { DictateButton } from 'react-dictate-button'` instead, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
 - 💥 Removed `defaultProps` and `propTypes`, by [@compulim](https://github.com/compulim), in PR [#74](https://github.com/compulim/react-dictate-button/pull/74)
 
-### Changed
-
 ## [2.0.1] - 2021-06-01
 
 ### Fixed
@@ -43,10 +41,6 @@ Breaking changes are indicated by 💥.
 - Fixed [#65](https://github.com/compulim/react-dictate-button/issues/65). Setting `started` to `false` after `onDictate` callback should succeed even on an unabortable recognition, by [@compulim](https://github.com/compulim), in PR [#66](https://github.com/compulim/react-dictate-button/pull/66)
 
 ## [2.0.0] - 2021-05-16
-
-### Fixed
-
-- Fixed [#39](https://github.com/compulim/react-dictate-button/issues/39), added `type="button"` attribute to `<DictateButton>`, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
 
 ### Added
 
@@ -67,6 +61,10 @@ Breaking changes are indicated by 💥.
   - [`@babel/preset-react@7.13.13`](https://npmjs.com/package/@babel/preset-react)
   - [`lerna@4.0.0`](https://npmjs.com/package/lerna)
   - [`react@16.8.0`](https://npmjs.com/package/react)
+
+### Fixed
+
+- Fixed [#39](https://github.com/compulim/react-dictate-button/issues/39), added `type="button"` attribute to `<DictateButton>`, by [@compulim](https://github.com/compulim) in PR [#58](https://github.com/compulim/react-dictate-button/pull/58)
 
 ## [1.2.2] - 2020-02-27
 
@@ -99,13 +97,13 @@ Breaking changes are indicated by 💥.
 
 ## [1.1.2] - 2018-06-29
 
-### Fixed
-
-- Fixed `Composer.speechRecognition`/`speechGrammarList` should not be required
-
 ### Added
 
 - Added `onClick` prop, can use `preventDefault` to stop speech recognition from starting
+
+### Fixed
+
+- Fixed `Composer.speechRecognition`/`speechGrammarList` should not be required
 
 ## [1.1.1] - 2018-06-29
 
@@ -128,3 +126,15 @@ Breaking changes are indicated by 💥.
 ### Added
 
 - Initial release
+
+[3.0.0]: https://github.com/compulim/react-dictate-button/compare/v2.0.1...v3.0.0
+[2.0.1]: https://github.com/compulim/react-dictate-button/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/compulim/react-dictate-button/compare/v1.2.2...v2.0.0
+[1.2.2]: https://github.com/compulim/react-dictate-button/compare/v1.2.1...v1.2.2
+[1.2.1]: https://github.com/compulim/react-dictate-button/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/compulim/react-dictate-button/compare/v1.1.3...v1.2.0
+[1.1.3]: https://github.com/compulim/react-dictate-button/compare/v1.1.2...v1.1.3
+[1.1.2]: https://github.com/compulim/react-dictate-button/compare/v1.1.1...v1.1.2
+[1.1.1]: https://github.com/compulim/react-dictate-button/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/compulim/react-dictate-button/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/compulim/react-dictate-button/releases/tag/v1.0.0

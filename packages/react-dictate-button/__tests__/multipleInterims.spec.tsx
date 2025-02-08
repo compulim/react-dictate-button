@@ -86,9 +86,9 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, 'test')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, 'test'))
+          )
         })
       );
     });
@@ -109,9 +109,9 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, 'testing')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, 'testing'))
+          )
         })
       );
     });
@@ -132,9 +132,9 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8999999761581421, 'testing')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.8999999761581421, 'testing'))
+          )
         })
       );
     });
@@ -155,10 +155,10 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8999999761581421, 'testing')], false),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' one')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.8999999761581421, 'testing')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' one'))
+          )
         })
       );
     });
@@ -180,10 +180,10 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8999999761581421, 'testing')], false),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' one two')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.8999999761581421, 'testing')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' one two'))
+          )
         })
       );
     });
@@ -205,10 +205,10 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8999999761581421, 'testing')], false),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' 1 2 3')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.8999999761581421, 'testing')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' 1 2 3'))
+          )
         })
       );
     });
@@ -230,13 +230,10 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8999999761581421, 'testing')], false),
-            new SpeechRecognitionResult(
-              [new SpeechRecognitionAlternative(0.009999999776482582, ' one two three')],
-              false
-            )
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.8999999761581421, 'testing')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' one two three'))
+          )
         })
       );
     });
@@ -258,12 +255,11 @@ describe('with multiple non-finalized interims', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult(
-              [new SpeechRecognitionAlternative(0.5359774827957153, 'testing one two three')],
-              true
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(
+              new SpeechRecognitionAlternative(0.5359774827957153, 'testing one two three')
             )
-          ])
+          )
         })
       );
     });
@@ -271,9 +267,10 @@ describe('with multiple non-finalized interims', () => {
     expect(onDictate).toHaveBeenCalledTimes(1);
     expect(onProgress).toHaveBeenCalledTimes(0);
     expect(onDictate.mock.calls[0][0]).toHaveProperty('type', 'dictate');
-    expect(onDictate.mock.calls[0][0]).toHaveProperty('result',
-      { confidence: 0.5359774827957153, transcript: 'testing one two three' }
-    );
+    expect(onDictate.mock.calls[0][0]).toHaveProperty('result', {
+      confidence: 0.5359774827957153,
+      transcript: 'testing one two three'
+    });
 
     // ---
 

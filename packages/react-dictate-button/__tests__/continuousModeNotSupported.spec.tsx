@@ -85,9 +85,9 @@ describe('not honoring continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, 'test')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, 'test'))
+          )
         })
       );
     });
@@ -108,9 +108,9 @@ describe('not honoring continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, 'testing')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, 'testing'))
+          )
         })
       );
     });
@@ -131,9 +131,9 @@ describe('not honoring continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8999999761581421, 'testing')], true)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.8999999761581421, 'testing'))
+          )
         })
       );
     });

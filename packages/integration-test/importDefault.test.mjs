@@ -49,9 +49,9 @@ test('simple scenario', async () => {
 
     speechRecognition.dispatchEvent(
       new SpeechRecognitionEvent('result', {
-        results: new SpeechRecognitionResultList([
-          new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9, 'Hello, World!')], true)
-        ])
+        results: new SpeechRecognitionResultList(
+          SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9, 'Hello, World!'))
+        )
       })
     );
 

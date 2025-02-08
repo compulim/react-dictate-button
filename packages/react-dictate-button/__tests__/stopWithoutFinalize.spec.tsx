@@ -72,9 +72,9 @@ describe('end without "result" event with "isFinal" set to true', () => {
         speechRecognition.dispatchEvent(
           new SpeechRecognitionEvent('result', {
             resultIndex: 0,
-            results: new SpeechRecognitionResultList([
-              new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9, 'Hello, World!')], false)
-            ])
+            results: new SpeechRecognitionResultList(
+              new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.9, 'Hello, World!'))
+            )
           })
         );
 

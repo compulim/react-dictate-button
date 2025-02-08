@@ -12,7 +12,7 @@ export default class SpeechRecognitionEvent extends Event {
 
     this.#resultIndex = eventInitDict.resultIndex ?? 0;
     this.#results =
-      'results' in eventInitDict && eventInitDict.results ? eventInitDict.results : new SpeechRecognitionResultList([]);
+      'results' in eventInitDict && eventInitDict.results ? eventInitDict.results : new SpeechRecognitionResultList();
   }
 
   #resultIndex: number;

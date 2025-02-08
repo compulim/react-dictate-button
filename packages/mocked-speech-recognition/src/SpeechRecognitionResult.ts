@@ -1,9 +1,20 @@
+// Supports export class and interface at the same time.
+/* eslint-disable import/export */
+
 import SpeechRecognitionAlternative from './SpeechRecognitionAlternative.ts';
 
-export default class SpeechRecognitionResult extends Array<SpeechRecognitionAlternative> {
+export default interface SpeechRecognitionResult {
+  fromFinalized(...items: SpeechRecognitionAlternative[]): SpeechRecognitionResult;
+}
+
+export default class SpeechRecognitionResult
+  extends Array<SpeechRecognitionAlternative>
+  implements SpeechRecognitionResult
+{
   constructor(...args: SpeechRecognitionAlternative[]);
   constructor(arrayLength?: number);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(...args: any[]) {
     super(...args);
 
@@ -27,9 +38,4 @@ export default class SpeechRecognitionResult extends Array<SpeechRecognitionAlte
 
     return result;
   }
-}
-
-export default interface SpeechRecognitionResult {
-  new (...args: any[]): SpeechRecognitionResult;
-  fromFinalized(items: SpeechRecognitionAlternative[]): SpeechRecognitionResult;
 }

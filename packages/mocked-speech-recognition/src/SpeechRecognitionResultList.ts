@@ -4,6 +4,7 @@ export default class SpeechRecognitionResultList extends Array<SpeechRecognition
   constructor(...args: SpeechRecognitionResult[]);
   constructor(arrayLength?: number);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(...args: any[]) {
     super(...args);
   }

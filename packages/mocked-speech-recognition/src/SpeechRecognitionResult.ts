@@ -1,13 +1,29 @@
+// Supports export class and interface at the same time.
+/* eslint-disable import/export */
+
 import SpeechRecognitionAlternative from './SpeechRecognitionAlternative.ts';
 
-export default class SpeechRecognitionResult extends Array<SpeechRecognitionAlternative> {
-  constructor(items: SpeechRecognitionAlternative[], isFinal: boolean | undefined) {
-    super(...items);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export default interface SpeechRecognitionResult {
+  fromFinalized(...items: SpeechRecognitionAlternative[]): SpeechRecognitionResult;
+}
 
-    this.#isFinal = !!isFinal;
+// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
+export default class SpeechRecognitionResult
+  extends Array<SpeechRecognitionAlternative>
+  implements SpeechRecognitionResult
+{
+  constructor(...args: SpeechRecognitionAlternative[]);
+  constructor(arrayLength?: number);
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  constructor(...args: any[]) {
+    super(...args);
+
+    this.#isFinal = false;
   }
 
-  #isFinal: boolean;
+  #isFinal: boolean = false;
 
   item(index: number): SpeechRecognitionAlternative | undefined {
     return this[index];
@@ -15,5 +31,13 @@ export default class SpeechRecognitionResult extends Array<SpeechRecognitionAlte
 
   get isFinal(): boolean {
     return this.#isFinal;
+  }
+
+  static fromFinalized(...items: SpeechRecognitionAlternative[]): SpeechRecognitionResult {
+    const result = new SpeechRecognitionResult(...items);
+
+    result.#isFinal = true;
+
+    return result;
   }
 }

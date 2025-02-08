@@ -87,9 +87,9 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, 'test')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, 'test'))
+          )
         })
       );
     });
@@ -110,9 +110,9 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, 'testing')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, 'testing'))
+          )
         })
       );
     });
@@ -133,9 +133,9 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 0,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing'))
+          )
         })
       );
     });
@@ -157,10 +157,10 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 1,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' one')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' one'))
+          )
         })
       );
     });
@@ -181,10 +181,10 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 1,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one'))
+          )
         })
       );
     });
@@ -203,11 +203,11 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 2,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' two')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' two'))
+          )
         })
       );
     });
@@ -228,11 +228,11 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 2,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8551138043403625, ' two')], true)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.8551138043403625, ' two'))
+          )
         })
       );
     });
@@ -254,12 +254,12 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 3,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8551138043403625, ' two')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' three')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.8551138043403625, ' two')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' three'))
+          )
         })
       );
     });
@@ -283,12 +283,12 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 3,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8551138043403625, ' two')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9290534257888794, ' three')], true)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.8551138043403625, ' two')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9290534257888794, ' three'))
+          )
         })
       );
     });
@@ -310,13 +310,13 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 4,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8551138043403625, ' two')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9290534257888794, ' three')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' test')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.8551138043403625, ' two')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9290534257888794, ' three')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' test'))
+          )
         })
       );
     });
@@ -340,13 +340,13 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 4,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8551138043403625, ' two')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9290534257888794, ' three')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.009999999776482582, ' testing')], false)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.8551138043403625, ' two')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9290534257888794, ' three')),
+            new SpeechRecognitionResult(new SpeechRecognitionAlternative(0.009999999776482582, ' testing'))
+          )
         })
       );
     });
@@ -370,13 +370,13 @@ describe('with continuous mode', () => {
       speechRecognition.dispatchEvent(
         new SpeechRecognitionEvent('result', {
           resultIndex: 4,
-          results: new SpeechRecognitionResultList([
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.966937243938446, 'testing')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9035850167274475, ' one')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.8551138043403625, ' two')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9290534257888794, ' three')], true),
-            new SpeechRecognitionResult([new SpeechRecognitionAlternative(0.9721954464912415, ' testing')], true)
-          ])
+          results: new SpeechRecognitionResultList(
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.966937243938446, 'testing')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9035850167274475, ' one')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.8551138043403625, ' two')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9290534257888794, ' three')),
+            SpeechRecognitionResult.fromFinalized(new SpeechRecognitionAlternative(0.9721954464912415, ' testing'))
+          )
         })
       );
     });

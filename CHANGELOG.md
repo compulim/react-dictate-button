@@ -11,7 +11,7 @@ Breaking changes are indicated by 💥.
 
 ### Changed
 
-- Reduced React version requirement from 16.9.0 to 16.8.6, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+- Reduced React version requirement from 16.9.0 to 16.8.6, by [@compulim](https://github.com/compulim), in PR [#83](https://github.com/compulim/react-dictate-button/pull/83)
 
 ## [3.0.0] - 2025-01-31
 

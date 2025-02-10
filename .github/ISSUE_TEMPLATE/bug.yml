@@ -95,7 +95,9 @@ body:
             </DictateButton>
           );
 
-          await act(() => fireEvent.click(screen.getByText('Click me')));
+          act(() => {
+            fireEvent.click(screen.getByText('Click me'))
+          });
 
           expect(handleDictate).toHaveBeenCalledTimes(1);
         });

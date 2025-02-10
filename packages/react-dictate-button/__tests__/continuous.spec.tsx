@@ -54,7 +54,9 @@ describe('with continuous mode', () => {
       </DictateButton>
     );
 
-    act(() => fireEvent.click(screen.getByText('Click me')));
+    act(() => {
+      fireEvent.click(screen.getByText('Click me'));
+    });
 
     const speechRecognition: SpeechRecognition = constructSpeechRecognition.mock.results[0]?.value;
 

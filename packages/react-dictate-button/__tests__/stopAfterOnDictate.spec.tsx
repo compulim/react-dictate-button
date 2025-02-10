@@ -40,7 +40,9 @@ describe('with SpeechRecognition object without abort() stop after onDictate', (
       </DictateButton>
     );
 
-    act(() => fireEvent.click(screen.getByText('Click me')));
+    act(() => {
+      fireEvent.click(screen.getByText('Click me'));
+    });
 
     expect(constructSpeechRecognition).toHaveBeenCalledTimes(1);
     expect(start).toHaveBeenCalledTimes(1);

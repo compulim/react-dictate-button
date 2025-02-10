@@ -58,7 +58,9 @@ describe('not honoring continuous mode', () => {
       </DictateCheckbox>
     );
 
-    act(() => fireEvent.click(screen.getByText('Click me')));
+    act(() => {
+      fireEvent.click(screen.getByText('Click me'));
+    });
 
     const speechRecognition: SpeechRecognition = constructSpeechRecognition.mock.results[0]?.value;
 

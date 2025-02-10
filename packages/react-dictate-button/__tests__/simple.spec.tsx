@@ -48,7 +48,9 @@ describe('simple scenario', () => {
     beforeEach(() => {
       expect(constructSpeechRecognition).toHaveBeenCalledTimes(0);
 
-      act(() => fireEvent.click(screen.getByText('Click me')));
+      act(() => {
+        fireEvent.click(screen.getByText('Click me'));
+      });
     });
 
     test('SpeechRecognition object should be constructed', () =>
@@ -60,7 +62,7 @@ describe('simple scenario', () => {
     describe('when start events are dispatched', () => {
       let speechRecognition: SpeechRecognition;
 
-      beforeEach(() =>
+      beforeEach(() => {
         act(() => {
           speechRecognition = constructSpeechRecognition.mock.results[0]?.value;
 
@@ -68,14 +70,14 @@ describe('simple scenario', () => {
           speechRecognition.dispatchEvent(new Event('audiostart', {}));
           speechRecognition.dispatchEvent(new Event('soundstart', {}));
           speechRecognition.dispatchEvent(new Event('speechstart', {}));
-        })
-      );
+        });
+      });
 
       test('onStart() should have been called once', () => expect(onStart).toHaveBeenCalledTimes(1));
       test('onEnd() should not be called', () => expect(onEnd).toHaveBeenCalledTimes(0));
 
       describe('when result events are dispatched', () => {
-        beforeEach(() =>
+        beforeEach(() => {
           act(() => {
             speechRecognition.dispatchEvent(
               new SpeechRecognitionEvent('result', {
@@ -85,8 +87,8 @@ describe('simple scenario', () => {
                 )
               })
             );
-          })
-        );
+          });
+        });
 
         describe('onDictate() should have been called', () => {
           test('once', () => expect(onDictate).toHaveBeenCalledTimes(1));
@@ -100,14 +102,14 @@ describe('simple scenario', () => {
         });
 
         describe('when end events are dispatched', () => {
-          beforeEach(() =>
+          beforeEach(() => {
             act(() => {
               speechRecognition.dispatchEvent(new Event('speechend', {}));
               speechRecognition.dispatchEvent(new Event('soundend', {}));
               speechRecognition.dispatchEvent(new Event('audioend', {}));
               speechRecognition.dispatchEvent(new Event('end', {}));
-            })
-          );
+            });
+          });
 
           test('onStart() should not be called again', () => expect(onStart).toHaveBeenCalledTimes(1));
           test('onEnd() should have been called once', () => expect(onEnd).toHaveBeenCalledTimes(1));

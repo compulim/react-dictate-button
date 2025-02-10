@@ -34,7 +34,9 @@ test('simple scenario', async () => {
 
   expect(constructSpeechRecognition).toHaveBeenCalledTimes(0);
 
-  act(() => fireEvent.click(screen.getByText('Click me')));
+  act(() => {
+    fireEvent.click(screen.getByText('Click me'));
+  });
 
   expect(constructSpeechRecognition).toHaveBeenCalledTimes(1);
   expect(start).toHaveBeenCalledTimes(1);

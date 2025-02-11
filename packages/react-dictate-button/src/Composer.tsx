@@ -206,9 +206,11 @@ const Composer = ({
       }
 
       if (rawResults.length) {
+        // web-speech-cognitive-services does not emit "resultIndex".
+
         // Destructuring breaks Angular due to a bug in Zone.js.
         // eslint-disable-next-line prefer-destructuring
-        const rawResult = rawResults[resultIndex];
+        const rawResult = rawResults[resultIndex ?? rawResults.length - 1];
 
         if (rawResult?.isFinal) {
           if (!continuousRef.current) {

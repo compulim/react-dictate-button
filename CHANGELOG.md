@@ -11,7 +11,7 @@ Breaking changes are indicated by 💥.
 
 ### Added
 
-- Works with Web Speech API provider without `resultIndex` in `SpeechRecognitiveResultEvent`, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+- Works with Web Speech API provider without `resultIndex` in `SpeechRecognitionResultEvent`, by [@compulim](https://github.com/compulim), in PR [#86](https://github.com/compulim/react-dictate-button/pull/86)
 
 ### Changed
 

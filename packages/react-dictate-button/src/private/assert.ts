@@ -1,5 +1,5 @@
 declare global {
-  var IS_DEVELOPMENT: boolean;
+  const IS_DEVELOPMENT: boolean;
 }
 
 export default function assert(truthy: boolean) {

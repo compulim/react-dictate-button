@@ -7,6 +7,7 @@ import Context from './Context.ts';
 import { type DictateEventHandler } from './DictateEventHandler.ts';
 import { type EndEventHandler } from './EndEventHandler.ts';
 import { type ErrorEventHandler } from './ErrorEventHandler.ts';
+import assert from './private/assert.ts';
 import { type ProgressEventHandler } from './ProgressEventHandler.ts';
 import { type RawEventHandler } from './RawEventHandler.ts';
 import { type SpeechGrammarListPolyfill } from './SpeechGrammarListPolyfill.ts';
@@ -85,7 +86,6 @@ const Composer = ({
   started
 }: ComposerProps) => {
   const [readyState, setReadyState] = useState(0);
-  const continuousRef = useRefFrom(continuous);
   const extraRef = useRefFrom(extra);
   const grammarRef = useRefFrom(grammar);
   const langRef = useRefFrom(lang);
@@ -98,14 +98,9 @@ const Composer = ({
   const onStartRef = useRefFrom(onStart);
   const prevSpeechRecognition = usePrevious(speechRecognition);
   const recognitionRef = useRef<SpeechRecognition>();
-  /** Had emitted "progress" without subsequent "dictate". */
-  const shouldEmitDictateOnEndRef = useRef(false);
-  /** Had emitted "start". */
-  const shouldEmitEndRef = useRef(false);
-  /** Had emitted "end" or never started. */
-  const shouldEmitStartRef = useRef(true);
   const speechGrammarListRef = useRefFrom(speechGrammarList);
   const speechRecognitionRef = useRefFrom(speechRecognition);
+  const stateRef = useRef<'idle' | 'started' | 'has progress' | 'has result'>('idle');
 
   // If "speechRecognition" ponyfill changed, reset the "notAllowed" flag.
   if (prevSpeechRecognition !== speechRecognition) {
@@ -114,54 +109,57 @@ const Composer = ({
 
   const emitDictate = useCallback<DictateEventHandler>(
     event => {
+      assert(stateRef.current !== 'started');
+
       onDictateRef.current?.(event);
-      shouldEmitDictateOnEndRef.current = false;
+      stateRef.current = 'has result';
     },
-    [onDictateRef, shouldEmitDictateOnEndRef]
+    [onDictateRef, stateRef]
   );
 
   const emitEnd = useCallback(() => {
     // "dictate" and "progress" works as a pair. If "progress" was emitted without "dictate", we should emit "dictate" before "end".
-    if (shouldEmitDictateOnEndRef.current) {
+    if (stateRef.current === 'has progress') {
       emitDictate({ type: 'dictate' });
+      stateRef.current = 'has result';
     }
 
     // "start" and "end" works as a pair. If "start" was emitted, we should emit "end" event.
-    if (shouldEmitEndRef.current) {
-      onEndRef.current?.(new Event('end') as Event & { type: 'end' });
+    assert(stateRef.current === 'started' || stateRef.current === 'has result');
 
-      shouldEmitEndRef.current = false;
-      shouldEmitStartRef.current = true;
-    }
-  }, [onEndRef, shouldEmitEndRef, shouldEmitStartRef]);
+    onEndRef.current?.(new Event('end') as Event & { type: 'end' });
+    stateRef.current = 'idle';
+  }, [onEndRef, stateRef]);
 
   const emitError = useCallback<ErrorEventHandler>(
     event => {
       onErrorRef.current?.(event);
-      shouldEmitDictateOnEndRef.current = false;
+      stateRef.current = 'idle';
     },
-    [onErrorRef, shouldEmitDictateOnEndRef]
+    [onErrorRef, stateRef]
   );
 
   const emitProgress = useCallback<ProgressEventHandler>(
     event => {
+      assert(
+        stateRef.current === 'started' || stateRef.current === 'has progress' || stateRef.current === 'has result'
+      );
+
       // Web Speech API does not emit "result" when nothing is heard, and Chrome does not emit "nomatch" event.
       // Because we emitted onProgress, we should emit "dictate" if not error, so they works in pair.
-      shouldEmitDictateOnEndRef.current = true;
-      onProgressRef.current && onProgressRef.current(event);
+      onProgressRef.current?.(event);
+      stateRef.current = 'has progress';
     },
-    [onProgressRef, shouldEmitDictateOnEndRef]
+    [onProgressRef, stateRef]
   );
 
   const emitStart = useCallback(() => {
-    // "start" and "end" works as a pair. Initially, or if "end" was emitted, we should emit "start" event.
-    if (shouldEmitStartRef.current) {
-      onStartRef.current?.(new Event('start') as Event & { type: 'start' });
+    assert(stateRef.current === 'idle');
 
-      shouldEmitEndRef.current = true;
-      shouldEmitStartRef.current = false;
-    }
-  }, [onStartRef, shouldEmitEndRef, shouldEmitStartRef]);
+    // "start" and "end" works as a pair. Initially, or if "end" was emitted, we should emit "start" event.
+    onStartRef.current?.(new Event('start') as Event & { type: 'start' });
+    stateRef.current = 'started';
+  }, [onStartRef, stateRef]);
 
   const handleAudioEnd = useCallback<TypedEventHandler<Event>>(
     ({ target }) => target === recognitionRef.current && setReadyState(3),
@@ -191,7 +189,7 @@ const Composer = ({
 
       recognitionRef.current = undefined;
     },
-    [emitEnd, recognitionRef, setReadyState, shouldEmitDictateOnEndRef]
+    [emitEnd, recognitionRef, setReadyState]
   );
 
   const handleError = useCallback<TypedEventHandler<SpeechRecognitionErrorEvent>>(
@@ -201,7 +199,6 @@ const Composer = ({
       }
 
       // Error out, no need to emit "dictate"
-      shouldEmitDictateOnEndRef.current = false;
       recognitionRef.current = undefined;
 
       if (event.error === 'not-allowed') {
@@ -213,7 +210,7 @@ const Composer = ({
       emitError(event);
       emitEnd();
     },
-    [emitEnd, emitError, notAllowedRef, recognitionRef, setReadyState, shouldEmitDictateOnEndRef]
+    [emitEnd, emitError, notAllowedRef, recognitionRef, setReadyState]
   );
 
   const handleRawEvent = useCallback<TypedEventHandler<Event>>(
@@ -222,7 +219,7 @@ const Composer = ({
         return;
       }
 
-      onRawEventRef.current && onRawEventRef.current(event);
+      onRawEventRef.current?.(event);
     },
     [onRawEventRef, recognitionRef]
   );
@@ -241,13 +238,6 @@ const Composer = ({
         const rawResult = rawResults[resultIndex ?? rawResults.length - 1];
 
         if (rawResult?.isFinal) {
-          // if (!continuousRef.current) {
-          //   // After "onDictate" callback, the caller should be able to set "started" to false on an unabortable recognition.
-          //   emitEnd();
-          //   recognitionRef.current = undefined;
-          //   setReadyState(0);
-          // }
-
           const alt = rawResult[0];
 
           alt &&
@@ -280,7 +270,7 @@ const Composer = ({
         }
       }
     },
-    [continuousRef, emitDictate, emitEnd, emitProgress, onProgressRef, recognitionRef, setReadyState]
+    [emitDictate, emitProgress, recognitionRef]
   );
 
   const handleStart = useCallback<TypedEventHandler<Event>>(
@@ -314,8 +304,8 @@ const Composer = ({
 
       recognition.continuous = !!continuous;
       recognition.interimResults = true;
-      recognition.addEventListener('audiostart', applyAll(handleAudioStart, handleRawEvent));
       recognition.addEventListener('audioend', applyAll(handleAudioEnd, handleRawEvent));
+      recognition.addEventListener('audiostart', applyAll(handleAudioStart, handleRawEvent));
       recognition.addEventListener('end', applyAll(handleEnd, handleRawEvent));
       recognition.addEventListener('error', applyAll(handleError, handleRawEvent));
       recognition.addEventListener('nomatch', handleRawEvent);
@@ -343,7 +333,9 @@ const Composer = ({
       const { current: recognition } = recognitionRef;
 
       if (recognition) {
-        emitEnd();
+        if (stateRef.current !== 'idle') {
+          emitEnd();
+        }
 
         if (recognitionAbortable(recognition)) {
           recognition.abort();
@@ -353,6 +345,7 @@ const Composer = ({
       }
     };
   }, [
+    continuous,
     emitEnd,
     extraRef,
     grammarRef,
@@ -368,7 +361,8 @@ const Composer = ({
     recognitionRef,
     speechGrammarListRef,
     speechRecognitionRef,
-    started
+    started,
+    stateRef
   ]);
 
   const abortable = recognitionAbortable(recognitionRef.current) && readyState === 2;

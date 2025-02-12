@@ -5,26 +5,15 @@
     "\\.[jt]sx?$": [
       "babel-jest",
       {
+        "plugins": [["babel-plugin-transform-define", { "IS_DEVELOPMENT": true }]],
         "presets": [
-          [
-            "@babel/preset-react",
-            {
-              "runtime": "classic"
-            }
-          ],
-          [
-            "@babel/preset-typescript",
-            {
-              "allowDeclareFields": true
-            }
-          ],
+          ["@babel/preset-react", { "runtime": "classic" }],
+          ["@babel/preset-typescript", { "allowDeclareFields": true }],
           [
             "@babel/preset-env",
             {
               "modules": "commonjs",
-              "targets": {
-                "node": "18"
-              }
+              "targets": { "node": "20" }
             }
           ]
         ],

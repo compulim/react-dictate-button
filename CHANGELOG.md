@@ -13,6 +13,10 @@ Breaking changes are indicated by 💥.
 
 - Works with Web Speech API provider without `resultIndex` in `SpeechRecognitionResultEvent`, by [@compulim](https://github.com/compulim), in PR [#86](https://github.com/compulim/react-dictate-button/pull/86)
 
+### Fixed
+
+- Fixed `dictate` event should dispatch before `end` event, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+
 ### Changed
 
 - Reduced React version requirement from 16.9.0 to 16.8.6, by [@compulim](https://github.com/compulim), in PR [#83](https://github.com/compulim/react-dictate-button/pull/83)

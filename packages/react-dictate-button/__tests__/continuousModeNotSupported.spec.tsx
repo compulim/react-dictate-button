@@ -67,6 +67,9 @@ describe('not honoring continuous mode', () => {
     expect(onProgress).toHaveBeenCalledTimes(0);
     expect(start).toHaveBeenCalledTimes(1);
 
+    // Web Speech provider does not honor continuous mode.
+    speechRecognition.continuous = false;
+
     act(() => {
       speechRecognition.dispatchEvent(new Event('start', {}));
       speechRecognition.dispatchEvent(new Event('audiostart', {}));
@@ -74,6 +77,9 @@ describe('not honoring continuous mode', () => {
       speechRecognition.dispatchEvent(new Event('speechstart', {}));
     });
 
+    expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
+    expect(onProgress).toHaveBeenCalledTimes(1);
     expect(onStart).toHaveBeenCalledTimes(1);
 
     onStart.mockReset();
@@ -95,7 +101,9 @@ describe('not honoring continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       { confidence: 0.009999999776482582, transcript: 'test' }
@@ -118,7 +126,9 @@ describe('not honoring continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       { confidence: 0.009999999776482582, transcript: 'testing' }
@@ -141,7 +151,9 @@ describe('not honoring continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(1);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onDictate.mock.calls[0][0]).toHaveProperty('type', 'dictate');
     expect(onDictate.mock.calls[0][0]).toHaveProperty('result', {
       confidence: 0.8999999761581421,

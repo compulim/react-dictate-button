@@ -13,6 +13,7 @@ import {
 
 describe('simple scenario for <DictateCheckbox>', () => {
   let constructSpeechRecognition: jest.Mock<SpeechRecognition, []>;
+  let eventNames: string[];
   let onDictate: jest.Mock<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>;
   let onEnd: jest.Mock<ReturnType<EndEventHandler>, Parameters<EndEventHandler>, undefined>;
   let onStart: jest.Mock<ReturnType<StartEventHandler>, Parameters<StartEventHandler>, undefined>;
@@ -27,9 +28,17 @@ describe('simple scenario for <DictateCheckbox>', () => {
       return speechRecognition;
     });
 
-    onDictate = jest.fn();
-    onEnd = jest.fn();
-    onStart = jest.fn();
+    eventNames = [];
+
+    onDictate = jest.fn<ReturnType<DictateEventHandler>, Parameters<DictateEventHandler>, undefined>(() =>
+      eventNames.push('dictate')
+    );
+
+    onEnd = jest.fn<ReturnType<EndEventHandler>, Parameters<EndEventHandler>, undefined>(() => eventNames.push('end'));
+
+    onStart = jest.fn<ReturnType<StartEventHandler>, Parameters<StartEventHandler>, undefined>(() =>
+      eventNames.push('start')
+    );
 
     render(
       <DictateCheckbox
@@ -104,6 +113,9 @@ describe('simple scenario for <DictateCheckbox>', () => {
             ));
         });
 
+        test('onStart() should not been called again', () => expect(onStart).toHaveBeenCalledTimes(1));
+        test('onEnd() should not be called', () => expect(onEnd).toHaveBeenCalledTimes(0));
+
         describe('when end events are dispatched', () => {
           beforeEach(() => {
             act(() => {
@@ -117,6 +129,7 @@ describe('simple scenario for <DictateCheckbox>', () => {
           test('onStart() should not be called again', () => expect(onStart).toHaveBeenCalledTimes(1));
           test('onEnd() should be called', () => expect(onEnd).toHaveBeenCalledTimes(1));
 
+          test('events should appear in right order', () => expect(eventNames).toEqual(['start', 'dictate', 'end']));
           test('should be unchecked', () =>
             expect(screen.getByText('Click me').querySelector('input')).toHaveProperty('checked', false));
         });

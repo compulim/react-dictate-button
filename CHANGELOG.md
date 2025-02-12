@@ -15,7 +15,7 @@ Breaking changes are indicated by 💥.
 
 ### Fixed
 
-- Fixed `dictate` event should dispatch before `end` event, by [@compulim](https://github.com/compulim), in PR [#XXX](https://github.com/compulim/react-dictate-button/pull/XXX)
+- Fixed `dictate` event should dispatch before `end` event, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/react-dictate-button/pull/87)
 
 ### Changed
 

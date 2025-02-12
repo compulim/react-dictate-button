@@ -16,6 +16,7 @@ Breaking changes are indicated by 💥.
 ### Fixed
 
 - Fixed `dictate` event should dispatch before `end` event, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/react-dictate-button/pull/87)
+- Logics should relies on `SpeechRecognition.continuous` property than `continuous` props, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/react-dictate-button/pull/87)
 
 ### Changed
 

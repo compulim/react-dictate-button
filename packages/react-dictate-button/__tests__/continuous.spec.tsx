@@ -97,7 +97,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       { confidence: 0.009999999776482582, transcript: 'test' }
@@ -120,7 +122,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       { confidence: 0.009999999776482582, transcript: 'testing' }
@@ -143,7 +147,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(1);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onDictate.mock.calls[0][0]).toHaveProperty('type', 'dictate');
     expect(onDictate.mock.calls[0][0]).toHaveProperty('result', {
       confidence: 0.966937243938446,
@@ -168,7 +174,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       { confidence: 0.009999999776482582, transcript: ' one' }
@@ -192,7 +200,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(1);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onDictate.mock.calls[0][0]).toHaveProperty('type', 'dictate');
     expect(onDictate.mock.calls[0][0]).toHaveProperty('result', { confidence: 0.9035850167274475, transcript: ' one' });
 
@@ -215,7 +225,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       { confidence: 0.009999999776482582, transcript: ' two' }
@@ -240,7 +252,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(1);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onDictate.mock.calls[0][0]).toHaveProperty('type', 'dictate');
     expect(onDictate.mock.calls[0][0]).toHaveProperty('result', {
       confidence: 0.8551138043403625,
@@ -267,7 +281,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       {
@@ -296,7 +312,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(1);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onDictate.mock.calls[0][0]).toHaveProperty('type', 'dictate');
     expect(onDictate.mock.calls[0][0]).toHaveProperty('result', {
       confidence: 0.9290534257888794,
@@ -324,7 +342,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       {
@@ -354,7 +374,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(0);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(1);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onProgress.mock.calls[0][0]).toHaveProperty('type', 'progress');
     expect(onProgress.mock.calls[0][0]).toHaveProperty('results', [
       {
@@ -384,7 +406,9 @@ describe('with continuous mode', () => {
     });
 
     expect(onDictate).toHaveBeenCalledTimes(1);
+    expect(onEnd).toHaveBeenCalledTimes(0);
     expect(onProgress).toHaveBeenCalledTimes(0);
+    expect(onStart).toHaveBeenCalledTimes(0);
     expect(onDictate.mock.calls[0][0]).toHaveProperty('type', 'dictate');
     expect(onDictate.mock.calls[0][0]).toHaveProperty('result', {
       confidence: 0.9721954464912415,

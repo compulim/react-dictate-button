@@ -17,10 +17,12 @@ Breaking changes are indicated by 💥.
 
 - Fixed `dictate` event should dispatch before `end` event, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/react-dictate-button/pull/87)
 - Fixed [#84](https://github.com/compulim/react-dictate-button/issues/84). Logics should relies on `SpeechRecognition.continuous` property than `continuous` props, by [@compulim](https://github.com/compulim), in PR [#87](https://github.com/compulim/react-dictate-button/pull/87)
+- Fixed `end` event should only be dispatched after `SpeechRecognition.error` event, instead of always emit on stop/unmount, by [@compulim](https://github.com/compulim), in PR [#88](https://github.com/compulim/react-dictate-button/pull/88)
 
 ### Changed
 
 - Reduced React version requirement from 16.9.0 to 16.8.6, by [@compulim](https://github.com/compulim), in PR [#83](https://github.com/compulim/react-dictate-button/pull/83)
+- 💥 Stopping an unabortable recognition (`SpeechRecognition.abort()` is undefined) will warn instead of throw, by [@compulim](https://github.com/compulim), in PR [#88](https://github.com/compulim/react-dictate-button/pull/88)
 
 ## [3.0.0] - 2025-01-31
 

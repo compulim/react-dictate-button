@@ -53,6 +53,7 @@ export default () => (
 | Name                | Type                     | Default                                         | Description                                                                                                                                                                                                                                                       |
 | ------------------- | ------------------------ | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `className`         | `string`                 | `undefined`                                     | Class name to apply to the button                                                                                                                                                                                                                                 |
+| `continuous`        | `boolean`                | `false`                                         | `true` to set Web Speech API to use continuous mode and should continue to recognize until stop, otherwise, `false`                                                                                                                                               |
 | `disabled`          | `boolean`                | `false`                                         | `true` to abort ongoing recognition and disable the button, otherwise, `false`                                                                                                                                                                                    |
 | `extra`             | `{ [key: string]: any }` | `{}`                                            | Additional properties to set to [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) before `start`, useful when bringing your own [`SpeechRecognition`](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition) |
 | `grammar`           | `string`                 | `undefined`                                     | Grammar list in [JSGF format](https://developer.mozilla.org/en-US/docs/Web/API/SpeechGrammarList/addFromString)                                                                                                                                                   |
@@ -127,11 +128,11 @@ export default () => (
 
 > Although previous versions exported a React Context, it is recommended to use the hooks interface.
 
-| Name            | Signature   | Description                                                                             |
-| --------------- | ----------- | --------------------------------------------------------------------------------------- |
-| `useAbortable`  | `[boolean]` | If ongoing speech recognition can be aborted, `true`, otherwise, `false`                |
-| `useReadyState` | `[number]`  | Returns the current state of recognition, refer to [this section](#function-as-a-child) |
-| `useSupported`  | `[boolean]` | If speech recognition is supported, `true`, otherwise, `false`                          |
+| Name            | Signature   | Description                                                                                         |
+| --------------- | ----------- | --------------------------------------------------------------------------------------------------- |
+| `useAbortable`  | `[boolean]` | If ongoing speech recognition has `abort()` function and can be aborted, `true`, otherwise, `false` |
+| `useReadyState` | `[number]`  | Returns the current state of recognition, refer to [this section](#function-as-a-child)             |
+| `useSupported`  | `[boolean]` | If speech recognition is supported, `true`, otherwise, `false`                                      |
 
 ### Checks if speech recognition is supported
 
@@ -151,22 +152,40 @@ To determines whether speech recognition is supported in the browser:
 One of the design aspect is to make sure events are easy to understand and deterministic. First rule of thumb is to make sure `onProgress` will lead to either `onDictate` or `onError`. Here are some samples of event firing sequence (tested on Chrome 67):
 
 - Happy path: speech is recognized
+  1.  `onStart`
   1.  `onProgress({})` (just started, therefore, no `results`)
-  2.  `onProgress({ results: [] })`
-  3.  `onDictate({ result: ... })`
+  1.  `onProgress({ results: [] })`
+  1.  `onDictate({ result: ... })`
+  1.  `onEnd`
+- Happy path: speech is recognized with continuous mode
+  1.  `onStart`
+  1.  `onProgress({})` (just started, therefore, no `results`)
+  1.  `onProgress({ results: [] })`
+  1.  `onDictate({ result: ... })`
+  1.  `onProgress({ results: [] })`
+  1.  `onDictate({ result: ... })`
+  1.  `onEnd`
 - Heard some sound, but nothing can be recognized
+  1.  `onStart`
   1.  `onProgress({})`
-  2.  `onDictate({})` (nothing is recognized, therefore, no `result`)
+  1.  `onDictate({})` (nothing is recognized, therefore, no `result`)
+  1.  `onEnd`
 - Nothing is heard (audio device available but muted)
+  1.  `onStart`
   1.  `onProgress({})`
-  2.  `onError({ error: 'no-speech' })`
+  1.  `onError({ error: 'no-speech' })`
+  1.  `onEnd`
 - Recognition aborted
+  1.  `onStart`
   1.  `onProgress({})`
-  2.  `onProgress({ results: [] })`
-  3.  While speech is getting recognized, set `props.disabled` to `false`, abort recognition
-  4.  `onError({ error: 'aborted' })`
+  1.  `onProgress({ results: [] })`
+  1.  While speech is getting recognized, set `props.disabled` to `false`, abort recognition
+  1.  `onError({ error: 'aborted' })`
+  1.  `onEnd`
 - Not authorized to use speech or no audio device is availablabortable: truee
+  1.  `onStart`
   1.  `onError({ error: 'not-allowed' })`
+  1.  `onEnd`
 
 ## Function as a child
 

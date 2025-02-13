@@ -18,6 +18,8 @@ describe('with SpeechRecognition object without abort() stop after onDictate', (
   let start: jest.SpyInstance<void, [], SpeechRecognition> | undefined;
 
   beforeEach(() => {
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
+
     constructSpeechRecognition = jest.fn().mockImplementationOnce(() => {
       const speechRecognition = new SpeechRecognition();
 
@@ -76,8 +78,17 @@ describe('with SpeechRecognition object without abort() stop after onDictate', (
       expect(onDictate).toHaveBeenCalledTimes(1);
     });
 
-    test('unmounting the button after onDictate should not throw', () => {
-      renderResult.rerender(<Fragment />);
+    describe('unmounting the button after onDictate', () => {
+      beforeEach(() => {
+        renderResult.rerender(<Fragment />);
+      });
+
+      test('should warn for unabortable recognition', () => {
+        expect(console.warn).toHaveBeenCalledTimes(1);
+        expect(console.warn).toHaveBeenLastCalledWith(
+          'react-dictate-state: Cannot stop because SpeechRecognition does not have abort() function.'
+        );
+      });
     });
   });
 

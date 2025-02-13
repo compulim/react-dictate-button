@@ -28,6 +28,11 @@ type ComposerProps = {
       ) => ReactNode)
     | ReactNode
     | undefined;
+  /**
+   * Sets whether speech recognition is in continuous mode or interactive mode.
+   *
+   * Modifying this value during recognition will have no effect until restarted.
+   */
   continuous?: boolean | undefined;
   extra?: Record<string, unknown> | undefined;
   grammar?: string | undefined;
@@ -42,14 +47,6 @@ type ComposerProps = {
   speechRecognition?: SpeechRecognitionPolyfill | undefined;
   started?: boolean | undefined;
 };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function applyAll<T extends (this: any, ...args: any[]) => any>(this: any, ...fns: T[]): T {
-  return function (...args) {
-    // eslint-disable-next-line no-invalid-this, prefer-rest-params
-    fns.forEach(fn => fn.apply(this, args));
-  } as T;
-}
 
 function recognitionAbortable(recognition: unknown): recognition is {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -86,6 +83,7 @@ const Composer = ({
   started
 }: ComposerProps) => {
   const [readyState, setReadyState] = useState(0);
+  const continuousRef = useRefFrom(continuous);
   const extraRef = useRefFrom(extra);
   const grammarRef = useRefFrom(grammar);
   const langRef = useRefFrom(lang);
@@ -99,8 +97,9 @@ const Composer = ({
   const prevSpeechRecognition = usePrevious(speechRecognition);
   const recognitionRef = useRef<SpeechRecognition>();
   const speechGrammarListRef = useRefFrom(speechGrammarList);
-  const speechRecognitionRef = useRefFrom(speechRecognition);
-  const stateRef = useRef<'idle' | 'started' | 'has progress' | 'has result'>('idle');
+  const speechRecognitionClassRef = useRefFrom(speechRecognition);
+  const stateRef = useRef<'idle' | 'started' | 'has progress' | 'has result' | 'error'>('idle');
+  const unmountedRef = useRef(false);
 
   // If "speechRecognition" ponyfill changed, reset the "notAllowed" flag.
   if (prevSpeechRecognition !== speechRecognition) {
@@ -109,6 +108,10 @@ const Composer = ({
 
   const emitDictate = useCallback<DictateEventHandler>(
     event => {
+      if (unmountedRef.current) {
+        return;
+      }
+
       assert(stateRef.current !== 'started');
 
       onDictateRef.current?.(event);
@@ -118,6 +121,10 @@ const Composer = ({
   );
 
   const emitEnd = useCallback(() => {
+    if (unmountedRef.current) {
+      return;
+    }
+
     // "dictate" and "progress" works as a pair. If "progress" was emitted without "dictate", we should emit "dictate" before "end".
     if (stateRef.current === 'has progress') {
       emitDictate({ type: 'dictate' });
@@ -125,22 +132,33 @@ const Composer = ({
     }
 
     // "start" and "end" works as a pair. If "start" was emitted, we should emit "end" event.
-    assert(stateRef.current === 'started' || stateRef.current === 'has result');
+    assert(stateRef.current === 'started' || stateRef.current === 'has result' || stateRef.current === 'error');
 
     onEndRef.current?.(new Event('end') as Event & { type: 'end' });
-    stateRef.current = 'idle';
+
+    if (stateRef.current !== 'error') {
+      stateRef.current = 'idle';
+    }
   }, [onEndRef, stateRef]);
 
   const emitError = useCallback<ErrorEventHandler>(
     event => {
+      if (unmountedRef.current) {
+        return;
+      }
+
       onErrorRef.current?.(event);
-      stateRef.current = 'idle';
+      stateRef.current = 'error';
     },
     [onErrorRef, stateRef]
   );
 
   const emitProgress = useCallback<ProgressEventHandler>(
     event => {
+      if (unmountedRef.current) {
+        return;
+      }
+
       assert(
         stateRef.current === 'started' || stateRef.current === 'has progress' || stateRef.current === 'has result'
       );
@@ -154,6 +172,10 @@ const Composer = ({
   );
 
   const emitStart = useCallback(() => {
+    if (unmountedRef.current) {
+      return;
+    }
+
     assert(stateRef.current === 'idle');
 
     // "start" and "end" works as a pair. Initially, or if "end" was emitted, we should emit "start" event.
@@ -284,68 +306,72 @@ const Composer = ({
   );
 
   useEffect(() => {
-    if (started) {
-      if (!speechRecognitionRef.current || notAllowedRef.current) {
-        throw new Error('Speech recognition is not supported');
-      }
-
-      const grammars = speechGrammarListRef.current && grammarRef.current && new speechGrammarListRef.current();
-      const recognition = (recognitionRef.current = new speechRecognitionRef.current());
-
-      if (grammars) {
-        grammars.addFromString(grammarRef.current, 1);
-
-        recognition.grammars = grammars;
-      }
-
-      if (typeof langRef.current !== 'undefined') {
-        recognition.lang = langRef.current;
-      }
-
-      recognition.continuous = !!continuous;
-      recognition.interimResults = true;
-      recognition.addEventListener('audioend', applyAll(handleAudioEnd, handleRawEvent));
-      recognition.addEventListener('audiostart', applyAll(handleAudioStart, handleRawEvent));
-      recognition.addEventListener('end', applyAll(handleEnd, handleRawEvent));
-      recognition.addEventListener('error', applyAll(handleError, handleRawEvent));
-      recognition.addEventListener('nomatch', handleRawEvent);
-      recognition.addEventListener('result', applyAll(handleResult, handleRawEvent));
-      recognition.addEventListener('soundend', handleRawEvent);
-      recognition.addEventListener('soundstart', handleRawEvent);
-      recognition.addEventListener('speechend', handleRawEvent);
-      recognition.addEventListener('speechstart', handleRawEvent);
-      recognition.addEventListener('start', applyAll(handleStart, handleRawEvent));
-
-      const { current: extra } = extraRef;
-
-      extra &&
-        Object.entries(extra).forEach(([key, value]) => {
-          if (key !== 'constructor' && key !== 'prototype' && key !== '__proto__') {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (recognition as any)[key] = value;
-          }
-        });
-
-      recognition.start();
+    if (!started) {
+      return;
     }
 
+    if (!speechRecognitionClassRef.current || notAllowedRef.current) {
+      throw new Error('Speech recognition is not supported');
+    } else if (recognitionRef.current) {
+      throw new Error('Speech recognition already started, cannot start a new one.');
+    }
+
+    const grammars = speechGrammarListRef.current && grammarRef.current && new speechGrammarListRef.current();
+    const recognition = (recognitionRef.current = new speechRecognitionClassRef.current());
+
+    if (grammars) {
+      grammars.addFromString(grammarRef.current, 1);
+
+      recognition.grammars = grammars;
+    }
+
+    if (typeof langRef.current !== 'undefined') {
+      recognition.lang = langRef.current;
+    }
+
+    recognition.continuous = !!continuousRef.current;
+    recognition.interimResults = true;
+
+    recognition.addEventListener('audioend', handleAudioEnd);
+    recognition.addEventListener('audiostart', handleAudioStart);
+    recognition.addEventListener('end', handleEnd);
+    recognition.addEventListener('error', handleError);
+    recognition.addEventListener('result', handleResult);
+    recognition.addEventListener('start', handleStart);
+
+    recognition.addEventListener('nomatch', handleRawEvent);
+    recognition.addEventListener('audioend', handleRawEvent);
+    recognition.addEventListener('audiostart', handleRawEvent);
+    recognition.addEventListener('end', handleRawEvent);
+    recognition.addEventListener('error', handleRawEvent);
+    recognition.addEventListener('result', handleRawEvent);
+    recognition.addEventListener('soundend', handleRawEvent);
+    recognition.addEventListener('soundstart', handleRawEvent);
+    recognition.addEventListener('speechend', handleRawEvent);
+    recognition.addEventListener('speechstart', handleRawEvent);
+    recognition.addEventListener('start', handleRawEvent);
+
+    const { current: extra } = extraRef;
+
+    extra &&
+      Object.entries(extra).forEach(([key, value]) => {
+        if (key !== 'constructor' && key !== 'prototype' && key !== '__proto__') {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (recognition as any)[key] = value;
+        }
+      });
+
+    recognition.start();
+
     return () => {
-      const { current: recognition } = recognitionRef;
-
-      if (recognition) {
-        if (stateRef.current !== 'idle') {
-          emitEnd();
-        }
-
-        if (recognitionAbortable(recognition)) {
-          recognition.abort();
-        } else {
-          throw new Error('Failed to stop recognition while the current one is ongoing and is not abortable.');
-        }
+      if (recognitionAbortable(recognition)) {
+        recognition.abort();
+      } else if (!unmountedRef.current) {
+        console.warn('react-dictate-state: Cannot stop because SpeechRecognition does not have abort() function.');
       }
     };
   }, [
-    continuous,
+    continuousRef,
     emitEnd,
     extraRef,
     grammarRef,
@@ -360,10 +386,17 @@ const Composer = ({
     notAllowedRef,
     recognitionRef,
     speechGrammarListRef,
-    speechRecognitionRef,
+    speechRecognitionClassRef,
     started,
     stateRef
   ]);
+
+  useEffect(
+    () => () => {
+      unmountedRef.current = true;
+    },
+    []
+  );
 
   const abortable = recognitionAbortable(recognitionRef.current) && readyState === 2;
   const supported = !!speechRecognition && !notAllowedRef.current;

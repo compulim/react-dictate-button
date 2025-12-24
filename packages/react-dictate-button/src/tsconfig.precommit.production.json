@@ -10,12 +10,6 @@
     "target": "ESNext",
     "types": []
   },
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "__tests__/**/*"
-  ],
+  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx", "__tests__/**/*"],
   "extends": "./tsconfig.custom.json"
 }

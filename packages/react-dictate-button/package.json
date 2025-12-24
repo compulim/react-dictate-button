@@ -3,6 +3,7 @@
   "version": "0.0.0-0",
   "description": "A button to start dictation using Web Speech API, with an easy to understand event lifecycle.",
   "files": [
+    "./*.js",
     "./dist/"
   ],
   "exports": {
@@ -40,9 +41,9 @@
     "precommit:typescript:production": "tsc --noEmit --project ./src/tsconfig.precommit.production.json",
     "precommit:typescript:test": "tsc --noEmit --project ./src/tsconfig.precommit.test.json",
     "prepack": "cp ../../CHANGELOG.md . && cp ../../LICENSE . && cp ../../README.md .",
-    "start": "npm run build -- --onSuccess=\"touch ../pages/src/index.jsx ../integration-test/jest.config.json\" --watch",
+    "start": "npm run build -- --onSuccess \"touch ../pages/package.json\" --watch",
     "switch": "cat package.json | jq --arg SWITCH_NAME $SWITCH_NAME -r '(.[\"switch:\" + $SWITCH_NAME] // {}) as $TEMPLATE | .devDependencies += ($TEMPLATE.devDependencies // {}) | .dependencies += ($TEMPLATE.dependencies // {})' | tee ./package.json.tmp && mv ./package.json.tmp ./package.json",
-    "test": "jest"
+    "test": "node --import ./happy-dom-env.ts --test ${CI:---watch} **/*.{spec,test}.{[jt]s,[jt]sx,c[jt]s,m[jt]s}"
   },
   "repository": {
     "type": "git",

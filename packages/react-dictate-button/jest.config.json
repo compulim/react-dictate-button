@@ -1,19 +1,31 @@
 {
+  "testEnvironment": "@happy-dom/jest-environment",
   "testPathIgnorePatterns": ["/__setup__/", "/lib/", "/node_modules/", "/__types__/", "\\.pnp\\.[^\\/]+$"],
   "transform": {
     "/__tests__/types/": ["<rootDir>/__tests__/__setup__/typingTestTransformer.js"],
-    "\\.[jt]sx?$": [
+    "\\.m?[jt]sx?$": [
       "babel-jest",
       {
-        "plugins": [["babel-plugin-transform-define", { "IS_DEVELOPMENT": true }]],
         "presets": [
-          ["@babel/preset-react", { "runtime": "classic" }],
-          ["@babel/preset-typescript", { "allowDeclareFields": true }],
+          [
+            "@babel/preset-react",
+            {
+              "runtime": "classic"
+            }
+          ],
+          [
+            "@babel/preset-typescript",
+            {
+              "allowDeclareFields": true
+            }
+          ],
           [
             "@babel/preset-env",
             {
               "modules": "commonjs",
-              "targets": { "node": "20" }
+              "targets": {
+                "node": "20"
+              }
             }
           ]
         ],

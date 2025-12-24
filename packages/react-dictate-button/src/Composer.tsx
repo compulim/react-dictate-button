@@ -139,7 +139,7 @@ const Composer = ({
     if (stateRef.current !== 'error') {
       stateRef.current = 'idle';
     }
-  }, [onEndRef, stateRef]);
+  }, [emitDictate, onEndRef, stateRef]);
 
   const emitError = useCallback<ErrorEventHandler>(
     event => {

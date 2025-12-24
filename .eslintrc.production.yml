@@ -36,15 +36,15 @@ rules:
       - '**/*.css'
       - dotenv/config
 settings:
-  import/extensions:
-    - .cjs
-    - .mjs
-    - .js
-    - .jsx
-    - .cts
-    - .mts
-    - .ts
-    - .tsx
   import/resolver:
-    node: true
+    node:
+      extensions:
+        - .cjs
+        - .mjs
+        - .js
+        - .jsx
+        - .cts
+        - .mts
+        - .ts
+        - .tsx
     typescript: true

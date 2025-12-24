@@ -9,6 +9,24 @@ Breaking changes are indicated by 💥.
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped dependencies, in PR [#93](https://github.com/compulim/react-dictate-button/pull/93)
+  - Production dependencies
+    - [`@babel/runtime-corejs3@7.28.4`](https://npmjs.com/package/@babel/runtime-corejs3/v/7.28.4)
+  - Development dependencies
+    - [`@babel/runtime-corejs3@7.28.4`](https://npmjs.com/package/@babel/runtime-corejs3/v/7.28.4)
+    - [`@typescript-eslint/eslint-plugin@8.50.1`](https://npmjs.com/package/@typescript-eslint/eslint-plugin/v/8.50.1)
+    - [`@typescript-eslint/parser@8.50.1`](https://npmjs.com/package/@typescript-eslint/parser/v/8.50.1)
+    - [`core-js@3.47.0`](https://npmjs.com/package/core-js/v/3.47.0)
+    - [`eslint@9.39.2`](https://npmjs.com/package/eslint/v/9.39.2)
+    - [`eslint-import-resolver-typescript@4.4.4`](https://npmjs.com/package/eslint-import-resolver-typescript/v/4.4.4)
+    - [`eslint-plugin-import@2.32.0`](https://npmjs.com/package/eslint-plugin-import/v/2.32.0)
+    - [`eslint-plugin-prettier@5.5.4`](https://npmjs.com/package/eslint-plugin-prettier/v/5.5.4)
+    - [`eslint-plugin-react@7.37.5`](https://npmjs.com/package/eslint-plugin-react/v/7.37.5)
+    - [`event-target-properties@0.1.1`](https://npmjs.com/package/event-target-properties/v/0.1.1)
+    - [`prettier@3.7.4`](https://npmjs.com/package/prettier/v/3.7.4)
+
 ## [4.0.0] - 2025-02-13
 
 ### Added

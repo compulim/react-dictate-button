@@ -101,17 +101,37 @@
     }
   },
   "pinDependencies": {
-    "@testing-library/react": "^16",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-test-renderer": "^18"
+    "@testing-library/react": [
+      "^16"
+    ],
+    "@types/react": [
+      "^18"
+    ],
+    "@types/react-dom": [
+      "^18"
+    ],
+    "react": [
+      "^18"
+    ],
+    "react-dom": [
+      "^18"
+    ],
+    "react-test-renderer": [
+      "^18"
+    ]
+  },
+  "localPeerDependencies": {
+    "@compulim/mocked-speech-recognition": "0.0.0-0"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.6"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.8",
     "@babel/preset-react": "^7.25.7",
     "@babel/preset-typescript": "^7.25.7",
+    "@compulim/mocked-speech-recognition": "0.0.0-0",
+    "@compulim/test-harness": "0.0.0-0",
     "@fluentui/react": "^8.121.4",
     "@happy-dom/jest-environment": "^16.7.3",
     "@testing-library/dom": "^10.4.0",
@@ -131,16 +151,12 @@
     "prettier": "^3.3.3",
     "publint": "^0.2.11",
     "react": "^18.3.1",
-    "react-dictate-button-mocked-speech-recognition": "^0.0.0-0",
     "react-dom": "^18.3.1",
     "react-test-renderer": "^18.3.1",
     "react-wrap-with": "^0.1.0",
     "tsup": "^8.3.0",
     "type-fest": "^4.32.0",
     "typescript": "^5.6.3"
-  },
-  "peerDependencies": {
-    "react": ">=16.8.6"
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.28.4",

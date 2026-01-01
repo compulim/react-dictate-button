@@ -1,11 +1,12 @@
 {
-  "name": "react-dictate-button-root",
+  "name": "@compulim/root",
   "version": "4.0.2-0",
   "description": "",
   "private": true,
   "author": "William Wong (https://github.com/compulim)",
   "license": "MIT",
   "workspaces": [
+    "packages/test-harness",
     "packages/mocked-speech-recognition",
     "packages/react-dictate-button",
     "packages/pages",

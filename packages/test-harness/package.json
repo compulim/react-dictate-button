@@ -1,0 +1,11 @@
+{
+  "name": "@compulim/test-harness",
+  "version": "0.0.0-0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "William Wong (https://github.com/compulim)",
+  "license": "MIT",
+  "devDependencies": {}
+}

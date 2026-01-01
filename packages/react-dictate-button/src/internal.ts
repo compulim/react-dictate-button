@@ -1,1 +1,1 @@
-export * from 'react-dictate-button-mocked-speech-recognition';
+export * from '@compulim/mocked-speech-recognition';

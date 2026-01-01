@@ -131,6 +131,7 @@
     "@babel/preset-react": "^7.25.7",
     "@babel/preset-typescript": "^7.25.7",
     "@compulim/mocked-speech-recognition": "0.0.0-0",
+    "@compulim/test-harness": "0.0.0-0",
     "@fluentui/react": "^8.121.4",
     "@happy-dom/jest-environment": "^16.7.3",
     "@testing-library/dom": "^10.4.0",

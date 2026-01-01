@@ -118,6 +118,6 @@
   "dependencies": {
     "@babel/runtime-corejs3": "^7.28.4",
     "event-target-properties": "^0.1.1",
-    "use-ref-from": "^0.1.0"
+    "use-ref-from": "^0.2.1"
   }
 }

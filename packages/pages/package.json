@@ -65,18 +65,18 @@
     "react-dictate-button": "0.0.0-0"
   },
   "devDependencies": {
-    "@tsconfig/strictest": "^2.0.5",
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.1",
-    "esbuild": "^0.24.0",
-    "react-wrap-with": "^0.1.0",
-    "type-fest": "^4.26.1",
-    "typescript": "^5.6.3"
+    "@tsconfig/strictest": "^2.0.8",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "esbuild": "^0.27.2",
+    "react-wrap-with": "^0.2.0",
+    "type-fest": "^5.3.1",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dictate-button": "0.0.0-0",
     "react-dom": "^18.3.1",
-    "use-ref-from": "^0.1.0"
+    "use-ref-from": "^0.2.1"
   }
 }

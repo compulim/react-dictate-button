@@ -160,6 +160,6 @@
   },
   "dependencies": {
     "@babel/runtime-corejs3": "^7.28.4",
-    "use-ref-from": "^0.1.0"
+    "use-ref-from": "^0.2.1"
   }
 }

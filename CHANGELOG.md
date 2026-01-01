@@ -9,6 +9,16 @@ Breaking changes are indicated by 💥.
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped dependencies, in PR [#97](https://github.com/compulim/react-dictate-button/pull/97)
+  - Production dependencies
+    - [`use-ref-from@0.2.1`](https://npmjs.com/package/use-ref-from/v/0.2.1)
+  - Development dependencies
+    - [`@typescript-eslint/eslint-plugin@8.51.0`](https://npmjs.com/package/@typescript-eslint/eslint-plugin/v/8.51.0)
+    - [`@typescript-eslint/parser@8.51.0`](https://npmjs.com/package/@typescript-eslint/parser/v/8.51.0)
+    - [`use-ref-from@0.2.1`](https://npmjs.com/package/use-ref-from/v/0.2.1)
+
 ## [4.0.1] - 2025-12-24
 
 ### Changed

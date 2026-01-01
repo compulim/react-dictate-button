@@ -9,6 +9,38 @@ Breaking changes are indicated by 💥.
 
 ## [Unreleased]
 
+### Changed
+
+- Bumped dependencies, in PR [#101](https://github.com/compulim/react-dictate-button/pull/101)
+  - Production dependencies
+    - [`use-ref-from@0.2.1`](https://npmjs.com/package/use-ref-from/v/0.2.1)
+  - Development dependencies
+    - [`@babel/preset-env@7.28.5`](https://npmjs.com/package/@babel/preset-env/v/7.28.5)
+    - [`@babel/preset-react@7.28.5`](https://npmjs.com/package/@babel/preset-react/v/7.28.5)
+    - [`@babel/preset-typescript@7.28.5`](https://npmjs.com/package/@babel/preset-typescript/v/7.28.5)
+    - [`@fluentui/react@8.125.3`](https://npmjs.com/package/@fluentui/react/v/8.125.3)
+    - [`@testing-library/dom@10.4.1`](https://npmjs.com/package/@testing-library/dom/v/10.4.1)
+    - [`@testing-library/react@16.3.1`](https://npmjs.com/package/@testing-library/react/v/16.3.1)
+    - [`@tsconfig/recommended@1.0.13`](https://npmjs.com/package/@tsconfig/recommended/v/1.0.13)
+    - [`@tsconfig/strictest@2.0.8`](https://npmjs.com/package/@tsconfig/strictest/v/2.0.8)
+    - [`@types/dom-speech-recognition@0.0.7`](https://npmjs.com/package/@types/dom-speech-recognition/v/0.0.7)
+    - [`@types/jest@30.0.0`](https://npmjs.com/package/@types/jest/v/30.0.0)
+    - [`@types/lodash@4.17.21`](https://npmjs.com/package/@types/lodash/v/4.17.21)
+    - [`@types/node@25.0.3`](https://npmjs.com/package/@types/node/v/25.0.3)
+    - [`@types/react@18.3.27`](https://npmjs.com/package/@types/react/v/18.3.27)
+    - [`@types/react-dom@18.3.7`](https://npmjs.com/package/@types/react-dom/v/18.3.7)
+    - [`@typescript-eslint/eslint-plugin@8.51.0`](https://npmjs.com/package/@typescript-eslint/eslint-plugin/v/8.51.0)
+    - [`@typescript-eslint/parser@8.51.0`](https://npmjs.com/package/@typescript-eslint/parser/v/8.51.0)
+    - [`esbuild@0.27.2`](https://npmjs.com/package/esbuild/v/0.27.2)
+    - [`jest@30.2.0`](https://npmjs.com/package/jest/v/30.2.0)
+    - [`prettier@3.7.4`](https://npmjs.com/package/prettier/v/3.7.4)
+    - [`publint@0.3.16`](https://npmjs.com/package/publint/v/0.3.16)
+    - [`react-wrap-with@0.2.0`](https://npmjs.com/package/react-wrap-with/v/0.2.0)
+    - [`tsup@8.5.1`](https://npmjs.com/package/tsup/v/8.5.1)
+    - [`type-fest@5.3.1`](https://npmjs.com/package/type-fest/v/5.3.1)
+    - [`typescript@5.9.3`](https://npmjs.com/package/typescript/v/5.9.3)
+    - [`use-ref-from@0.2.1`](https://npmjs.com/package/use-ref-from/v/0.2.1)
+
 ## [4.0.1] - 2025-12-24
 
 ### Changed
